@@ -1,5 +1,6 @@
 ### TODO
 https://github.com/Smilegate-Healer/WebKakao 참고하여 Readme File 뼈대 작성 한 거라 추후 프로젝트 상황에 따라 수정
+</br>
 
 <a name="top">
   
@@ -15,7 +16,9 @@ https://github.com/Smilegate-Healer/WebKakao 참고하여 Readme File 뼈대 작
 #### [3. 아키텍처](#architecture)
 #### [4. 데모 영상](#demo_video)
 #### [5. 문서 링크](#docs_link)
-#### [6. History](#history)
+#### [6. 팀 소개](#about_team)
+#### [7. History](#history)
+
 
 </br>
 
@@ -25,11 +28,11 @@ https://github.com/Smilegate-Healer/WebKakao 참고하여 Readme File 뼈대 작
 
 </a>
   
-##### 1-1. 프로젝트 기획
+#### 1-1. 프로젝트 기획
 
 >- 
 
-##### 1-2. 프로젝트 목적
+#### 1-2. 프로젝트 목적
 
 >-
   
@@ -53,11 +56,14 @@ https://github.com/Smilegate-Healer/WebKakao 참고하여 Readme File 뼈대 작
 
 </a>
 
->-
+#### 3-1. 아키텍쳐 구성도
 
-**기술 스택**
-* 
+>- TODO : 아키텍쳐 이미지 추가
+
+#### 3-2. 기술 스택
   
+>- 
+
 [맨 위로 가기](#top)
 </br>
   
@@ -83,9 +89,26 @@ https://github.com/Smilegate-Healer/WebKakao 참고하여 Readme File 뼈대 작
 [맨 위로 가기](#top)
 </br>
 
-<a name="history">  
-  
-### 6. History
+<a name="about_team">  
+
+### 6. 팀 소개
+
+</a>
+
+#### 6-1. 팀 목표
+
+>- 
+
+#### 6-2. 방법 / 수단
+
+>- 
+
+[맨 위로 가기](#top)
+</br>
+
+<a name="history"> 
+
+### 7. History
 
 </a>
 
