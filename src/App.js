@@ -10,6 +10,7 @@ import Tab from '@material-ui/core/Tab';
 import Box from '@material-ui/core/Box';
 import PropTypes from 'prop-types';
 import DojunPage from './DojunPage';
+import MyPage from './MyPage';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -126,7 +127,7 @@ export default function MainPage() {
         <DojunPage></DojunPage>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Item Two
+        <MyPage/>
       </TabPanel>
     </div>
   );
