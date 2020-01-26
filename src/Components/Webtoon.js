@@ -9,7 +9,7 @@ import Rating from '@material-ui/lab/Rating';
 
 const styles=theme => ({
     card: {
-        minWidth: 200,
+        width: 220,
     },
 })
 

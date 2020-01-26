@@ -8,11 +8,17 @@ import {grey} from '@material-ui/core/colors'
 const styles=theme => ({
     card: {
         backgroundColor: grey[400],
-        minWidth: 200,
-        minHeight: 200
+        width: 220,
+        maxHeight: 220,
+        marginTop:theme.spacing(1),
+        marginLeft:theme.spacing(1),
+    },
+    iconBox:{
+        maxWidth:200,
+        padding:theme.spacing(6,4.1)
     },
     icon:{
-        marginLeft:theme.spacing(10)
+        marginLeft:theme.spacing(4)
     }
 })
 
@@ -24,8 +30,9 @@ class PlusWebtoon extends Component {
                 <Card className={classes.card} >
                     <CardActionArea>
                     <CardContent>
-                        <div className="icon">
-                            <img src="/Icon/plusIcon.png"/>
+                        <div className={classes.iconBox} >
+                            <img className={classes.icon} src="/Icon/plusIcon.png"/>
+                            <h3>새로운 작품 등록</h3>
                         </div>
                     </CardContent>
                     </CardActionArea>

@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import SwipeableViews from 'react-swipeable-views';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
@@ -8,6 +7,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import MyWebtoon from './MyWebtoon';
+import CommentPage from './CommentPage';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -42,7 +42,7 @@ function a11yProps(index) {
 const useStyles = makeStyles(theme => ({
   root: {
     backgroundColor: theme.palette.background.paper,
-    width: 500,
+    width: 1500,
   },
 }));
 
@@ -63,7 +63,7 @@ export default function MyPage() {
     <div className={classes.root}>
       <AppBar position="static" color="primary">
        <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
-          <Tab label="관심 웹툰"  {...a11yProps(0)} />
+          <Tab label="관심 웹툰" {...a11yProps(0)} />
           <Tab label="내 작품" {...a11yProps(1)} />
           <Tab label="내 댓글" {...a11yProps(2)} />
         </Tabs>
@@ -75,7 +75,7 @@ export default function MyPage() {
         <MyWebtoon/>
       </TabPanel>
       <TabPanel value={value} index={2}>
-        item three
+        <CommentPage/>
       </TabPanel>
     </div>
   );

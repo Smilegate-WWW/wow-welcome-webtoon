@@ -14,6 +14,7 @@ const useStyles = makeStyles(theme => ({
     gridList: {
       width: 1200,
       height: 500,
+      justify:"center",
     },
     
 }));

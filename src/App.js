@@ -1,5 +1,5 @@
 import React from 'react';
-import {fade,makeStyles} from '@material-ui/core/styles';
+import { fade, makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -11,6 +11,8 @@ import Box from '@material-ui/core/Box';
 import PropTypes from 'prop-types';
 import DojunPage from './DojunPage';
 import MyPage from './MyPage';
+import {BrowserRouter as Router,Route,Link} from 'react-router-dom';
+import LoginPage from './LoginPage';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -27,7 +29,7 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(0, 0, 0, 1),
   },
   search: {
-    flexGrow:1,
+    flexGrow: 1,
     position: 'static',
     borderRadius: theme.shape.borderRadius,
     backgroundColor: fade(theme.palette.common.white, 0.15),
@@ -52,6 +54,9 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.up('md')]: {
       width: 300,
     },
+  },
+  buttonMargin: {
+    marginRight: theme.spacing(2),
   },
 }));
 
@@ -85,6 +90,7 @@ function a11yProps(index) {
   };
 }
 
+
 export default function MainPage() {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
@@ -97,12 +103,12 @@ export default function MainPage() {
     <div className={classes.root}>
       <AppBar position="static" color="inherit">
         <Toolbar>
-          <Typography variant="h6"  className={classes.title}>
+          <Typography variant="h6" className={classes.title}>
             WWW 만화
           </Typography>
           <div className={classes.search} >
             <div className={classes.searchIcon}>
-              <img src='/Icon/searchIcon.png'/>
+              <img src='/Icon/searchIcon.png' />
             </div>
             <InputBase
               placeholder="제목/작가로 검색할 수 있습니다."
@@ -112,22 +118,23 @@ export default function MainPage() {
               }}
               inputProps={{ 'aria-label': 'search' }}
             />
-            </div>
-          <Button variant="contained" color="primary">로그인</Button>
+          </div>
+          <div className={classes.buttonMargin}><Button variant="contained" color="primary">만화 업로드</Button></div>
+          <Button variant="contained" color="primary" >로그인</Button>
         </Toolbar>
       </AppBar>
-    
+
       <AppBar position="static" color="inherit">
-       <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
+        <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
           <Tab label="도전 만화"  {...a11yProps(0)} />
           <Tab label="마이페이지" {...a11yProps(1)} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <DojunPage></DojunPage>
+        <DojunPage/>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <MyPage/>
+        <MyPage />
       </TabPanel>
     </div>
   );
