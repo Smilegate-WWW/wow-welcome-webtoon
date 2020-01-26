@@ -9,11 +9,8 @@ https://github.com/Smilegate-Healer/WebKakao 참고하여 Readme File 뼈대 작
 </a>
 
 
-
-
 ## 목차
 
-#### <a href = "https://github.com/Smilegate-WWW/wow-welcome-webtoon/wiki"> 0. Wiki </a>
 #### [1. 프로젝트 설명](#about_project)
 #### [2. Wow-Welcome-Webtoon 기능](#functions)
 #### [3. 아키텍처](#architecture)
