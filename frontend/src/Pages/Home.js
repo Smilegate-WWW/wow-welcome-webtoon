@@ -149,7 +149,7 @@ export default function Home() {
                     <Button variant="contained" color="primary" href="/">
                     <span style={{color:"#fafafa",fontWeight:550}}>도전만화</span>
                 </Button>
-                    <Button variant="contained" href="/MyPage">
+                    <Button variant="contained" href="/mypage">
                     <span style={{color:"#212121",fontWeight:520}}>마이페이지</span>
                 </Button>
                 </div>

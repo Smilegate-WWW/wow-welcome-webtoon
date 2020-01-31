@@ -8,8 +8,6 @@ import InputBase from '@material-ui/core/InputBase';
 import Box from '@material-ui/core/Box';
 import PropTypes from 'prop-types';
 
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -115,9 +113,9 @@ export default function MainPage() {
               inputProps={{ 'aria-label': 'search' }}
             />
           </div>
-          <div className={classes.buttonMargin}><Button variant="contained" color="primary" href="./LoginPage" >
+          <div className={classes.buttonMargin}><Button variant="contained" color="primary" href="http://localhost:3000/login" >
               <span style={{color:"#fafafa",fontWeight:550}}>만화 업로드</span></Button></div>
-          <Button variant="contained" color="primary" href="./LoginPage"><span style={{color:"#fafafa",fontWeight:550}}>로그인</span></Button>
+          <Button variant="contained" color="primary" href="http://localhost:3000/login"><span style={{color:"#fafafa",fontWeight:550}}>로그인</span></Button>
         </Toolbar>
       </AppBar>
  

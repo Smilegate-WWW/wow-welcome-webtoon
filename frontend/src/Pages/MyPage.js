@@ -83,7 +83,7 @@ export default function MyPage() {
                         <span style={{ color: "#212121", fontWeight: 520 }}>도전만화</span>
                     </Button>
 
-                    <Button variant="contained" color="primary" href="/MyPage">
+                    <Button variant="contained" color="primary" href="/mypage">
                         <span style={{ color: "#fafafa", fontWeight: 550 }}>마이페이지</span>
                     </Button>
                 </div>
@@ -91,13 +91,13 @@ export default function MyPage() {
 
             <div className={classes.link}>
                 <Typography className={classes.linkMerge}>
-                    <Link href="/MyPage" color="primary" style={{
+                    <Link href="/mypage" color="primary" style={{
                         fontWeight: 700, fontSize: "20px",
                     }}>
                         내 작품
                     </Link>
 
-                    <Link href="/MyPage/CommentPage" color="inherit" style={{
+                    <Link href="/mypage/comment" color="inherit" style={{
                         fontWeight: 500, fontSize: "18px",
                     }}>
                         내 댓글

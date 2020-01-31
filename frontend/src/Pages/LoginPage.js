@@ -59,7 +59,7 @@ export default function LoginPage() {
             </div>
 
             <div className={classes.signup}>
-                <a href="/LoginPage/SignupPage">회원가입</a>
+                <a href="/loginpage/signup">회원가입</a>
             </div>
         </div>
     );
