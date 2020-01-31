@@ -1,12 +1,24 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import Root from './Client/Root';
 import * as serviceWorker from './serviceWorker';
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core';
+import deepOrange from '@material-ui/core/colors/deepOrange';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const theme = createMuiTheme({
+    palette:{
+        primary :{
+            main:deepOrange[400]
+        }
+    }
+})
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
+ReactDOM.render(
+<MuiThemeProvider theme={theme}>
+    <Root />
+</MuiThemeProvider>, 
+document.getElementById('root'));
+
+
 serviceWorker.unregister();
