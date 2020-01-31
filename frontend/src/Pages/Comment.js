@@ -90,7 +90,7 @@ const myComments = [
 ];
 
 
-export default function CommentPage() {
+export default function Comment() {
     const classes = useStyles();
     const [checked, setChecked] = React.useState(true);
 

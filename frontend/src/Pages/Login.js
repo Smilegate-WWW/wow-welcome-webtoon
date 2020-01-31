@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function LoginPage() {
+export default function Login() {
     const classes = useStyles();
 
     return (
@@ -59,7 +59,7 @@ export default function LoginPage() {
             </div>
 
             <div className={classes.signup}>
-                <a href="/loginpage/signup">회원가입</a>
+                <a href="/login/signup">회원가입</a>
             </div>
         </div>
     );
