@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Handling Form Submission</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<h1><p th:text="${title}" /></h1>
+<form action="#" th:action="@{/add}" th:object="${webtoon}" method="post">
+
+	 작품 제목 : <input type="text" th:field="*{title}" />  <br>
+         형식 : 에피소드<input type="checkbox"  name="ch1" value="1"/>
+		 옴니버스<input type="checkbox"   name="ch1" value="2"/>
+		스토리 <input type="checkbox"   name="ch1" value="3"/> <br>
+		
+	장르: 일상<input type="checkbox"  name="genre" value="1"/>
+		 개그<input type="checkbox"   name="genre" value="2"/>
+		판타지 <input type="checkbox"   name="genre" value="3"/> 
+		액션<input type="checkbox"  name="genre" value="4"/>
+		드라마<input type="checkbox"  name="genre" value="5"/>
+		 순정<input type="checkbox"   name="genre" value="6"/>
+		감성 <input type="checkbox"   name="genre" value="7"/> <br>
+		
+	작품 요약: <input type="text" name="summary"> <br>
+	줄거리: <input type="text" name="plot"> <br>
+	썸네일 이미지 : <br>
+		
+	
+	
+    <input type="submit" value="등록">
+</form>
+</body>
+</html>
