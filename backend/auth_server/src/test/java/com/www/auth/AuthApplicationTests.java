@@ -29,7 +29,6 @@ class AuthApplicationTests {
     			.pw("test1234")
     			.name("Å×½ºÆ®")
     			.birth(java.sql.Date.valueOf("1970-01-01"))
-    			.sex(1)
     			.build()
     			);
     }

@@ -18,10 +18,10 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UserDto {
 	
-		private String ID;
-		private String Name;
-		private Date Birth;
-		private int sex;
+		private int idx;
+		private String userid;
+		private String name;
+		private Date birth;
+		private int gender;
 		
-	
 }

@@ -33,7 +33,10 @@ public class AuthController {
 	public Response<UserRegisterDto> execSignUP(@RequestBody UserRegisterDto user){
 		userRepository.save(user.toEntity()); //DB insert
 		Response<UserRegisterDto> result = new Response<UserRegisterDto>();
-		result.setResponse(user);
+		//DBinsert complete
+		result.setCode(200);
+		result.setMsg("DB complete");
+		result.setData(user);
 		return result;
 	}
 	

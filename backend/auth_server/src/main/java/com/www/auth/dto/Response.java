@@ -15,10 +15,18 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Response<T> {
 	
-	private T response;
+	private int code;
+	private String msg;
+	private T data;
 	
-	public void setResponse(T response) {
-		this.response = response;
+	public void setData(T response) {
+		this.data = response;
+	}
+	public void setCode(int code) {
+		this.code =code;
+	}
+	public void setMsg(String msg) {
+		this.msg = msg;
 	}
 
 }
