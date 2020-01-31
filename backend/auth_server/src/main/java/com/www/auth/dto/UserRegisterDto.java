@@ -16,15 +16,18 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class UserRegisterDto extends UserDto{
-	private String Password;
+	
+	private String email;
+	private String pw;
 	
 	public Users toEntity() {
 		return Users.builder()
-				.id(getID())
+				.id(getUserid())
 				.name(getName())
-				.pw(Password)
+				.pw(pw)
 				.birth(getBirth())
-				.sex(getSex())
+				.gender(getGender())
+				.email(email)
 				.build();
 	}
 	
