@@ -1,19 +1,43 @@
-import React, {Component} from 'react';
-import {Route} from 'react-router-dom';
-import {Home, Comment,Login,MyPage,Signup} from './Pages';
+import React, { useState } from 'react';
+import { Route, Switch } from 'react-router-dom';
+import { Home, Comment, Login, MyPage, Signup, Register } from './Pages';
+import signIn from './TestAuth';
+import AuthRoute from './AuthRoute';
 
-class App extends Component {
-  render() {
-    return (
-      <div>
-        <Route exact path="/" component={Home}/>
-        <Route exact path="/mypage" component={MyPage}/>
-        <Route exact path="/login" component={Login}/>
-        <Route path="/mypage/comment" component={Comment}/>
-        <Route path="/login/signup" component={Signup}/>
-      </div>
-    );
-  }
+export default function App() {
+  //user 로그인된 사용자 정보 담은 변수
+  const [user, setUser] = useState(null);
+  // 인증 여부
+  const authenticated = user != null;
+
+  const login = ({ id, pw }) => setUser(signIn({ id, pw }));
+  const logout = () => setUser(null);
+
+  return (
+    <div>
+      <Switch>
+        <Route 
+          exact path="/" 
+          render={props => (
+            <Home authenticated={authenticated} login={login} logout={logout} {...props} />
+          )}
+        />
+        <AuthRoute
+          authenticated={authenticated}
+          exact path="/mypage"
+          render={props => <MyPage user={user} {...props} />}
+        />
+        <Route
+          exact path="/login"
+          render={props => (
+            <Login authenticated={authenticated} login={login} {...props} />
+          )}
+        />
+        <Route path="/mypage/comment" component={Comment} />
+        <Route path="/login/signup" component={Signup} />
+        <Route path="/mypage/register" component={Register} />
+      </Switch>
+    </div>
+  );
+
 }
-
-export default App;

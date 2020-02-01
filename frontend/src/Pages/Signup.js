@@ -38,7 +38,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function Signup() {
     const classes = useStyles();
-    const [sex, setSex] = React.useState('');
+    const [gender, setGender] = React.useState('');
 
     const inputLabel = React.useRef(null);
     const [labelWidth, setLabelWidth] = React.useState(0);
@@ -48,7 +48,7 @@ export default function Signup() {
 
 
     const handleChange = event => {
-        setSex(event.target.value);
+        setGender(event.target.value);
     };
 
     return (
@@ -60,16 +60,16 @@ export default function Signup() {
             }}>&emsp;WWW</span>
 
             <form className={classes.textField} noValidate autoComplete="off">
-                <TextField id="user_id" label="아이디" variant="outlined" />
+                <TextField id="userid" label="아이디" variant="outlined" />
                 <TextField
-                    id="user_id"
+                    id="pw"
                     label="비밀번호"
                     type="password"
                     autoComplete="current-password"
                     variant="outlined"
                 />
                 <TextField
-                    id="user_id_check"
+                    id="pw_check"
                     label="비밀번호 재입력"
                     type="password"
                     autoComplete="current-password"
@@ -79,16 +79,16 @@ export default function Signup() {
 
             <div className={classes.display}>
                 <form className={classes.smallTextField} noValidate autoComplete="off">
-                    <TextField id="user_name" label="이름" variant="outlined" />
+                    <TextField id="name" label="이름" variant="outlined" />
                 </form>
 
                 <FormControl variant="outlined" className={classes.smallTextField}>
 
-                    <InputLabel ref={inputLabel} id="user-sex-label">성별</InputLabel>
+                    <InputLabel ref={inputLabel} id="gender_label">성별</InputLabel>
                     <Select
-                        labelId="user-sex-label"
-                        id="user-sex"
-                        value={sex}
+                        labelId="gender_label"
+                        id="gender"
+                        value={gender}
                         onChange={handleChange}
                         labelWidth={labelWidth}
                     >
@@ -100,7 +100,7 @@ export default function Signup() {
 
             <form className={classes.textField} noValidate autoComplete="off">
                 <TextField
-                    id="user_birthday"
+                    id="birth"
                     label="생년월일"
                     type="date"
                     defaultValue="2000-01-01"
@@ -109,7 +109,7 @@ export default function Signup() {
                         shrink: true,
                     }}
                 />
-                <TextField id="user_email" label="이메일" variant="outlined" />
+                <TextField id="email" label="이메일" variant="outlined" />
             </form>
 
             <div className={classes.loginButton}>

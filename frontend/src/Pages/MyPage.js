@@ -70,7 +70,7 @@ const webtoons = [
 ]
 
 
-export default function MyPage() {
+export default function MyPage({user}) {
     const classes = useStyles();
 
     return (
