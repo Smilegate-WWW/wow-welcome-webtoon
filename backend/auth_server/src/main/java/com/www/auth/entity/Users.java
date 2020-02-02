@@ -13,6 +13,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+
 /**
  * Users Entity (DB User info table mapping)
  * @author bjiso
@@ -21,7 +25,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 @Entity
-public class Users {
+public class Users extends BaseTimeEntity{
 	
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int idx;
@@ -44,26 +48,37 @@ public class Users {
 	@Column(nullable = false, length=45)
 	private String email;
 	
-	@Column(nullable = false)
-	private LocalDateTime register_date;
-	
-	@Column(nullable = false)
-	private LocalDateTime updated_date;
-	
 	@Column
 	private LocalDateTime login_date;
 	
 	
 	@Builder
-    public Users(String id, String pw, String name, Date birth, int gender, String email) {
-        this.userid = id;
-        this.pw = pw;
+    public Users(String id, String e_pw, String name, Date birth, int gender, String email) {
+		/*
+		 * //generate salt value SecureRandom rd = new SecureRandom(); byte[] salt = new
+		 * byte[16]; rd.nextBytes(salt); StringBuffer st = new StringBuffer(); for(int
+		 * i=0; i<salt.length; i++) st.append(String.format("%02x", salt[i]));
+		 * this.salt=st.toString();
+		 * 
+		 * //encrypt try { byte[] src=pw.getBytes(); byte[] bytes = new
+		 * byte[src.length+salt.length]; System.arraycopy(src, 0, bytes, 0, src.length);
+		 * System.arraycopy(salt, 0, bytes, src.length, salt.length);
+		 * 
+		 * MessageDigest sh = MessageDigest.getInstance("SHA-256"); sh.update(bytes);
+		 * byte[] enc_pw = sh.digest();
+		 * 
+		 * StringBuffer sb = new StringBuffer(); for(int i=0; i<enc_pw.length; i++)
+		 * sb.append(Integer.toString((enc_pw[i] & 0xFF) + 256, 16).substring(1));
+		 * this.pw = sb.toString(); } catch (NoSuchAlgorithmException e) {
+		 * e.printStackTrace(); }
+		 */
+		
+		this.userid = id; 
+		this.pw = e_pw;
         this.name = name;
         this.birth = birth;
         this.gender = gender;
         this.email = email;
-        register_date = LocalDateTime.now();
-        updated_date = register_date;
     }
 
 }

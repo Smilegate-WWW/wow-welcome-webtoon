@@ -1,7 +1,8 @@
 package com.www.auth.respository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import com.www.auth.entity.Users;
 
 /**
@@ -11,4 +12,5 @@ import com.www.auth.entity.Users;
  */
 public interface UsersRepository extends JpaRepository<Users,String>{
 
+	List<Users> findByUserid(String userid);
 }

@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.www.auth.dto.Response;
+import com.www.auth.dto.UserDto;
+import com.www.auth.dto.UserLoginDto;
 import com.www.auth.dto.UserRegisterDto;
-import com.www.auth.respository.UsersRepository;
+import com.www.auth.service.UserService;
 
 import lombok.AllArgsConstructor;
 
@@ -22,21 +24,22 @@ import lombok.AllArgsConstructor;
 @RequestMapping("/users")
 public class AuthController {
 
-	private UsersRepository userRepository;
-	
+	UserService userService;
 	/**
-	 * User Input -> mysql Users table just insert
-	 * @param user
+	 * (/users)SingUp
+	 * @param user 
 	 * @return 
 	 */
 	@PostMapping
 	public Response<UserRegisterDto> execSignUP(@RequestBody UserRegisterDto user){
-		userRepository.save(user.toEntity()); //DB insert
-		Response<UserRegisterDto> result = new Response<UserRegisterDto>();
-		//DBinsert complete
-		result.setCode(200);
-		result.setMsg("DB complete");
-		result.setData(user);
+		System.out.println("======================");
+		Response<UserRegisterDto> result = userService.register(user);
+		return result;
+	}
+	
+	@GetMapping("/token")
+	public Response<UserDto> Login(@RequestBody UserLoginDto userlogin){
+		Response<UserDto> result = userService.login(userlogin);
 		return result;
 	}
 	
