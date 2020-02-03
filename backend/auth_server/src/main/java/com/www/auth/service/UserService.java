@@ -1,7 +1,5 @@
 package com.www.auth.service;
 
-import java.util.List;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +10,8 @@ import com.www.auth.dto.UserRegisterDto;
 import com.www.auth.entity.Users;
 import com.www.auth.respository.UsersRepository;
 
+import com.www.auth.service.JwtTokenProvider;
+
 import lombok.AllArgsConstructor;
 
 @Service
@@ -20,6 +20,7 @@ public class UserService {
 
 	UsersRepository userRepository;
 	PasswordEncoder passwordEncoder;
+	JwtTokenProvider jwtTokenProvider;
 	
 	/**
 	 * register, sign up
@@ -28,7 +29,11 @@ public class UserService {
 		Response<UserRegisterDto> result = new Response<UserRegisterDto>();
 		//user id 중복 검사
 		//id중복일경우 code, msg 추가
-		
+		if(userRepository.existsByUserid(user.getUserid())) {
+			result.setCode(004);
+			result.setMsg("insert fail");
+			return result;
+		}
 		//id중복아닐경우
 		//pw encoding
 		System.out.println("pw:"+user.getPw());
@@ -48,18 +53,17 @@ public class UserService {
 	 * @param userlogindto (id/pw)
 	 * @return 
 	 */
-	public Response<UserDto> login(UserLoginDto user){
-		Response<UserDto> result = new Response<UserDto>();
+	public Response<String> login(UserLoginDto user){
+		Response<String> result = new Response<String>();
 		//user login
-		List<Users> userinfo =userRepository.findByUserid(user.getUserid());
 		//id not exist
-		if(userinfo.isEmpty()) {
+		if(!userRepository.existsByUserid(user.getUserid())) {
 			result.setCode(003);
 			result.setMsg("login fail");
 			return result;
 		}
 		//pw matching
-		Users info = userinfo.get(0);
+		Users info = userRepository.findByUserid(user.getUserid()).get(0);
 		if(passwordEncoder.matches(user.getPw(), info.getPw())){
 			result.setCode(001);
 			result.setMsg("login complete");
@@ -69,8 +73,17 @@ public class UserService {
 			data.setGender(info.getGender());
 			data.setName(info.getName());
 			data.setUserid(info.getUserid());
-			result.setData(data);
+			
+			String token = jwtTokenProvider.createToken(data);
+			result.setData(token);
 			//로그인 시간 찍히는것 수정필요
+			
+			System.out.println("======token create==========");	
+			if(jwtTokenProvider.validateToken(token))
+				System.out.println("true!");
+			System.out.println(jwtTokenProvider.getUserID(token));
+			System.out.println(jwtTokenProvider.getUserIdx(token));
+			System.out.println("============================");
 		}
 		else {
 			result.setCode(002);

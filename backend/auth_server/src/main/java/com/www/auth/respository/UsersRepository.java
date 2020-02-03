@@ -13,4 +13,6 @@ import com.www.auth.entity.Users;
 public interface UsersRepository extends JpaRepository<Users,String>{
 
 	List<Users> findByUserid(String userid);
+	
+	boolean existsByUserid(String userid);
 }

@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.www.auth.dto.Response;
@@ -37,9 +38,9 @@ public class AuthController {
 		return result;
 	}
 	
-	@GetMapping("/token")
-	public Response<UserDto> Login(@RequestBody UserLoginDto userlogin){
-		Response<UserDto> result = userService.login(userlogin);
+	@PostMapping("/token")
+	public Response<String> Login(UserLoginDto userlogin){
+		Response<String> result = userService.login(userlogin);
 		return result;
 	}
 	
