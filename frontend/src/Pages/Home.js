@@ -157,7 +157,7 @@ export default function Home({ authenticated, login,logout}) {
                 </Button>
                 </div>
             </div>
-
+            
             <div className={classes.todayBest}>
                 <Paper elevation={3} >
                     <div className={classes.titleMargin}>

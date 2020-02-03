@@ -12,6 +12,9 @@ import GridListTile from '@material-ui/core/GridListTile';
 import Webtoon from '../Components/Webtoon';
 import PlusWebtoon from '../Components/PlusWebtoon';
 import Paper from '@material-ui/core/Paper';
+//스위치
+import Switch from '@material-ui/core/Switch';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 const useStyles = makeStyles(theme => ({
     menu: {
@@ -45,6 +48,9 @@ const useStyles = makeStyles(theme => ({
         height: 500,
         justify: "center",
     },
+    alarm:{
+        marginLeft:theme.spacing(135)
+    },
 }));
 
 //내 작품 목록
@@ -70,12 +76,11 @@ const webtoons = [
 ]
 
 
-export default function MyPage({user}) {
+export default function MyPage({ authenticated, logout }) {
     const classes = useStyles();
-
     return (
         <div>
-            <Header />
+            <Header authenticated={authenticated} logout={logout}/>
 
             <div className={classes.menu}>
                 <div className={classes.button}>
@@ -86,7 +91,15 @@ export default function MyPage({user}) {
                     <Button variant="contained" color="primary" href="/mypage">
                         <span style={{ color: "#fafafa", fontWeight: 550 }}>마이페이지</span>
                     </Button>
+                    <FormControlLabel
+                    value="alarm"
+                    control={<Switch color="primary" />}
+                    label={<img src="/Icon/alarm.png" alt="icon"/>}
+                    labelPlacement="start"
+                    className={classes.alarm}
+                    />
                 </div>
+                
             </div>
 
             <div className={classes.link}>
@@ -107,14 +120,14 @@ export default function MyPage({user}) {
 
             <div className={classes.gridRoot}>
                 <Paper>
-                <GridList cellHeight={250} className={classes.gridList} spacing={15} cols={5}>
-                    {webtoons.map(webtoon => (
-                        <GridListTile key={webtoon} item>
-                            <Webtoon title={webtoon.title} poster={webtoon.poster} artist={webtoon.artist} rating={webtoon.rating} />
-                        </GridListTile>
-                    ))}
-                    <PlusWebtoon />
-                </GridList>
+                    <GridList cellHeight={250} className={classes.gridList} spacing={15} cols={5}>
+                        {webtoons.map(webtoon => (
+                            <GridListTile key={webtoon} item>
+                                <Webtoon title={webtoon.title} poster={webtoon.poster} artist={webtoon.artist} rating={webtoon.rating} />
+                            </GridListTile>
+                        ))}
+                        <PlusWebtoon href="/mypage/register"/>
+                    </GridList>
                 </Paper>
             </div>
 

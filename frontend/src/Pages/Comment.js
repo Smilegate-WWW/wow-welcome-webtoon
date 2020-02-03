@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
     },
     link: {
         '& > *': {
-            margin: theme.spacing(5, 0, 5, 14),
+            margin: theme.spacing(5, 0, 4, 14),
         },
 
     },
@@ -49,7 +49,7 @@ const useStyles = makeStyles(theme => ({
     },
     deleteButton: {
         '& > *': {
-            marginTop: theme.spacing(3),
+            marginTop: theme.spacing(2),
             marginLeft: theme.spacing(167),
         },
     },
@@ -90,17 +90,18 @@ const myComments = [
 ];
 
 
-export default function Comment() {
+export default function Comment({authenticated,logout}) {
     const classes = useStyles();
     const [checked, setChecked] = React.useState(true);
 
     const handleChange = event => {
         setChecked(event.target.checked);
     };
-
+    
+    console.log(authenticated)
     return (
         <div>
-            <Header />
+            <Header authenticated={authenticated} logout={logout}/>
 
             <div className={classes.menu}>
                 <div className={classes.button}>

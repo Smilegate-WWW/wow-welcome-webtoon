@@ -25,7 +25,7 @@ export default function App() {
         <AuthRoute
           authenticated={authenticated}
           exact path="/mypage"
-          render={props => <MyPage user={user} {...props} />}
+          render={props => <MyPage user={user} authenticated={authenticated} logout={logout} {...props} />}
         />
         <Route
           exact path="/login"
@@ -33,7 +33,12 @@ export default function App() {
             <Login authenticated={authenticated} login={login} {...props} />
           )}
         />
-        <Route path="/mypage/comment" component={Comment} />
+        <Route 
+          path="/mypage/comment" 
+          render={props => (
+            <Comment authenticated={authenticated} logout={logout} {...props} />
+          )}
+        />
         <Route path="/login/signup" component={Signup} />
         <Route path="/mypage/register" component={Register} />
       </Switch>
