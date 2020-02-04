@@ -20,11 +20,11 @@ public class UserRegisterDto extends UserDto{
 	private String email;
 	private String pw;
 	
-	public Users toEntity() {
+	public Users toEntity(String e_pw) {
 		return Users.builder()
 				.id(getUserid())
 				.name(getName())
-				.pw(pw)
+				.e_pw(e_pw)
 				.birth(getBirth())
 				.gender(getGender())
 				.email(email)
