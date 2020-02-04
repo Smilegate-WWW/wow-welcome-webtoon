@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { Home, Comment, Login, MyPage, Signup, Register } from './Pages';
+import { Home, Comment, Login, MyPage, Signup, Register, Webtoon} from './Pages';
 import signIn from './TestAuth';
 import AuthRoute from './AuthRoute';
 
@@ -41,6 +41,7 @@ export default function App() {
         />
         <Route path="/login/signup" component={Signup} />
         <Route path="/mypage/register" component={Register} />
+        <Route path="/webtoon" component={Webtoon}/>
       </Switch>
     </div>
   );

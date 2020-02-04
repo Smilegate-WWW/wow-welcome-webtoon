@@ -143,7 +143,6 @@ export default function Home({ authenticated, login,logout}) {
     };
 
     return (
-        <Router>
         <div>
             <Header authenticated={authenticated} logout={logout}/>
 
@@ -188,7 +187,7 @@ export default function Home({ authenticated, login,logout}) {
                         <div className={classes.gridRoot}>
                             <GridList cellHeight={250} className={classes.gridList} spacing={15} cols={5}>
                                 {webtoons.map(webtoon => (
-                                    <GridListTile key={webtoon} item>
+                                    <GridListTile key={webtoon} item >
                                         <Webtoon title={webtoon.title} poster={webtoon.poster} artist={webtoon.artist} rating={webtoon.rating} />
                                     </GridListTile>
                                 ))}
@@ -204,6 +203,5 @@ export default function Home({ authenticated, login,logout}) {
                 </Paper>
             </div>
         </div>
-        </Router>
     )
 };
