@@ -233,7 +233,7 @@ export default function Register({ authenticated, logout }) {
                 <Button variant="contained" color="primary" >
                     <span style={{color:"#fafafa",fontWeight:550}}>등록</span>
                 </Button>
-                <Button variant="contained" color="primary" >
+                <Button variant="contained" color="primary" href="/mypage/upload">
                     <span style={{color:"#fafafa",fontWeight:550}}>등록 후 1회 올리기</span>
                 </Button>
             </div>

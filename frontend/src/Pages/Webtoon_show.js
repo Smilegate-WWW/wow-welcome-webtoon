@@ -110,7 +110,7 @@ export default function Webtoon({ authenticated, logout }) {
                                         <img src={episode.thumbnail}/>
                                     </TableCell>
                                     <TableCell align="left">
-                                        <a href="/episode" style={{}}>
+                                        <a href="/webtoon/episode" style={{}}>
                                         {episode.title}
                                         </a>
                                     </TableCell>

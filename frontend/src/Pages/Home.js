@@ -150,10 +150,10 @@ export default function Home({ authenticated, login,logout}) {
                 <div className={classes.button}>
                     <Button variant="contained" color="primary" href="/">
                     <span style={{color:"#fafafa",fontWeight:550}}>도전만화</span>
-                </Button>
+                    </Button>
                     <Button variant="contained" href="/mypage">
                     <span style={{color:"#212121",fontWeight:520}}>마이페이지</span>
-                </Button>
+                    </Button>
                 </div>
             </div>
             
@@ -176,7 +176,7 @@ export default function Home({ authenticated, login,logout}) {
             <div className={classes.webtoonList}>
                 <Paper elevation={3}>
                     <AppBar position="static" color="inherit">
-                        <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
+                        <Tabs value={value} onChange={handleChange} aria-label="webtoonListTabLabel">
                             <Tab label="업데이트순"  {...a11yProps(0)} />
                             <Tab label="조회순" {...a11yProps(1)} />
                             <Tab label="별점순" {...a11yProps(2)} />
