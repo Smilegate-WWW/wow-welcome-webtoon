@@ -22,7 +22,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		.and()
 		    .authorizeRequests()
-		        .antMatchers("/users").permitAll();
+		        .antMatchers("/users").permitAll(); //회원가입 및 로그인 api 모두가 접근 가능
 	}
 	
 	@Bean

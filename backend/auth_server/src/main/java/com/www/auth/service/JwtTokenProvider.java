@@ -4,12 +4,12 @@ import java.security.Key;
 import java.util.Date;
 
 import javax.crypto.spec.SecretKeySpec;
-import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.DatatypeConverter;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
-
-import com.www.auth.dto.UserDto;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -26,38 +26,54 @@ public class JwtTokenProvider{
 	private Key KEY = new SecretKeySpec(apiKeySecretBytes,signatureAlgorithm.getJcaName());	
 	private long tokenValidMilisecond = 1000L * 60 * 60; // 1시간만 토큰 유효
     
-    // Jwt 토큰 생성
-	public String createToken(UserDto user) {
-        Claims claims = Jwts.claims().setSubject(user.getUserid());
-        claims.put("idx", user.getIdx());
-        claims.put("name",user.getName());
+	@Autowired
+	RedisTemplate<String,Object> redisTemplate;
+	
+    // access jwt 토큰 생성
+	public String createAccessToken(int user_idx, String user_name) {
+		//payload
+        Claims claims = Jwts.claims();
+        claims.put("user_idx", user_idx);
+        claims.put("user_name",user_name);
         
         Date now = new Date();
         return Jwts.builder()
         		.setHeaderParam("typ","jwt")
-                .setClaims(claims) // 데이터
-                .setIssuedAt(now) // 토큰 발행일자
-                .setExpiration(new Date(now.getTime() + tokenValidMilisecond)) // set Expire Time
-                .signWith(KEY,signatureAlgorithm) // 암호화 알고리즘, secret값 세팅
+                .setClaims(claims) 
+                .setIssuedAt(now) 
+                .setExpiration(new Date(now.getTime() + tokenValidMilisecond)) 
+                .signWith(KEY,signatureAlgorithm) 
                 .compact();
     }
- 
-    // Jwt 토큰에서 회원 구별 정보 추출
-    public String getUserID(String token) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
-    }
+	//refresh token 
+	public String createRefreshToken(String user_name) {
+		System.out.println("redis template:"+redisTemplate);
+		
+		Date now = new Date();
+		String refreshToken = Jwts.builder()
+				.setHeaderParam("typ","jwt")
+				.setIssuedAt(now) 
+                .setExpiration(new Date(now.getTime() + tokenValidMilisecond*24)) //일단 하루만 유효 
+                .signWith(KEY,signatureAlgorithm) 
+                .compact();
+		//redis set (유효시간 설정 필요)
+		ValueOperations<String, Object> vop = redisTemplate.opsForValue();
+		vop.set(user_name, refreshToken);
+		
+		return refreshToken;
+	}
     
     //jwt token에서 idx추출
     public int getUserIdx(String token) {
-    	return (int) Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("idx");
+    	return (int) Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("user_idx");
+    }
+    
+    //jwt token에서 name 추출
+    public String getUserName(String token) {
+    	return (String) Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("user_name");
     }
  
-    // Request의 Header에서 token 파싱 : "X-AUTH-TOKEN: jwt토큰"
-    public String resolveToken(HttpServletRequest req) {
-        return req.getHeader("X-AUTH-TOKEN");
-    }
- 
-    // Jwt 토큰의 유효성 + 만료일자 확인
+    // Jwt 토큰의 유효성 확인
     public boolean validateToken(String jwtToken) {
         try {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken).getBody();
@@ -65,5 +81,23 @@ public class JwtTokenProvider{
         } catch (Exception e) {
             return false;
         }
+    }
+    
+    //refresh token 검증
+    public boolean checkRefreshToken(String accessT, String refreshT) {
+    	String user_name = getUserName(accessT);
+    	try {
+    		ValueOperations<String, Object> vop = redisTemplate.opsForValue();
+    		String redis_T = (String) vop.get(user_name);
+    		System.out.println("redis refresh token: "+redis_T);
+    		
+    		if(redis_T.equals(refreshT))
+    			return true;
+    		else
+    			return false;
+    	}catch(Exception e) {
+    		return false;
+    	}
+    	
     }
 }
