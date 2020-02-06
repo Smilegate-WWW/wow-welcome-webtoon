@@ -28,11 +28,11 @@ class PlusWebtoon extends Component {
         return (
             <div>
                 <Card className={classes.card} >
-                    <CardActionArea>
+                    <CardActionArea href="/mypage/register">
                     <CardContent>
                         <div className={classes.iconBox} >
                             <img className={classes.icon} src="/Icon/plusIcon.png"/>
-                            <h3>새로운 작품 등록</h3>
+                            <h4>새로운 작품 등록</h4>
                         </div>
                     </CardContent>
                     </CardActionArea>

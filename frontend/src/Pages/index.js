@@ -4,3 +4,6 @@ export {default as Login} from './Login';
 export {default as MyPage} from './MyPage';
 export {default as Signup} from './Signup';
 export {default as Register} from './Register';
+export {default as Webtoon} from './Webtoon_show';
+export {default as Episode} from './Episode';
+export {default as Upload} from './EpisodeUpload'; 

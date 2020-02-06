@@ -114,7 +114,7 @@ export default function Signup() {
 
             <div className={classes.loginButton}>
                 <Button variant="contained" color="primary">
-                    <span style={{ color: "#fafafa", fontWeight: "bold" }}>로그인</span>
+                    <span style={{ color: "#fafafa", fontWeight: "bold" }}>회원가입</span>
                 </Button>
             </div>
         </div>

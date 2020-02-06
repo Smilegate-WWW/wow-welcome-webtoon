@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { Home, Comment, Login, MyPage, Signup, Register } from './Pages';
+import { Home, Comment, Login, MyPage, Signup, Register, Webtoon,Episode,Upload} from './Pages';
 import signIn from './TestAuth';
 import AuthRoute from './AuthRoute';
 
@@ -25,7 +25,7 @@ export default function App() {
         <AuthRoute
           authenticated={authenticated}
           exact path="/mypage"
-          render={props => <MyPage user={user} {...props} />}
+          render={props => <MyPage user={user} authenticated={authenticated} logout={logout} {...props} />}
         />
         <Route
           exact path="/login"
@@ -33,9 +33,17 @@ export default function App() {
             <Login authenticated={authenticated} login={login} {...props} />
           )}
         />
-        <Route path="/mypage/comment" component={Comment} />
+        <Route 
+          path="/mypage/comment" 
+          render={props => (
+            <Comment authenticated={authenticated} logout={logout} {...props} />
+          )}
+        />
         <Route path="/login/signup" component={Signup} />
         <Route path="/mypage/register" component={Register} />
+        <Route exact path="/webtoon" component={Webtoon}/>
+        <Route path="/webtoon/episode" component={Episode}/>
+        <Route path="/mypage/upload" component={Upload}/>
       </Switch>
     </div>
   );
