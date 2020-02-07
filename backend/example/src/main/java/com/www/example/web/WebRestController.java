@@ -1,7 +1,7 @@
-package com.momo.example.web;
+package com.www.example.web;
 
-import com.momo.example.domain.posts.PostsSaveRequestDto;
-import com.momo.example.service.PostsService;
+import com.www.example.domain.posts.PostsSaveRequestDto;
+import com.www.example.service.PostsService;
 import lombok.AllArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.GetMapping;

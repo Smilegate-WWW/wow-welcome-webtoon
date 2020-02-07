@@ -1,4 +1,4 @@
-package com.momo.example.domain.posts;
+package com.www.example.domain.posts;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

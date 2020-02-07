@@ -1,4 +1,4 @@
-package com.momo.example.domain.posts;
+package com.www.example.domain.posts;
 
 import lombok.Builder;
 import lombok.Getter;

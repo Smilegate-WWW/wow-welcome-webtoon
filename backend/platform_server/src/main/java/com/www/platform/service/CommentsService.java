@@ -1,5 +1,6 @@
 package com.www.platform.service;
 
+import com.www.platform.domain.Response;
 import com.www.platform.domain.comments.CommentsMainResponseDto;
 import com.www.platform.domain.comments.CommentsRepositroy;
 import com.www.platform.domain.comments.CommentsSaveRequestDto;
@@ -25,14 +26,20 @@ public class CommentsService {
 
     // 예외 발생시 모든 DB작업 초기화 해주는 어노테이션 ( 완료시에만 커밋해줌 )
     @Transactional
-    public Integer save(CommentsSaveRequestDto dto) {
+    public int save(CommentsSaveRequestDto dto) {
         return commentsRepository.save(dto.toEntity()).getIdx();
     }
 
     @Transactional(readOnly = true)
-    public List<CommentsMainResponseDto> findAllDesc() {
-        return commentsRepository.findAllDesc()
+    public Response<List<CommentsMainResponseDto>> findAllDesc() {
+        Response<List<CommentsMainResponseDto>> result = new Response<List<CommentsMainResponseDto>>();
+        result.setData(commentsRepository.findAllDesc()
                 .map(CommentsMainResponseDto::new)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
+        result.setCode(000);
+        result.setMsg("findAllDesc complete");
+
+        return result;
     }
+
 }

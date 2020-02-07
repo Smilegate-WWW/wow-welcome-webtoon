@@ -1,4 +1,4 @@
-package com.momo.example;
+package com.www.example;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

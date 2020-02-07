@@ -1,8 +1,8 @@
-package com.momo.example.service;
+package com.www.example.service;
 
-import com.momo.example.domain.posts.Posts;
-import com.momo.example.domain.posts.PostsRepository;
-import com.momo.example.domain.posts.PostsSaveRequestDto;
+import com.www.example.domain.posts.Posts;
+import com.www.example.domain.posts.PostsRepository;
+import com.www.example.domain.posts.PostsSaveRequestDto;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;

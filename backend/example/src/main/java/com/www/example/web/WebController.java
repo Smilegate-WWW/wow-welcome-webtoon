@@ -1,6 +1,6 @@
-package com.momo.example.web;
+package com.www.example.web;
 
-import com.momo.example.service.PostsService;
+import com.www.example.service.PostsService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

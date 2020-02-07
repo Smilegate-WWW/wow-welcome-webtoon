@@ -1,4 +1,4 @@
-package com.momo.example.domain;
+package com.www.example.domain;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;

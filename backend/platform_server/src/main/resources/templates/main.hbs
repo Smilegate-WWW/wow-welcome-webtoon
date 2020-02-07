@@ -1,75 +1,58 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <title>플랫폼 서버 테스트</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>test!!</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!--부트스트랩 css 추가-->
     <link rel="stylesheet" href="/css/lib/bootstrap.min.css">
+
 </head>
 <body>
-<h1>플랫폼 서버 테스트</h1>
+    <h2>댓글 테스트</h2>
 
-<div class="col-md-12">
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#saveCommentsModal">댓글 등록</button>
-    <br/>
-    <br/>
-    <!-- 목록 출력 영역 -->
-    <table class="table table-horizontal table-bordered">
-        <thead class="thead-strong">
-        <tr>
-            <th>댓글 번호</th>
-            <th>유저 아이디</th>
-            <th>내용</th>
-            <th>등록일</th>
-        </tr>
-        </thead>
-        <tbody id="tbody">
-        {{#each comments}}
-            <tr>
-                <td>{{idx}}</td>
-                <td>{{userId}}</td>
-                <td>{{content}}</td>
-                <td>{{createdDate}}</td>
-            </tr>
-        {{/each}}
-        </tbody>
-    </table>
-</div>
 
-<!-- Model 영역 -->
-<div class="modal fade" id="saveCommentsModal" tabindex="-1" role="dialog" aria-labelledby="saveCommentsLabel"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="saveCommentsLabel">댓글 등록</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="form-group">
-                        <label for="content"> 내용 </label>
-                        <textarea class="form-control" id="content" placeholder="내용을 입력하세요"></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-                <button type="button" class="btn btn-primary" id="btn-save">등록</button>
-            </div>
-        </div>
+    <div class="col-md-12">
+        의견 쓰기<br>
+        <input type="text" class="input-comments" id="content" placeholder="내용을 입력하세요" value="">
+        <button type="button" class="btn btn-primary" id="btn-save-comment">댓글 등록</button><br>
+
+        <!-- 목록 출력 영역 -->
+        <table class="table table-horizontal table-bordered">
+            <thead class="thead-strong">
+                <tr>
+                    <th>댓글 번호</th>
+                    <th>유저</th>
+                    <th>내용</th>
+                    <th>좋아요</th>
+                    <th>싫어요</th>
+                    <th>등록일</th>
+                    <th>삭제</th>
+                </tr>
+            </thead>
+            <tbody id="tbody">
+            {{#each comments/data}}
+                <tr>
+                    <td>{{idx}}</td>
+                    <td></td>
+                    <td>{{content}}</td>
+                    <td>{{like_cnt}}</td>
+                    <td>{{dislike_cnt}}</td>
+                    <td>{{created_date}}</td>
+                    <td><button type="button" class="btn btn-info" id="btn-delete-comment" onclick=deleteComment({{idx}})> 삭제</button><br></td>
+                </tr>
+            {{/each}}
+            </tbody>
+        </table>
     </div>
-</div>
 
-<!--부트스트랩 js, jquery 추가-->
-<script src="/static/js/css/lib/jquery.min.js"></script>
-<script src="/static/js/css/lib/bootstrap.min.js"></script>
+    <!--부트스트랩 js, jquery 추가-->
+    <script src="/js/lib/jquery.min.js"></script>
+    <script src="/js/lib/bootstrap.min.js"></script>
 
-<!--custom js 추가-->
-<script src="/js/app/main.js"></script>
+    <!--custom js 추가-->
+    <script src="/js/app/main.js"></script>
+
 </body>
 </html>

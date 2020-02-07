@@ -8,36 +8,41 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-// Entity í´ë˜ìŠ¤ë¥¼ í”„ë¡œì íŠ¸ ì½”ë“œìƒì—ì„œ ê¸°ë³¸ìƒì„±ìë¡œ ìƒì„±í•˜ëŠ” ê²ƒì€ ë§‰ê³  JPAì—ì„œ Entity í´ë˜ìŠ¤ë¥¼ ìƒì„±í•˜ëŠ”ê²ƒì€ í—ˆìš©í•˜ê¸° ìœ„í•´ ì¶”ê°€
+// Entity Å¬·¡½º¸¦ ÇÁ·ÎÁ§Æ® ÄÚµå»ó¿¡¼­ ±âº»»ı¼ºÀÚ·Î »ı¼ºÇÏ´Â °ÍÀº ¸·µÇ, JPA¿¡¼­ Entity Å¬·¡½º¸¦ »ı¼ºÇÏ´Â°ÍÀº Çã¿ëÇÏ±â À§ÇØ Ãß°¡
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-public class Comments extends BaseCreatedTimeEntity {
+public class Comments extends BaseCreatedTimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idx;
+    private int idx;
 
-    // TODO : db ì´ˆê¸° ëª¨ë¸ë§ í™•ì • ì§“ê³  fk(ep_info_dix, users_idx) ì¶”ê°€, ì´ì „ì— í…ŒìŠ¤íŠ¸í•  ë•ŒëŠ” fkë¹¼ê³  h2 dbë¡œ í…ŒìŠ¤íŠ¸
+    /*
+    @ManyToOne
+    @JoinColumn
+    private Episode epIdx;
 
-    // TODO : í…ŒìŠ¤íŠ¸ìš©ìœ¼ë¡œ ë§Œë“ ê±°ê³  fkë¡œ ë°”ê¿”ì•¼ ë¨. íƒ€ì…ë„ ë°”ê¿”ì•¼ ë¨.
-    @Column(columnDefinition = "VARCHAR", length = 20)
-    private String userId;
+    @ManyToOne
+    @JoinColumn
+    private Users usersIdx;
+    */
 
     @Column(nullable = false)
-    private int like;
+    private int like_cnt;
 
     @Column(nullable = false)
-    private int dislike;
+    private int dislike_cnt;
 
-    @Column(columnDefinition = "TEXT", nullable = false, length = 500)
+    @Column(columnDefinition = "TEXT", nullable = false, length = 300)
     private String content;
 
     @Builder
-    public Comments(String userId, int like, int dislike, String content) {
-        this.userId = userId;
-        this.like = like;
-        this.dislike = dislike;
+    public Comments(int like_cnt, int dislike_cnt, String content){
+        this.like_cnt = like_cnt;
+        this.dislike_cnt = dislike_cnt;
         this.content = content;
     }
 }
+
+

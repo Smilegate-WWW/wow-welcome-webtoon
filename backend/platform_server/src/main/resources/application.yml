@@ -1,24 +1,14 @@
+server:
+  address: localhost
+  port: 8080
 spring:
-  profiles:
-    active: local # 기본 환경 선택
-
-# local 환경
----
-spring:
-  profiles: local
   datasource:
-    data: classpath:platform-data-h2.sql # 시작할 때 실행시킬 script
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/wwwdb2?serverTimezone=UTC&characterEncoding=UTF-8
+    username: root
+    password: root
   jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    generate-ddl: true
     show-sql: true
-    hibernate:
-      ddl-auto: create-drop
-  h2:
-    console:
-      enabled: true
-#
----
-spring:
-  profiles: dev
----
-spring:
-  profiles: real

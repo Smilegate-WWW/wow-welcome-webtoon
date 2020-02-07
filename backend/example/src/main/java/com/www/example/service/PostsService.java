@@ -1,8 +1,8 @@
-package com.momo.example.service;
+package com.www.example.service;
 
-import com.momo.example.domain.posts.PostsMainResponseDto;
-import com.momo.example.domain.posts.PostsRepository;
-import com.momo.example.domain.posts.PostsSaveRequestDto;
+import com.www.example.domain.posts.PostsMainResponseDto;
+import com.www.example.domain.posts.PostsRepository;
+import com.www.example.domain.posts.PostsSaveRequestDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

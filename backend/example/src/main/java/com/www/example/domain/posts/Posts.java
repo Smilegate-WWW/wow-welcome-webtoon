@@ -1,6 +1,6 @@
-package com.momo.example.domain.posts;
+package com.www.example.domain.posts;
 
-import com.momo.example.domain.BaseTimeEntity;
+import com.www.example.domain.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

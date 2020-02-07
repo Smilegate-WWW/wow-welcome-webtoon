@@ -1,4 +1,4 @@
-package com.momo.example.web;
+package com.www.example.web;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

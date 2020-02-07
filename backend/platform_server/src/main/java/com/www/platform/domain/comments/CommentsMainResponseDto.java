@@ -9,19 +9,22 @@ import java.util.Optional;
 @Getter
 public class CommentsMainResponseDto {
     private Integer idx;
-    private String userId;
-    private int like;
-    private int dislike;
+    //private Episode epIdx;
+    //private Users usersIdx;
+    private int like_cnt;
+    private int dislike_cnt;
     private String content;
-    private String createdDate;
+    private String created_date;
 
     public CommentsMainResponseDto(Comments entity) {
         idx = entity.getIdx();
-        userId = entity.getUserId();
-        like = entity.getLike();
-        dislike = entity.getDislike();
+        //epIdx = entity.getEpIdx();
+        //usersIdx = entity.getUsersIdx();
+        like_cnt = entity.getLike_cnt();
+        dislike_cnt = entity.getDislike_cnt();
         content = entity.getContent();
-        createdDate = toStringDateTime(entity.getCreatedDate());
+        //created_date = LocalDateTime.now();
+        created_date = toStringDateTime(entity.getCreated_date());
     }
 
     private String toStringDateTime(LocalDateTime localDateTime) {

@@ -22,6 +22,8 @@ public class CommentsSaveRequestDto {
 
     public Comments toEntity() {
         return Comments.builder()
+                .like_cnt(0)
+                .dislike_cnt(0)
                 .content(content)
                 .build();
     }

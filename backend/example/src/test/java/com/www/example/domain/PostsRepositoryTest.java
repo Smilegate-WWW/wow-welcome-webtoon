@@ -1,10 +1,10 @@
-package com.momo.example.domain;
+package com.www.example.domain;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.momo.example.domain.posts.Posts;
-import com.momo.example.domain.posts.PostsRepository;
+import com.www.example.domain.posts.Posts;
+import com.www.example.domain.posts.PostsRepository;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
