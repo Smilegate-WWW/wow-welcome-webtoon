@@ -1,6 +1,7 @@
 package com.www.platform.service;
 
 import com.www.platform.domain.Response;
+import com.www.platform.domain.comments.CommentsDeleteRequestDto;
 import com.www.platform.domain.comments.CommentsMainResponseDto;
 import com.www.platform.domain.comments.CommentsRepositroy;
 import com.www.platform.domain.comments.CommentsSaveRequestDto;
@@ -26,10 +27,47 @@ public class CommentsService {
 
     // 예외 발생시 모든 DB작업 초기화 해주는 어노테이션 ( 완료시에만 커밋해줌 )
     @Transactional
-    public int save(CommentsSaveRequestDto dto) {
-        return commentsRepository.save(dto.toEntity()).getIdx();
+    public Response<Integer> save(CommentsSaveRequestDto dto) {
+        Response<Integer> result = new Response<Integer>();
+
+        int entityIdx = commentsRepository.save(dto.toEntity()).getIdx();
+
+        if(1 <= entityIdx)
+        {
+            result.setCode(0);
+            result.setMsg("save complete");
+            result.setData(entityIdx);
+        }
+        else
+        {
+            result.setCode(1);
+            result.setMsg("save fail");
+            result.setData(-1);
+        }
+        return result;
     }
 
+    @Transactional
+    public Response<Integer> delete(CommentsDeleteRequestDto dto)
+    {
+        Response<Integer> result = new Response<Integer>();
+        if(false == commentsRepository.existsById(dto.getIdx())){
+            result.setCode(1);
+            result.setMsg("delete fail");
+            result.setData(-1);
+        }
+        else
+        {
+            commentsRepository.deleteById(dto.getIdx());
+            result.setCode(0);
+            result.setMsg("delete complete");
+            result.setData(dto.getIdx());
+        }
+
+        return result;
+    }
+
+    // TODO : ep idx에 따른 댓글 리스트 출력, 페이징 처리
     @Transactional(readOnly = true)
     public Response<List<CommentsMainResponseDto>> findAllDesc() {
         Response<List<CommentsMainResponseDto>> result = new Response<List<CommentsMainResponseDto>>();
@@ -41,5 +79,4 @@ public class CommentsService {
 
         return result;
     }
-
 }
