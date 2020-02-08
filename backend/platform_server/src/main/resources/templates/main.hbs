@@ -10,26 +10,28 @@
 
 </head>
 <body>
-    <h2>댓글 테스트</h2>
-
+<h2>댓글 테스트</h2>
 
     <div class="col-md-12">
         의견 쓰기<br>
-        <input type="text" class="input-comments" id="content" placeholder="내용을 입력하세요" value="">
+        <input type="text" class="input-comments" id="content" placeholder="내용을 입력하세요">
         <button type="button" class="btn btn-primary" id="btn-save-comment">댓글 등록</button><br>
+        <br>
+        <button type="button" class="btn btn-secondary" id="saveCommentBtn">댓글 등록</button><br>
+        <br>
 
         <!-- 목록 출력 영역 -->
         <table class="table table-horizontal table-bordered">
             <thead class="thead-strong">
-                <tr>
-                    <th>댓글 번호</th>
-                    <th>유저</th>
-                    <th>내용</th>
-                    <th>좋아요</th>
-                    <th>싫어요</th>
-                    <th>등록일</th>
-                    <th>삭제</th>
-                </tr>
+            <tr>
+                <th>댓글 번호</th>
+                <th>유저</th>
+                <th>내용</th>
+                <th>좋아요</th>
+                <th>싫어요</th>
+                <th>등록일</th>
+                <th>삭제</th>
+            </tr>
             </thead>
             <tbody id="tbody">
             {{#each comments/data}}
