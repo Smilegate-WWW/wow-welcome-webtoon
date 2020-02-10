@@ -38,9 +38,10 @@ public class Comments extends BaseCreatedTimeEntity{
     private String content;
 
     @Builder
-    public Comments(int like_cnt, int dislike_cnt, String content){
-        this.like_cnt = like_cnt;
-        this.dislike_cnt = dislike_cnt;
+    public Comments(int idx, String content){
+        this.idx = idx;
+        // this.like_cnt = like_cnt;
+        // this.dislike_cnt = dislike_cnt;
         this.content = content;
     }
 }

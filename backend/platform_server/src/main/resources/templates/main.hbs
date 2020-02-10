@@ -6,30 +6,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!--부트스트랩 css 추가-->
-    <link rel="stylesheet" href="/css/lib/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/lib/bootstrap.min.css?ver=1">
 
 </head>
 <body>
-    <h2>댓글 테스트</h2>
-
+<h2>댓글 테스트</h2>
 
     <div class="col-md-12">
         의견 쓰기<br>
-        <input type="text" class="input-comments" id="content" placeholder="내용을 입력하세요" value="">
+        <input type="text" class="input-comments" id="content" placeholder="내용을 입력하세요">
         <button type="button" class="btn btn-primary" id="btn-save-comment">댓글 등록</button><br>
+        <br>
+        <button type="button" class="btn btn-secondary" id="saveCommentBtn">댓글 등록</button><br>
+        <br>
 
         <!-- 목록 출력 영역 -->
         <table class="table table-horizontal table-bordered">
             <thead class="thead-strong">
-                <tr>
-                    <th>댓글 번호</th>
-                    <th>유저</th>
-                    <th>내용</th>
-                    <th>좋아요</th>
-                    <th>싫어요</th>
-                    <th>등록일</th>
-                    <th>삭제</th>
-                </tr>
+            <tr>
+                <th>댓글 번호</th>
+                <th>유저</th>
+                <th>내용</th>
+                <th>좋아요</th>
+                <th>싫어요</th>
+                <th>등록일</th>
+                <th>삭제</th>
+            </tr>
             </thead>
             <tbody id="tbody">
             {{#each comments/data}}
@@ -48,11 +50,11 @@
     </div>
 
     <!--부트스트랩 js, jquery 추가-->
-    <script src="/js/lib/jquery.min.js"></script>
-    <script src="/js/lib/bootstrap.min.js"></script>
+    <script src="/js/lib/jquery.min.js?ver=1"></script>
+    <script src="/js/lib/bootstrap.min.js?ver=1"></script>
 
     <!--custom js 추가-->
-    <script src="/js/app/main.js"></script>
+    <script src="/js/app/main.js?ver=1"></script>
 
 </body>
 </html>

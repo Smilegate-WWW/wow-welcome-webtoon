@@ -5,6 +5,3 @@ include 'backend:file_server'
 findProject(':backend:file_server')?.name = 'file'
 include 'backend:platform_server'
 findProject(':backend:platform_server')?.name = 'platform'
-include 'backend:example'
-findProject(':backend:example')?.name = 'example'
-

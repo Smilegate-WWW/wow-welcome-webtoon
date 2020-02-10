@@ -1,6 +1,7 @@
 package com.www.platform.web;
 
 import com.www.platform.domain.Response;
+import com.www.platform.domain.comments.CommentsDeleteRequestDto;
 import com.www.platform.domain.comments.CommentsMainResponseDto;
 import com.www.platform.domain.comments.CommentsSaveRequestDto;
 import com.www.platform.service.CommentsService;
@@ -22,19 +23,21 @@ public class CommentsController {
         return commentsService.findAllDesc();
     }
 
-    /*
+    @PostMapping("/comments")
+    public Response<Integer> saveComments(@RequestBody CommentsSaveRequestDto dto) {
+        return commentsService.save(dto);
+    }
+
+    @DeleteMapping("/comments")
+    public Response<Integer> deleteComments(@RequestBody CommentsDeleteRequestDto dto){
+        return commentsService.delete(dto);
+    }
+
+    // TODO : Best Comments;
     @GetMapping("/comments/best")
     public Response<List<CommentsMainResponseDto>> getBestComments() {
         return commentsService.findAllDesc();
     }
-    */
-
-    @PostMapping("/comments")
-    public int saveComments(@RequestBody CommentsSaveRequestDto dto) {
-        System.out.println(dto);
-        return commentsService.save(dto);
-    }
-
 
     /*
     @GetMapping("/profile")
