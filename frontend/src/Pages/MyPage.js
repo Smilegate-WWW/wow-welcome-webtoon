@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 //내 작품 관련
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
-import Webtoon from '../Components/Webtoon';
+import MyWebtoon from '../Components/MyWebtoon';
 import PlusWebtoon from '../Components/PlusWebtoon';
 import Paper from '@material-ui/core/Paper';
 //스위치
@@ -54,24 +54,30 @@ const useStyles = makeStyles(theme => ({
 }));
 
 //내 작품 목록
-const webtoons = [
+const MyWebtoons = [
     {
         title: "유미의 세포들",
         poster: "http://placeimg.com/128/128/any",
         artist: "이동건",
-        rating: 4
+        rating: 4,
+        register_date:"2020.01.10",
+        update_date:"2020.02.10",
     },
     {
         title: "복학왕",
         poster: "http://placeimg.com/128/128/any",
         artist: "기안84",
-        rating: 3
+        rating: 3,
+        register_date:"2020.01.10",
+        update_date:"2020.02.10",
     },
     {
         title: "여신강림",
         poster: "http://placeimg.com/128/128/any",
         artist: "냥",
-        rating: 4
+        rating: 4,
+        register_date:"2020.01.10",
+        update_date:"2020.02.10",
     }
 ]
 
@@ -120,10 +126,10 @@ export default function MyPage({ authenticated, logout }) {
 
             <div className={classes.gridRoot}>
                 <Paper>
-                    <GridList cellHeight={250} className={classes.gridList} spacing={15} cols={5}>
-                        {webtoons.map(webtoon => (
-                            <GridListTile key={webtoon} item>
-                                <Webtoon title={webtoon.title} poster={webtoon.poster} artist={webtoon.artist} rating={webtoon.rating} />
+                    <GridList cellHeight={300} className={classes.gridList} spacing={15} cols={4}>
+                        {MyWebtoons.map(myWebtoon => (
+                            <GridListTile key={myWebtoon} item>
+                                <MyWebtoon title={myWebtoon.title} poster={myWebtoon.poster} artist={myWebtoon.artist} rating={myWebtoon.rating} register_date={myWebtoon.register_date} update_date={myWebtoon.update_date}/>
                             </GridListTile>
                         ))}
                         <PlusWebtoon href="/mypage/register"/>

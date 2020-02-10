@@ -36,10 +36,16 @@ const useStyles = makeStyles(theme => ({
     },
     buttons:{
         marginTop:theme.spacing(1),
-        paddingLeft:theme.spacing(80),
+        paddingLeft:theme.spacing(85),
         '& > *': {
             margin: theme.spacing(1),
         },
+    },
+    upload:{
+        variant:"contained", 
+        height:30, 
+        marginTop:20,
+        marginRight:10
     },
 }));
 
@@ -102,6 +108,12 @@ export default function Upload({ authenticated, logout }) {
 
                     <div style={{display:"flex"}}>
                         <h5>원고 등록&emsp;&emsp;&emsp;&emsp;</h5>
+                        <input 
+                            type="file" 
+                            name="file" 
+                            onChange={null} 
+                            className={classes.upload}
+                        />
                         <Button variant="contained" style={{height:30, marginTop:20,marginRight:10}}>
                            업로드
                         </Button>

@@ -8,14 +8,13 @@ import {grey} from '@material-ui/core/colors'
 const styles=theme => ({
     card: {
         backgroundColor: grey[400],
-        width: 220,
-        maxHeight: 220,
+        maxHeight: 350,
         marginTop:theme.spacing(1),
         marginLeft:theme.spacing(1),
     },
     iconBox:{
         maxWidth:200,
-        padding:theme.spacing(6,4.1)
+        padding:theme.spacing(7,4.1)
     },
     icon:{
         marginLeft:theme.spacing(4)

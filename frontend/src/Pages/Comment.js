@@ -45,7 +45,7 @@ const useStyles = makeStyles(theme => ({
         maxWidth: 100,
     },
     commentField: {
-        maxWidth: 1000,
+        maxWidth: 600,
     },
     deleteButton: {
         '& > *': {
@@ -62,31 +62,46 @@ const myComments = [
         title: "유미의 세포들",
         no: "12화",
         comment: "풀이 없으면 인간은 사막이다 오아이스도 없는 사막이다 보이는 끝까지 찾아다녀도 목숨이 있는 때까지 방황하여도 보이는 것은 거친 모래뿐일 것이다 이상의 꽃이 없으면 쓸쓸한 인간에 남는 것은 영락과 부패 뿐이다 낙원을 장식하는 천자만홍이",
+        good_cnt:12,
+        bad_cnt:3,
+        register_date:"2020.02.08",
     },
     {
         image: <img src="http://placeimg.com/64/64/any" />,
         title: "감자들의 감자 심는 이야기~~~",
         no: "12화",
         comment: "풀이 없으면 인간은 사막이다 오아이스도 없는 사막이다 보이는 끝까지 찾아다녀도 목숨이 있는 때까지 방황하여도 보이는 것은 거친 모래뿐일 것이다 이상의 꽃이 없으면 쓸쓸한 인간에 남는 것은 영락과 부패 뿐이다 낙원을 장식하는 천자만홍이",
+        good_cnt:12,
+        bad_cnt:3,
+        register_date:"2020.02.08",
     },
     {
         image: <img src="http://placeimg.com/64/64/any" />,
         title: "유미의 세포들",
         no: "12화",
         comment: "풀이 없으면 인간은 사막이다 오아이스도 없는 사막이다 보이는 끝까지 찾아다녀도 목숨이 있는 때까지 방황하여도 보이는 것은 거친 모래뿐일 것이다 이상의 꽃이 없으면 쓸쓸한 인간에 남는 것은 영락과 부패 뿐이다 낙원을 장식하는 천자만홍이",
+        good_cnt:12,
+        bad_cnt:3,
+        register_date:"2020.02.08",
     },
     {
         image: <img src="http://placeimg.com/64/64/any" />,
         title: "유미의 세포들",
         no: "12화",
         comment: "풀이 없으면 인간은 사막이다 오아이스도 없는 사막이다 보이는 끝까지 찾아다녀도 목숨이 있는 때까지 방황하여도 보이는 것은 거친 모래뿐일 것이다 이상의 꽃이 없으면 쓸쓸한 인간에 남는 것은 영락과 부패 뿐이다 낙원을 장식하는 천자만홍이",
+        good_cnt:12,
+        bad_cnt:3,
+        register_date:"2020.02.08",
     },
     {
         image: <img src="http://placeimg.com/64/64/any" />,
         title: "복학왕",
         no: "12화",
         comment: "풀이 없으면 인간은 사막이다 오아이스도 없는 사막이다 보이는 끝까지 찾아다녀도 목숨이 있는 때까지 방황하여도 보이는 것은 거친 모래뿐일 것이다 이상의 꽃이 없으면 쓸쓸한 인간에 남는 것은 영락과 부패 뿐이다 낙원을 장식하는 천자만홍이",
-    }
+        good_cnt:12,
+        bad_cnt:3,
+        register_date:"2020.02.08",
+    },
 ];
 
 
@@ -140,6 +155,9 @@ export default function Comment({authenticated,logout}) {
                                     <TableCell align="center">제목</TableCell>
                                     <TableCell align="center">회차</TableCell>
                                     <TableCell align="center">내 댓글</TableCell>
+                                    <TableCell align="center">좋아요</TableCell>
+                                    <TableCell align="center">싫어요</TableCell>
+                                    <TableCell align="center">등록일</TableCell>
                                     <TableCell align="center">삭제</TableCell>
                                 </TableRow>
                             </TableHead>
@@ -158,6 +176,9 @@ export default function Comment({authenticated,logout}) {
                                                 {myComment.comment}
                                             </div>
                                         </TableCell>
+                                        <TableCell align="center">{myComment.good_cnt}</TableCell>
+                                        <TableCell align="center">{myComment.bad_cnt}</TableCell>
+                                        <TableCell align="center">{myComment.register_date}</TableCell>
                                         <TableCell align="center">
                                             <div>
                                                 <Checkbox value="uncontrolled" color="primary" inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />

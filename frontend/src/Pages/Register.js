@@ -215,13 +215,18 @@ export default function Register({ authenticated, logout }) {
                     </div>
                     <div style={{ display: "flex" }}>
                         <h5 >썸네일&emsp;&emsp;</h5>
-                        <Button className={classes.thumbnail}>
-                            <h5>434X330</h5>
-                        </Button>
-
+                        <div>
+                            <Button className={classes.thumbnail} data-id="IMG">
+                                <h5>434X330</h5>
+                                
+                            </Button>
+                            <input type="file" id="IMG" name="IMG" style={{display:"none"}}/>
+                        </div>
                         <p style={{
                             fontSize: 12,
-                            padding: 5
+                            padding: 5,
+                            marginTop:80,
+                            color:grey
                         }}> 파일용량 1MB 이하/ jpg만 업로드 가능</p>
                     </div>
                 </div>
