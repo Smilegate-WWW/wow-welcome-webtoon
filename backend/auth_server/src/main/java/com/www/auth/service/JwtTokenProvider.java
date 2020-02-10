@@ -2,6 +2,7 @@ package com.www.auth.service;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
@@ -59,6 +60,7 @@ public class JwtTokenProvider{
 		//redis set (유효시간 설정 필요)
 		ValueOperations<String, Object> vop = redisTemplate.opsForValue();
 		vop.set(user_name, refreshToken);
+		redisTemplate.expire(user_name, 100000, TimeUnit.MILLISECONDS);
 		
 		return refreshToken;
 	}
