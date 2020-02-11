@@ -1,13 +1,10 @@
-package com.www.platform.web;
+package com.www.platform.controller;
 
-import com.www.platform.domain.comments.CommentsMainResponseDto;
 import com.www.platform.service.CommentsService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import java.util.List;
 
 @Controller
 @AllArgsConstructor

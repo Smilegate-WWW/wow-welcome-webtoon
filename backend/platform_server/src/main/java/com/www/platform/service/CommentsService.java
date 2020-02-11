@@ -3,7 +3,7 @@ package com.www.platform.service;
 import com.www.platform.domain.Response;
 import com.www.platform.domain.comments.CommentsDeleteRequestDto;
 import com.www.platform.domain.comments.CommentsMainResponseDto;
-import com.www.platform.domain.comments.CommentsRepositroy;
+import com.www.platform.domain.comments.CommentsRepository;
 import com.www.platform.domain.comments.CommentsSaveRequestDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,10 +20,12 @@ import java.util.stream.Collectors;
  * Spring 트랜잭션에 따라 다릅니다.
  */
 
+// TODO : response<T> code, msg 정리
+
 @AllArgsConstructor
 @Service
 public class CommentsService {
-    private CommentsRepositroy commentsRepository;
+    private CommentsRepository commentsRepository;
 
     // 예외 발생시 모든 DB작업 초기화 해주는 어노테이션 ( 완료시에만 커밋해줌 )
     @Transactional
@@ -51,17 +53,17 @@ public class CommentsService {
     public Response<Integer> delete(CommentsDeleteRequestDto dto)
     {
         Response<Integer> result = new Response<Integer>();
-        if(false == commentsRepository.existsById(dto.getIdx())){
-            result.setCode(1);
-            result.setMsg("delete fail");
-            result.setData(-1);
-        }
-        else
-        {
+        if(commentsRepository.existsById(dto.getIdx())){
             commentsRepository.deleteById(dto.getIdx());
             result.setCode(0);
             result.setMsg("delete complete");
             result.setData(dto.getIdx());
+        }
+        else
+        {
+            result.setCode(1);
+            result.setMsg("delete fail");
+            result.setData(-1);
         }
 
         return result;
@@ -74,7 +76,7 @@ public class CommentsService {
         result.setData(commentsRepository.findAllDesc()
                 .map(CommentsMainResponseDto::new)
                 .collect(Collectors.toList()));
-        result.setCode(000);
+        result.setCode(0);
         result.setMsg("findAllDesc complete");
 
         return result;
