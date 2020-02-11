@@ -51,28 +51,8 @@ public class Users extends BaseTimeEntity{
 	@Column
 	private LocalDateTime login_date;
 	
-	
 	@Builder
     public Users(String id, String e_pw, String name, Date birth, int gender, String email) {
-		/*
-		 * //generate salt value SecureRandom rd = new SecureRandom(); byte[] salt = new
-		 * byte[16]; rd.nextBytes(salt); StringBuffer st = new StringBuffer(); for(int
-		 * i=0; i<salt.length; i++) st.append(String.format("%02x", salt[i]));
-		 * this.salt=st.toString();
-		 * 
-		 * //encrypt try { byte[] src=pw.getBytes(); byte[] bytes = new
-		 * byte[src.length+salt.length]; System.arraycopy(src, 0, bytes, 0, src.length);
-		 * System.arraycopy(salt, 0, bytes, src.length, salt.length);
-		 * 
-		 * MessageDigest sh = MessageDigest.getInstance("SHA-256"); sh.update(bytes);
-		 * byte[] enc_pw = sh.digest();
-		 * 
-		 * StringBuffer sb = new StringBuffer(); for(int i=0; i<enc_pw.length; i++)
-		 * sb.append(Integer.toString((enc_pw[i] & 0xFF) + 256, 16).substring(1));
-		 * this.pw = sb.toString(); } catch (NoSuchAlgorithmException e) {
-		 * e.printStackTrace(); }
-		 */
-		
 		this.userid = id; 
 		this.pw = e_pw;
         this.name = name;

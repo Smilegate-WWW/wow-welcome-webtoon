@@ -17,6 +17,6 @@ import lombok.Getter;
 public abstract class BaseTimeEntity {
 	@CreatedDate
     private LocalDateTime created_date;
-    @LastModifiedDate
+	@LastModifiedDate
     private LocalDateTime updated_date;
 }
