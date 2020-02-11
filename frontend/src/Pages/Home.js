@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Header from '../Components/Header';
 //라우터
-import {Route as Router} from 'react-router-dom';
+import { Route as Router } from 'react-router-dom';
 // 버튼 관련
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -19,6 +19,7 @@ import Box from '@material-ui/core/Box';
 //웹툰 리스트 출력
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
+
 
 const useStyles = makeStyles(theme => ({
     menu: {
@@ -133,8 +134,9 @@ function a11yProps(index) {
 }
 
 
-export default function Home({ authenticated, login,logout}) {
-    
+
+export default function Home({ authenticated, login, logout }) {
+
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
 
@@ -144,19 +146,19 @@ export default function Home({ authenticated, login,logout}) {
 
     return (
         <div>
-            <Header authenticated={authenticated} logout={logout}/>
+            <Header authenticated={authenticated} logout={logout} />
 
             <div className={classes.menu}>
                 <div className={classes.button}>
                     <Button variant="contained" color="primary" href="/">
-                    <span style={{color:"#fafafa",fontWeight:550}}>도전만화</span>
+                        <span style={{ color: "#fafafa", fontWeight: 550 }}>도전만화</span>
                     </Button>
                     <Button variant="contained" href="/mypage">
-                    <span style={{color:"#212121",fontWeight:520}}>마이페이지</span>
+                        <span style={{ color: "#212121", fontWeight: 520 }}>마이페이지</span>
                     </Button>
                 </div>
             </div>
-            
+
             <div className={classes.todayBest}>
                 <Paper elevation={3} >
                     <div className={classes.titleMargin}>
