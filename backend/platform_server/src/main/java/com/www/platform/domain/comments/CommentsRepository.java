@@ -14,6 +14,11 @@ public interface CommentsRepository extends JpaRepository<Comments, Integer> {
             "ORDER BY c.idx DESC")
     Stream<Comments> findAllDesc();
 
+    /**
+     * clearAutomatically = true로 설정하면 쿼리 진행 후 persistence context
+     * @author by.mo
+     */
+
     @Modifying(clearAutomatically = true)
     @Transactional
     @Query("UPDATE Comments c " +
@@ -21,7 +26,7 @@ public interface CommentsRepository extends JpaRepository<Comments, Integer> {
             "WHERE c.idx = :comments_idx")
     void updateLikeCnt(@Param("comments_idx") int commentsIdx, @Param("add_cnt") int addCnt);
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Transactional
     @Query("UPDATE Comments c " +
             "SET c.dislike_cnt = c.dislike_cnt + :add_cnt " +

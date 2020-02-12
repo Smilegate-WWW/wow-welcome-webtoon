@@ -43,14 +43,17 @@ public class CommentsController {
 
     @PostMapping("/comments/like")
     public Response<CommentsMainResponseDto> requestCommentsLike(@RequestBody CommentsLikeRequestDto dto) {
-        /*
-        CommentsLike commentsLike = dto.toEntity();
-        System.out.println(commentsLike.getIdx());
-        System.out.println(commentsLike.getUsers_idx());
-        System.out.println(commentsLike.getComments_idx());
-         */
         return commentsLikeDislikeService.requestLike(dto);
     }
+
+    /*
+    @PostMapping("/comments/dislike")
+    public Response<CommentsMainResponseDto> requestCommentsDislike(@RequestBody CommentsDislikeRequestDto dto) {
+        return commentsLikeDislikeService.requestDislike(dto);
+    }
+
+     */
+
     /*
     public Response<CommentsMainResponseDto> requestCommentsLike(@RequestBody CommentsLikeRequestDto dto) {
         return commentsLikeDislikeService.requestLike(dto);

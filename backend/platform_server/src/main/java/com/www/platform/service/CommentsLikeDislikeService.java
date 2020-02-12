@@ -19,8 +19,7 @@ public class CommentsLikeDislikeService {
     private UsersRepository usersRepository;
     private CommentsRepository commentsRepository;
     private CommentsLikeRepository commentsLikeRepository;
-    //private CommentsDislikeRepository commentsDislikeRepository;
-
+    private CommentsDislikeRepository commentsDislikeRepository;
 
     @Transactional
     public Response<CommentsMainResponseDto> requestLike(CommentsLikeRequestDto dto) {
@@ -28,23 +27,32 @@ public class CommentsLikeDislikeService {
         // TODO : fail : login required
         // TODO : fail : like request user id = comments writer user id
 
-        //if(commentsLikeRepository.existsByComments_IdxAndUsers_Idx
-        //        (dto.getComments_idx().getIdx(), dto.getUsers_idx().getIdx())) {
+        Optional<Users> users = usersRepository.findById(dto.getUsers_idx());
+        Optional<Comments> comments = commentsRepository.findById(dto.getComments_idx());
+
+        CommentsLike commentsLike;
+
+        if(commentsLikeRepository.existsByComments_IdxAndUsers_Idx
+                (dto.getComments_idx(), dto.getUsers_idx())){
             // complete : cancel request like
-        //    commentsLikeRepository.delete(dto.toEntity());
-        //     commentsRepository.updateLikeCnt(dto.getComments_idx().getIdx(), -1);
-        //}
-        //else{
+
+            commentsLike = commentsLikeRepository.findByComments_IdxAndUsers_Idx
+                            (dto.getComments_idx(), dto.getUsers_idx());
+            commentsLikeRepository.deleteByIdx(commentsLike.getIdx());
+
+            commentsRepository.updateLikeCnt(commentsLike.getComments().getIdx(), -1);
+            CommentsMainResponseDto commentsMainResponseDto =
+                    new CommentsMainResponseDto(commentsRepository.findById(dto.getComments_idx()).get());
+            result.setCode(1);
+            result.setMsg("complete : cancel request like");
+            result.setData(commentsMainResponseDto);
+        }
+        else{
             // complete : success request like
-            // 좋아요 테이블 튜플 추가 -> 해당 comments 테이블에 like_cnt 증가 -> 댓글 response dto 반환
-            Optional<Users> users = usersRepository.findById(dto.getUsers_idx());
-            Optional<Comments> comments = commentsRepository.findById(dto.getComments_idx());
-
-            CommentsLike commentsLike = CommentsLike.builder()
-                                        .users_idx(users.get())
-                                        .comments_idx(comments.get())
-                                        .build();
-
+            commentsLike = CommentsLike.builder()
+                    .users_idx(users.get())
+                    .comments_idx(comments.get())
+                    .build();
             commentsLikeRepository.save(commentsLike);
             commentsRepository.updateLikeCnt(commentsLike.getComments().getIdx(), 1);
 
@@ -54,8 +62,55 @@ public class CommentsLikeDislikeService {
             result.setCode(0);
             result.setMsg("complete : success request like");
             result.setData(commentsMainResponseDto);
-        //}
+        }
 
         return result;
     }
+
+    /*
+    @Transactional
+    public Response<CommentsMainResponseDto> requestDislike(CommentsDislikeRequestDto dto) {
+        Response<CommentsMainResponseDto> result = new Response<CommentsMainResponseDto>();
+        // TODO : fail : login required
+        // TODO : fail : dislike request user id = comments writer user id
+
+        Optional<Users> users = usersRepository.findById(dto.getUsers_idx());
+        Optional<Comments> comments = commentsRepository.findById(dto.getComments_idx());
+
+        CommentsDislike commentsDislike;
+
+        if(commentsDislikeRepository.existsByComments_IdxAndUsers_Idx
+                (dto.getComments_idx(), dto.getUsers_idx())){
+            // complete : cancel request like
+
+            commentsDislike = commentsDislikeRepository.findByComments_IdxAndUsers_Idx
+                    (dto.getComments_idx(), dto.getUsers_idx());
+            commentsDislikeRepository.deleteById(commentsDislike.getIdx());
+
+            commentsRepository.updateDislikeCnt(commentsDislike.getComments().getIdx(), -1);
+            CommentsMainResponseDto commentsMainResponseDto =
+                    new CommentsMainResponseDto(commentsRepository.findById(dto.getComments_idx()).get());
+            result.setCode(1);
+            result.setMsg("complete : cancel request dislike");
+            result.setData(commentsMainResponseDto);
+        }
+        else{
+            // complete : success request like
+            commentsDislike = CommentsDislike.builder()
+                    .users_idx(users.get())
+                    .comments_idx(comments.get())
+                    .build();
+            commentsDislikeRepository.save(commentsDislike);
+            commentsRepository.updateDislikeCnt(commentsDislike.getComments().getIdx(), 1);
+
+            CommentsMainResponseDto commentsMainResponseDto =
+                    new CommentsMainResponseDto(commentsRepository.findById(dto.getComments_idx()).get());
+
+            result.setCode(0);
+            result.setMsg("complete : success request dislike");
+            result.setData(commentsMainResponseDto);
+        }
+        return result;
+    }
+     */
 }

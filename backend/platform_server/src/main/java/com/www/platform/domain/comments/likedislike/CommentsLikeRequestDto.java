@@ -19,12 +19,8 @@ import java.util.Optional;
 @Setter
 @NoArgsConstructor
 public class CommentsLikeRequestDto {
-    //private UsersRepository usersRepository;
-    //private CommentsRepository commentsRepository;
     private int users_idx;
     private int comments_idx;
-    //private Optional<Users> users_idx;
-    //private Optional<Comments> comments_idx;
 
     public CommentsLikeRequestDto(int users_idx, int comments_idx){
         this.users_idx = users_idx;

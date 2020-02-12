@@ -15,19 +15,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class CommentsDislikeRequestDto {
-    private Users users_idx;
-    private Comments comments_idx;
+    private int users_idx;
+    private int comments_idx;
 
-    @Builder
-    public CommentsDislikeRequestDto(Users users_idx, Comments comments_idx) {
+    public CommentsDislikeRequestDto(int users_idx, int comments_idx){
         this.users_idx = users_idx;
         this.comments_idx = comments_idx;
-    }
-
-    public CommentsDislike toEntity() {
-        return CommentsDislike.builder()
-                .users_idx(users_idx)
-                .comments_idx(comments_idx)
-                .build();
     }
 }
