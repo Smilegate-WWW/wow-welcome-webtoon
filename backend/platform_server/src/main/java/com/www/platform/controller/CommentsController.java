@@ -8,6 +8,7 @@ import com.www.platform.domain.fordevtest.UsersRepository;
 import com.www.platform.service.CommentsLikeDislikeService;
 import com.www.platform.service.CommentsService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,9 +24,11 @@ public class CommentsController {
     private CommentsLikeDislikeService commentsLikeDislikeService;
     //private Environment env;
 
-    @GetMapping("/comments")
-    public Response<List<CommentsMainResponseDto>> getComments() {
-        return commentsService.findAllDesc();
+    @GetMapping("/comments/{idx}")
+    public Response<Page<CommentsMainResponseDto>> getComments(@PathVariable("idx") int commentsIdx,
+                                                               @RequestParam("page") int page) {
+        System.out.println("idx : " + commentsIdx);
+        return commentsService.findCommentsByPageRequest(page);
     }
 
     @PostMapping("/comments")
@@ -38,7 +41,8 @@ public class CommentsController {
         return commentsService.delete(dto);
     }
 
-    // TODO : Best Comments;
+
+
     @GetMapping("/comments/best")
     public Response<List<CommentsMainResponseDto>> getBestComments() {
         return commentsService.findBestComments();

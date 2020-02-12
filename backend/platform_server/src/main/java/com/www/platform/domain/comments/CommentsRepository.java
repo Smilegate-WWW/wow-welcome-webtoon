@@ -1,13 +1,13 @@
 package com.www.platform.domain.comments;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.print.Pageable;
-import java.util.List;
 import java.util.stream.Stream;
 
 public interface CommentsRepository extends JpaRepository<Comments, Integer> {
@@ -17,7 +17,7 @@ public interface CommentsRepository extends JpaRepository<Comments, Integer> {
             "ORDER BY c.idx DESC")
     Stream<Comments> findAllDesc();
 
-    // 쿼리안에 Limit 안되고 함수명에 TopX 형태로 포함하면 자동 적용 됨.
+    Page<Comments> findAll(Pageable pageable);
 
     @Query(nativeQuery = true,
             value = "SELECT * " +

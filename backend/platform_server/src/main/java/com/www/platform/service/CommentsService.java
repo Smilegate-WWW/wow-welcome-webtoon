@@ -1,14 +1,9 @@
 package com.www.platform.service;
 
 import com.www.platform.domain.Response;
-import com.www.platform.domain.comments.CommentsDeleteRequestDto;
-import com.www.platform.domain.comments.CommentsMainResponseDto;
-import com.www.platform.domain.comments.CommentsRepository;
-import com.www.platform.domain.comments.CommentsSaveRequestDto;
+import com.www.platform.domain.comments.*;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,6 +76,41 @@ public class CommentsService {
                 .collect(Collectors.toList()));
         result.setCode(0);
         result.setMsg("findAllDesc complete");
+
+        return result;
+    }
+
+    @Transactional(readOnly = true)
+    public Response<Page<CommentsMainResponseDto>> findCommentsByPageRequest(int page) {
+        Response<Page<CommentsMainResponseDto>> result = new Response<Page<CommentsMainResponseDto>>();
+
+        // repository에서 Page<entity>로 받은 내용을 Page<dto>로 변환하는 법 아래 참고
+        // https://stackoverflow.com/questions/27557240/getting-a-page-of-dto-objects-from-spring-data-repository
+
+        Pageable pageable = PageRequest.of(page <= 0 ? 0 : page - 1, 15, Sort.Direction.DESC, "idx");
+        Page<Comments> commentsPage = commentsRepository.findAll(pageable);
+        int totalElements = (int) commentsPage.getTotalElements();
+        Page<CommentsMainResponseDto> commentsMainResponseDtoPage
+                = new PageImpl<CommentsMainResponseDto>(commentsPage
+                    .stream()
+                    .map(comments -> new CommentsMainResponseDto(comments))
+                    .collect(Collectors.toList()), pageable, totalElements);
+
+        result.setData(commentsMainResponseDtoPage);
+        /**
+        result.setData(commentsRepository.findAllDesc()
+                .map(CommentsMainResponseDto::new)
+                .collect(Collectors.toList()));
+         */
+        if(page > commentsPage.getTotalPages()){
+            result.setCode(1);
+            result.setMsg("fail : entered page exceeds the total pages");
+        }
+        else{
+            result.setCode(0);
+            result.setMsg("complete : find Comments By Page Request");
+        }
+
 
         return result;
     }
