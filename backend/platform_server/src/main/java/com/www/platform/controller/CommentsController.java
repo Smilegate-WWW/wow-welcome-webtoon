@@ -2,10 +2,7 @@ package com.www.platform.controller;
 
 import com.www.platform.domain.Response;
 import com.www.platform.domain.comments.*;
-import com.www.platform.domain.comments.likedislike.CommentsDislike;
-import com.www.platform.domain.comments.likedislike.CommentsDislikeRequestDto;
-import com.www.platform.domain.comments.likedislike.CommentsLike;
-import com.www.platform.domain.comments.likedislike.CommentsLikeRequestDto;
+import com.www.platform.domain.comments.likedislike.*;
 import com.www.platform.domain.fordevtest.Users;
 import com.www.platform.domain.fordevtest.UsersRepository;
 import com.www.platform.service.CommentsLikeDislikeService;
@@ -42,17 +39,14 @@ public class CommentsController {
     }
 
     @PostMapping("/comments/like")
-    public Response<CommentsMainResponseDto> requestCommentsLike(@RequestBody CommentsLikeRequestDto dto) {
+    public Response<CommentsLikeDislikeCntResponseDto> requestCommentsLike(@RequestBody CommentsLikeRequestDto dto) {
         return commentsLikeDislikeService.requestLike(dto);
     }
 
-    /*
     @PostMapping("/comments/dislike")
-    public Response<CommentsMainResponseDto> requestCommentsDislike(@RequestBody CommentsDislikeRequestDto dto) {
+    public Response<CommentsLikeDislikeCntResponseDto> requestCommentsDislike(@RequestBody CommentsDislikeRequestDto dto) {
         return commentsLikeDislikeService.requestDislike(dto);
     }
-
-     */
 
     /*
     public Response<CommentsMainResponseDto> requestCommentsLike(@RequestBody CommentsLikeRequestDto dto) {

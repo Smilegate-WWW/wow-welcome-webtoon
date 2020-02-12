@@ -2,7 +2,6 @@ package com.www.platform.service;
 
 import com.www.platform.domain.Response;
 import com.www.platform.domain.comments.Comments;
-import com.www.platform.domain.comments.CommentsMainResponseDto;
 import com.www.platform.domain.comments.CommentsRepository;
 import com.www.platform.domain.comments.likedislike.*;
 import com.www.platform.domain.fordevtest.Users;
@@ -22,13 +21,24 @@ public class CommentsLikeDislikeService {
     private CommentsDislikeRepository commentsDislikeRepository;
 
     @Transactional
-    public Response<CommentsMainResponseDto> requestLike(CommentsLikeRequestDto dto) {
-        Response<CommentsMainResponseDto> result = new Response<CommentsMainResponseDto>();
+    public Response<CommentsLikeDislikeCntResponseDto> requestLike(CommentsLikeRequestDto dto) {
+        Response<CommentsLikeDislikeCntResponseDto> result = new Response<CommentsLikeDislikeCntResponseDto>();
         // TODO : fail : login required
-        // TODO : fail : like request user id = comments writer user id
 
         Optional<Users> users = usersRepository.findById(dto.getUsers_idx());
         Optional<Comments> comments = commentsRepository.findById(dto.getComments_idx());
+
+        /**
+         * TODO : fail : like request user id = comments writer user id
+         * if(users.get().getIdx() == comments.get().getUsers_idx())
+         *         {
+         *             result.setCode(2);
+         *             result.setMsg("fail : like request user id = comments writer user id");
+         *             result.setData();
+         *             return result;
+         *         }
+         */
+
 
         CommentsLike commentsLike;
 
@@ -39,13 +49,13 @@ public class CommentsLikeDislikeService {
             commentsLike = commentsLikeRepository.findByComments_IdxAndUsers_Idx
                             (dto.getComments_idx(), dto.getUsers_idx());
             commentsLikeRepository.deleteByIdx(commentsLike.getIdx());
+            commentsRepository.updateLikeCnt(comments.get().getIdx(), -1);
 
-            commentsRepository.updateLikeCnt(commentsLike.getComments().getIdx(), -1);
-            CommentsMainResponseDto commentsMainResponseDto =
-                    new CommentsMainResponseDto(commentsRepository.findById(dto.getComments_idx()).get());
+            CommentsLikeDislikeCntResponseDto commentsLikeDislikeCntResponseDto =
+                    new CommentsLikeDislikeCntResponseDto(comments.get().getLike_cnt() - 1);
             result.setCode(1);
             result.setMsg("complete : cancel request like");
-            result.setData(commentsMainResponseDto);
+            result.setData(commentsLikeDislikeCntResponseDto);
         }
         else{
             // complete : success request like
@@ -54,28 +64,38 @@ public class CommentsLikeDislikeService {
                     .comments_idx(comments.get())
                     .build();
             commentsLikeRepository.save(commentsLike);
-            commentsRepository.updateLikeCnt(commentsLike.getComments().getIdx(), 1);
+            commentsRepository.updateLikeCnt(comments.get().getIdx(), 1);
 
-            CommentsMainResponseDto commentsMainResponseDto =
-                    new CommentsMainResponseDto(commentsRepository.findById(dto.getComments_idx()).get());
+            CommentsLikeDislikeCntResponseDto commentsLikeDislikeCntResponseDto =
+                    new CommentsLikeDislikeCntResponseDto(comments.get().getLike_cnt() + 1);
 
             result.setCode(0);
             result.setMsg("complete : success request like");
-            result.setData(commentsMainResponseDto);
+            result.setData(commentsLikeDislikeCntResponseDto);
         }
 
         return result;
     }
 
-    /*
+
     @Transactional
-    public Response<CommentsMainResponseDto> requestDislike(CommentsDislikeRequestDto dto) {
-        Response<CommentsMainResponseDto> result = new Response<CommentsMainResponseDto>();
+    public Response<CommentsLikeDislikeCntResponseDto> requestDislike(CommentsDislikeRequestDto dto) {
+        Response<CommentsLikeDislikeCntResponseDto> result = new Response<CommentsLikeDislikeCntResponseDto>();
         // TODO : fail : login required
-        // TODO : fail : dislike request user id = comments writer user id
 
         Optional<Users> users = usersRepository.findById(dto.getUsers_idx());
         Optional<Comments> comments = commentsRepository.findById(dto.getComments_idx());
+
+        /**
+         * TODO : fail : dislike request user id = comments writer user id
+         * if(users.get().getIdx() == comments.get().getUsers_idx())
+         *         {
+         *             result.setCode(2);
+         *             result.setMsg("fail : dislike request user id = comments writer user id");
+         *             result.setData();
+         *             return result;
+         *         }
+         */
 
         CommentsDislike commentsDislike;
 
@@ -85,14 +105,14 @@ public class CommentsLikeDislikeService {
 
             commentsDislike = commentsDislikeRepository.findByComments_IdxAndUsers_Idx
                     (dto.getComments_idx(), dto.getUsers_idx());
-            commentsDislikeRepository.deleteById(commentsDislike.getIdx());
+            commentsDislikeRepository.deleteByIdx(commentsDislike.getIdx());
+            commentsRepository.updateDislikeCnt(comments.get().getIdx(), -1);
 
-            commentsRepository.updateDislikeCnt(commentsDislike.getComments().getIdx(), -1);
-            CommentsMainResponseDto commentsMainResponseDto =
-                    new CommentsMainResponseDto(commentsRepository.findById(dto.getComments_idx()).get());
+            CommentsLikeDislikeCntResponseDto commentsLikeDislikeCntResponseDto =
+                    new CommentsLikeDislikeCntResponseDto(comments.get().getDislike_cnt() -1);
             result.setCode(1);
             result.setMsg("complete : cancel request dislike");
-            result.setData(commentsMainResponseDto);
+            result.setData(commentsLikeDislikeCntResponseDto);
         }
         else{
             // complete : success request like
@@ -101,16 +121,14 @@ public class CommentsLikeDislikeService {
                     .comments_idx(comments.get())
                     .build();
             commentsDislikeRepository.save(commentsDislike);
-            commentsRepository.updateDislikeCnt(commentsDislike.getComments().getIdx(), 1);
+            commentsRepository.updateDislikeCnt(comments.get().getIdx(), 1);
 
-            CommentsMainResponseDto commentsMainResponseDto =
-                    new CommentsMainResponseDto(commentsRepository.findById(dto.getComments_idx()).get());
-
+            CommentsLikeDislikeCntResponseDto commentsLikeDislikeCntResponseDto =
+                    new CommentsLikeDislikeCntResponseDto(comments.get().getDislike_cnt() + 1);
             result.setCode(0);
             result.setMsg("complete : success request dislike");
-            result.setData(commentsMainResponseDto);
+            result.setData(commentsLikeDislikeCntResponseDto);
         }
         return result;
     }
-     */
 }
