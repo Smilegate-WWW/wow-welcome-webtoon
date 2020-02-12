@@ -6,16 +6,29 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.awt.print.Pageable;
+import java.util.List;
 import java.util.stream.Stream;
 
 public interface CommentsRepository extends JpaRepository<Comments, Integer> {
+
     @Query("SELECT c " +
             "FROM Comments c " +
             "ORDER BY c.idx DESC")
     Stream<Comments> findAllDesc();
 
+    // 쿼리안에 Limit 안되고 함수명에 TopX 형태로 포함하면 자동 적용 됨.
+
+    @Query(nativeQuery = true,
+            value = "SELECT * " +
+                    "FROM Comments c " +
+                    "WHERE c.like_cnt >= c.dislike_cnt + 5 " +
+                    "ORDER BY (c.like_cnt - c.dislike_cnt) DESC, c.like_cnt DESC " +
+                    "LIMIT 5")
+    Stream<Comments> findBestComments();
+
     /**
-     * clearAutomatically = true로 설정하면 쿼리 진행 후 persistence context
+     * clearAutomatically = true로 설정하면 쿼리 진행 후 persistence context clear
      * @author by.mo
      */
 
