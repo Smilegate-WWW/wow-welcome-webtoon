@@ -10,7 +10,7 @@ export default function App() {
   // 인증 여부
   const authenticated = user != null;
 
-  const login = ({ id, pw }) => setUser(signIn({ id, pw }));
+  const login = ({ userid, pw }) => setUser(signIn({ userid, pw }));
   const logout = () => setUser(null);
 
   return (

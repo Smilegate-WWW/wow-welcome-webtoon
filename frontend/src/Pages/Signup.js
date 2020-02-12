@@ -105,7 +105,7 @@ export default function Signup() {
         form_data.append('birth', birth);
         form_data.append('gender', gender);
         form_data.append('email', email);
-        console.log(form_data);
+        
         let url = 'localhost:8080/users';
         axios.post(url, form_data)
             .then(res => {

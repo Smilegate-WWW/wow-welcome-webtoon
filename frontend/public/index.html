@@ -17,22 +17,7 @@
 <body>
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="root"></div>
-  <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
-    crossorigin="anonymous"></script>
-  
-  <script>
-    
-$.ajax({
-    //요청
-    method: "GET", // 방식
-    url: "https://dapi.kakao.com/v3/search/book?target=title", // 주소
-    data: { query:"미움 받을 용기" },  //데이터
-    headers:{Authorization: "KakaoAK bae3f470ce71b9925187548a1306e592"}
-})
-.done(function (data) {
-    console.log(data);
-});
-  </script>
+
   </body>
 
 </html>

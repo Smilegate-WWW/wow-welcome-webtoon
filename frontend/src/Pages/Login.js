@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 //아이디,비번 입력창
@@ -23,8 +23,8 @@ const useStyles = makeStyles(theme => ({
             height: 40,
         },
     },
-    signup:{
-        
+    signup: {
+
         '& > *': {
             margin: theme.spacing(0, 0, 0, 16),
         },
@@ -32,61 +32,81 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function Login({ authenticated, login, location }) {
-    const [id, setId] = useState('');
+    const [userid, setUserid] = useState('');
     const [pw, setPw] = useState('');
-    
+
     const classes = useStyles();
 
     const handleClick = () => {
-        try {
-          login({ id, pw });
-        } catch (e) {
-          alert('Failed to login');
-          setId('');
-          setPw('');
+        if (userid === '' || pw === '') {
+            alert("아이디와 비밀번호를 모두 입력하세요");
+        }
+        else {
+            try {
+                console.log(userid, pw);
+                login( {userid, pw} );
+              } catch (e) {
+                console.log({e});
+                alert('Failed to login');
+                setUserid('');
+                setPw('');
+            }    
+            const axios = require('axios');
+            const FormData = require('form-data');
+
+            const form_data = new FormData();
+            form_data.append('userid', userid);
+            form_data.append('pw', pw);
+
+            let url = 'localhost:8080/users/token';
+            axios.post(url, form_data)
+                .then(res => {
+                    console.log(res.data);
+                })
+                .catch(err => console.log(err));
         }
     };
 
-    //이전에 접근하려고 했던 페이지로 리다이렉션
-    const { from } = location.state || { from: { pathname: "/" } };
-    if (authenticated) return <Redirect to={from} />;
+//이전에 접근하려고 했던 페이지로 리다이렉션
+const { from } = location.state || { from: { pathname: "/" } };
+if (authenticated) return <Redirect to={from} />;
 
-    return (
-        <div className={classes.root}>
-            <h1 style={{
-                color: "#ff7043",
-                fontSize: "64px",
-            }}>&emsp;WWW</h1>
+return (
+    <div className={classes.root}>
+        <h1 style={{
+            color: "#ff7043",
+            fontSize: "64px",
+        }}>&emsp;WWW</h1>
 
 
-            <form className={classes.textField} noValidate autoComplete="off">
-                <TextField 
-                    id="userid" 
-                    label="아이디를 입력해주세요" 
-                    variant="outlined" 
-                    value={id}
-                    onChange={({target:{value} }) =>setId(value)}   
-                />
-                <TextField
-                    id="pw"
-                    label="비밀번호를 입력해주세요"
-                    type="password"
-                    autoComplete="current-password"
-                    value={pw}
-                    onChange={({ target: { value } }) => setPw(value)}
-                    variant="outlined"
-                />
-            </form>
+        <form className={classes.textField} noValidate autoComplete="off">
+            <TextField
+                id="userid"
+                label="아이디를 입력해주세요"
+                variant="outlined"
+                value={userid}
+                onChange={({ target: { value } }) => setUserid(value)}
+            />
+            <TextField
+                id="pw"
+                label="비밀번호를 입력해주세요"
+                type="password"
+                autoComplete="current-password"
+                value={pw}
+                onChange={({ target: { value } }) => setPw(value)}
+                variant="outlined"
+            />
+        </form>
 
-            <div className={classes.loginButton}>
-                <Button variant="contained" color="primary" onClick={handleClick}>
-                    <span style={{ color: "#fafafa", fontWeight: "bold" }}>로그인</span>
-                </Button>
-            </div>
-
-            <div className={classes.signup}>
-                <a href="/login/signup">회원가입</a>
-            </div>
+        <div className={classes.loginButton}>
+            <Button variant="contained" color="primary" onClick={handleClick}>
+                <span style={{ color: "#fafafa", fontWeight: "bold" }}>로그인</span>
+            </Button>
         </div>
-    );
+
+        <div className={classes.signup}>
+            <a href="/login/signup">회원가입</a>
+        </div>
+    </div>
+);
 }
