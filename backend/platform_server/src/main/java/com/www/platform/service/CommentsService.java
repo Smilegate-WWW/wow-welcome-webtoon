@@ -6,6 +6,9 @@ import com.www.platform.domain.comments.CommentsMainResponseDto;
 import com.www.platform.domain.comments.CommentsRepository;
 import com.www.platform.domain.comments.CommentsSaveRequestDto;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -78,6 +81,20 @@ public class CommentsService {
                 .collect(Collectors.toList()));
         result.setCode(0);
         result.setMsg("findAllDesc complete");
+
+        return result;
+    }
+
+    // TODO : ep idx에 따른 베스트 댓글 리스트 출력
+    @Transactional(readOnly = true)
+    public Response<List<CommentsMainResponseDto>> findBestComments() {
+        Response<List<CommentsMainResponseDto>> result = new Response<List<CommentsMainResponseDto>>();
+
+        result.setData(commentsRepository.findBestComments()
+                .map(CommentsMainResponseDto::new)
+                .collect(Collectors.toList()));
+        result.setCode(0);
+        result.setMsg("complete : find Best Comments");
 
         return result;
     }

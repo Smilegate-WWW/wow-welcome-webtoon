@@ -38,6 +38,12 @@ public class CommentsController {
         return commentsService.delete(dto);
     }
 
+    // TODO : Best Comments;
+    @GetMapping("/comments/best")
+    public Response<List<CommentsMainResponseDto>> getBestComments() {
+        return commentsService.findBestComments();
+    }
+
     @PostMapping("/comments/like")
     public Response<CommentsLikeDislikeCntResponseDto> requestCommentsLike(@RequestBody CommentsLikeRequestDto dto) {
         return commentsLikeDislikeService.requestLike(dto);
@@ -48,34 +54,4 @@ public class CommentsController {
         return commentsLikeDislikeService.requestDislike(dto);
     }
 
-    /*
-    public Response<CommentsMainResponseDto> requestCommentsLike(@RequestBody CommentsLikeRequestDto dto) {
-        return commentsLikeDislikeService.requestLike(dto);
-    }
-     */
-
-    /*
-    @PostMapping("/comments/dislike")
-    public Response<CommentsMainResponseDto> requestCommentsDisLike(@RequestBody CommentsDislikeRequestDto dto) {
-
-        return new Response<CommentsMainResponseDto>();
-    }
-    */
-
-    // TODO : Best Comments;
-    @GetMapping("/comments/best")
-    public Response<List<CommentsMainResponseDto>> getBestComments() {
-        return commentsService.findAllDesc();
-    }
-
-
-
-    /*
-    @GetMapping("/profile")
-    public String getProfile() {
-        return Arrays.stream(env.getActiveProfiles())
-                .findFirst()
-                .orElse("");
-    }
-    */
 }
