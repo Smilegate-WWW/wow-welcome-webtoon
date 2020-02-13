@@ -1,6 +1,7 @@
 package com.www.file.domain.entity;
 
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -16,14 +17,18 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
+import org.springframework.data.annotation.LastModifiedDate;
+
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @NoArgsConstructor
 @Data
 @Entity
+@ToString(exclude = "webtoon_idx")
 /*
 @SequenceGenerator(
 		name = "WEBTOON_SEQ_GENERATOR",
@@ -58,14 +63,12 @@ public class Webtoon extends TimeEntity{
 	@OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "webtoon")
 	//@JoinColumn(name="webtoon_idx")
 	private List<Episode> episodes = new ArrayList<Episode>();
-
 	
-	//created_date
-	//updated_date
 	
 	@Builder
 	public Webtoon(int idx, /*int users_idx,*/ String title, int toon_type, int genre1, 
-			int genre2, String summary, String plot, String thumbnail, int end_flag) {
+			int genre2, String summary, String plot, String thumbnail, int end_flag,
+			LocalDateTime created_date, LocalDateTime updated_date) {
 		this.idx = idx;
 		//this.users_idx = users_idx;
 		this.title = title;

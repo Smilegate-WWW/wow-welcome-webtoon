@@ -38,29 +38,34 @@ public class WebtoonService {
 		//webtoon정보 저장
 		webtoonRepository.save(webtoonDto.toEntity());
 		return 0;
-	
 	}
 	
-	public int addEpisode(int idx, MultipartFile thumbnail, MultipartFile[] manuscripts, EpisodeDto episodeDto) {
-		
-		//webtoon idx로 해당 webtoon entity 찾고 설정 
+	@Transactional
+	public int editWebtoon(int idx, MultipartFile file, WebtoonDto webtoonDto) throws IOException {
 		Optional<Webtoon> WebtoonEntityWrapper = webtoonRepository.findById(idx);
         Webtoon webtoon = WebtoonEntityWrapper.get();
-        //episodeDto에 해당 webtoon 연결
-        episodeDto.setWebtoon(webtoon);
-        /*
-         * file관련 db저장 
-         */
         
-        String thumbnailName = thumbnail.getOriginalFilename();
-        episodeDto.setThumnail(thumbnailName);
+        webtoon.setEnd_flag(webtoonDto.getEnd_flag());
+        webtoon.setGenre1(webtoonDto.getGenre1());
+        webtoon.setGenre2(webtoonDto.getGenre2());
+        webtoon.setPlot(webtoonDto.getPlot());
+        webtoon.setSummary(webtoonDto.getSummary());
+        webtoon.setTitle(webtoonDto.getTitle());
+        webtoon.setToon_type(webtoonDto.getToon_type());
         
-        String manuscriptsName = manuscripts[0].getOriginalFilename();
-        episodeDto.setContents(manuscriptsName);
+        //썸네일 이미지가 변경되었을 경우 
+        if(!file.isEmpty()) {
+			String fileName = file.getOriginalFilename();
+			System.out.println(fileName);
+			webtoonDto.setThumbnail(fileName);
+			//file 저장소에 저장
+			File destinationFile = new File("D:/image/"+fileName);
+			destinationFile.getParentFile().mkdir();
+			file.transferTo(destinationFile);
+		}
         
-        //episodeDto 생성 및 저장
-		episodeRepository.save(episodeDto.toEntity());
-		return 0;
+        webtoonRepository.save(webtoon);
+        return 0;
 	}
 
 }
