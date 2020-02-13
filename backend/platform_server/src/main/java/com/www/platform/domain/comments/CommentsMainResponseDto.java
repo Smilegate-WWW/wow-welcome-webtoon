@@ -9,8 +9,8 @@ import java.util.Optional;
 @Getter
 public class CommentsMainResponseDto {
     private Integer idx;
-    //private Episode epIdx;
-    //private Users usersIdx;
+    private int ep_idx;
+    private int users_idx;
     private int like_cnt;
     private int dislike_cnt;
     private String content;
@@ -18,12 +18,11 @@ public class CommentsMainResponseDto {
 
     public CommentsMainResponseDto(Comments entity) {
         idx = entity.getIdx();
-        //epIdx = entity.getEpIdx();
-        //usersIdx = entity.getUsersIdx();
+        ep_idx = entity.getEp().getIdx();
+        users_idx = entity.getUsers().getIdx();
         like_cnt = entity.getLike_cnt();
         dislike_cnt = entity.getDislike_cnt();
         content = entity.getContent();
-        //created_date = LocalDateTime.now();
         created_date = toStringDateTime(entity.getCreated_date());
     }
 

@@ -22,16 +22,13 @@ import java.security.SecureRandom;
 @NoArgsConstructor
 @Getter
 @Entity
-public class Users{
+public class Episode{
 
     @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int idx;
 
-    @Column(length=20, nullable=false)
-    private String userid;
-
     @Builder
-    public Users(String userid){
-        this.userid = userid;
+    public Episode(int idx){
+        this.idx = idx;
     }
 }

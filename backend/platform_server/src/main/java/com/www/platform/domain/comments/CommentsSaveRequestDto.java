@@ -14,15 +14,13 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CommentsSaveRequestDto {
     private String content;
+    private int users_idx;
+    private int ep_idx;
 
     @Builder
-    public CommentsSaveRequestDto(String content) {
+    public CommentsSaveRequestDto(String content, int users_idx, int ep_idx) {
         this.content = content;
-    }
-
-    public Comments toEntity() {
-        return Comments.builder()
-                .content(content)
-                .build();
+        this.users_idx = users_idx;
+        this.ep_idx = ep_idx;
     }
 }

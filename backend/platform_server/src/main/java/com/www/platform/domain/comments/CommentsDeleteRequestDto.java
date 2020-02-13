@@ -14,18 +14,11 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CommentsDeleteRequestDto {
     private int idx;
-    /*
-    TODO : useridx
-     */
+    private int users_idx;
 
     @Builder
-    public CommentsDeleteRequestDto(int idx) {
+    public CommentsDeleteRequestDto(int idx, int users_idx) {
         this.idx = idx;
-    }
-
-    public Comments toEntity() {
-        return Comments.builder()
-                .idx(idx)
-                .build();
+        this.users_idx = users_idx;
     }
 }
