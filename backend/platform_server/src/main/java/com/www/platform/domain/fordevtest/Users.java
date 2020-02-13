@@ -17,7 +17,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
-// ╟Ё╧ъ ев╫╨ф╝©К юс╫ц entity class
+// О©╫О©╫О©╫О©╫ О©╫в╫О©╫ф╝О©╫О©╫ О©╫с╫О©╫ entity class
 
 @NoArgsConstructor
 @Getter

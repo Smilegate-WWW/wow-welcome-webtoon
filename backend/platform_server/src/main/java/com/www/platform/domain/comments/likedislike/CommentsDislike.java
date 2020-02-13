@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-// Entity Å¬·¡½º¸¦ ÇÁ·ÎÁ§Æ® ÄÚµå»ó¿¡¼­ ±âº»»ý¼ºÀÚ·Î »ý¼ºÇÏ´Â °ÍÀº ¸·µÇ, JPA¿¡¼­ Entity Å¬·¡½º¸¦ »ý¼ºÇÏ´Â°ÍÀº Çã¿ëÇÏ±â À§ÇØ Ãß°¡
+// Entity Å¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Úµï¿½ó¿¡¼ï¿½ ï¿½âº»ï¿½ï¿½ï¿½ï¿½ï¿½Ú·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, JPAï¿½ï¿½ï¿½ï¿½ Entity Å¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´Â°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity(name = "comments_dislike")

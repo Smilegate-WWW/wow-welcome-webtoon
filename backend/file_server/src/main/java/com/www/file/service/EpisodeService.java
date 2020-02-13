@@ -68,15 +68,15 @@ public class EpisodeService {
 	@Transactional
 	public int addEpisode(int webtoon_idx, MultipartFile thumbnail, MultipartFile[] manuscripts, EpisodeDto episodeDto) {
 		
-		//webtoon idx·Î ÇØ´ç webtoon entity Ã£°í ¼³Á¤ 
+		//webtoon idxï¿½ï¿½ ï¿½Ø´ï¿½ webtoon entity Ã£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
 		Optional<Webtoon> WebtoonEntityWrapper = webtoonRepository.findById(webtoon_idx);
         Webtoon webtoon = WebtoonEntityWrapper.get();
-        //episodeDto¿¡ ÇØ´ç webtoon ¿¬°á
+        //episodeDtoï¿½ï¿½ ï¿½Ø´ï¿½ webtoon ï¿½ï¿½ï¿½ï¿½
         //episodeDto.setWebtoon(webtoon);
         //episodeDto.toEntity().setWebtoon(webtoon);
        
         /*
-         * file°ü·Ã dbÀúÀå 
+         * fileï¿½ï¿½ï¿½ï¿½ dbï¿½ï¿½ï¿½ï¿½ 
          */
         
         String thumbnailName = thumbnail.getOriginalFilename();
@@ -87,7 +87,7 @@ public class EpisodeService {
         
         EpisodeRegistDto ep = new EpisodeRegistDto(episodeDto,webtoon);
       
-        //episodeDto »ý¼º ¹× ÀúÀå
+        //episodeDto ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		episodeRepository.save(ep.toEntity());
 		
 		return 0;

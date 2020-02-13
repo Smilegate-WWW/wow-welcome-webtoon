@@ -28,7 +28,7 @@ public interface CommentsRepository extends JpaRepository<Comments, Integer> {
     Stream<Comments> findBestComments();
 
     /**
-     * clearAutomatically = true·Î ¼³Á¤ÇÏ¸é Äõ¸® ÁøÇà ÈÄ persistence context clear
+     * clearAutomatically = trueï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ persistence context clear
      * @author by.mo
      */
 
