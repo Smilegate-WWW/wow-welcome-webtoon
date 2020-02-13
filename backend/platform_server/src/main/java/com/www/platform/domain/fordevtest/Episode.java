@@ -17,21 +17,18 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
-// О©╫О©╫О©╫О©╫ О©╫в╫О©╫ф╝О©╫О©╫ О©╫с╫О©╫ entity class
+// ╟Ё╧ъ ев╫╨ф╝©К юс╫ц entity class
 
 @NoArgsConstructor
 @Getter
 @Entity
-public class Users{
+public class Episode{
 
     @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int idx;
 
-    @Column(length=20, nullable=false)
-    private String userid;
-
     @Builder
-    public Users(String userid){
-        this.userid = userid;
+    public Episode(int idx){
+        this.idx = idx;
     }
 }

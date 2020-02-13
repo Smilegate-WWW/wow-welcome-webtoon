@@ -1,6 +1,8 @@
 package com.www.platform.domain.comments;
 
 import com.www.platform.domain.BaseCreatedTimeEntity;
+import com.www.platform.domain.fordevtest.Episode;
+import com.www.platform.domain.fordevtest.Users;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,15 +20,13 @@ public class Comments extends BaseCreatedTimeEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idx;
 
-    /*
     @ManyToOne
-    @JoinColumn
-    private Episode epIdx;
+    @JoinColumn(nullable = false)
+    private Episode ep;
 
     @ManyToOne
-    @JoinColumn
-    private Users usersIdx;
-    */
+    @JoinColumn(nullable = false)
+    private Users users;
 
     @Column(nullable = false)
     private int like_cnt;
@@ -38,10 +38,10 @@ public class Comments extends BaseCreatedTimeEntity{
     private String content;
 
     @Builder
-    public Comments(int idx, String content){
+    public Comments(Episode ep, Users users, int idx, String content){
+        this.ep = ep;
+        this.users = users;
         this.idx = idx;
-        // this.like_cnt = like_cnt;
-        // this.dislike_cnt = dislike_cnt;
         this.content = content;
     }
 }
