@@ -40,9 +40,9 @@ public class CommentsController {
         return commentsService.delete(dto);
     }
 
-    @GetMapping("/comments/best")
-    public Response<List<CommentsMainResponseDto>> getBestComments() {
-        return commentsService.findBestComments();
+    @GetMapping("/comments/best/{epIdx}")
+    public Response<List<CommentsMainResponseDto>> getBestComments(@PathVariable("epIdx") int epIdx) {
+        return commentsService.findBestComments(epIdx);
     }
 
     @PostMapping("/comments/like")

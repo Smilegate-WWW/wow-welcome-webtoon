@@ -117,26 +117,32 @@ public class CommentsService {
     public Response<Page<CommentsMainResponseDto>> findCommentsByPageRequest(int epIdx, int page) {
         Response<Page<CommentsMainResponseDto>> result = new Response<Page<CommentsMainResponseDto>>();
 
-        // repository에서 Page<entity>로 받은 내용을 Page<dto>로 변환하는 법 아래 참고
-        // https://stackoverflow.com/questions/27557240/getting-a-page-of-dto-objects-from-spring-data-repository
+        if(!episodeRepository.existsById(epIdx)) {    // 에피소드가 존재하지 않을 때
+            result.setCode(2);
+            result.setMsg("fail : episode not exist");
+        }
+        else{
+            // repository에서 Page<entity>로 받은 내용을 Page<dto>로 변환하는 법 아래 참고
+            // https://stackoverflow.com/questions/27557240/getting-a-page-of-dto-objects-from-spring-data-repository
 
-        Pageable pageable = PageRequest.of(page <= 0 ? 0 : page - 1, 15, Sort.Direction.DESC, "idx");
-        Page<Comments> commentsPage = commentsRepository.findAll(pageable);
-        int totalElements = (int) commentsPage.getTotalElements();
-        Page<CommentsMainResponseDto> commentsMainResponseDtoPage
-                = new PageImpl<CommentsMainResponseDto>(commentsPage
+            Pageable pageable = PageRequest.of(page <= 0 ? 0 : page - 1, 15, Sort.Direction.DESC, "idx");
+            Page<Comments> commentsPage = commentsRepository.findAllByEpIdx(pageable, epIdx);
+            int totalElements = (int) commentsPage.getTotalElements();
+            Page<CommentsMainResponseDto> commentsMainResponseDtoPage
+                    = new PageImpl<CommentsMainResponseDto>(commentsPage
                     .stream()
                     .map(comments -> new CommentsMainResponseDto(comments))
                     .collect(Collectors.toList()), pageable, totalElements);
+            result.setData(commentsMainResponseDtoPage);
 
-        result.setData(commentsMainResponseDtoPage);
-        if(page > commentsPage.getTotalPages()){
-            result.setCode(1);
-            result.setMsg("fail : entered page exceeds the total pages");
-        }
-        else{
-            result.setCode(0);
-            result.setMsg("complete : find Comments By Page Request");
+            if(page > commentsPage.getTotalPages()){
+                result.setCode(1);
+                result.setMsg("fail : entered page exceeds the total pages");
+            }
+            else{
+                result.setCode(0);
+                result.setMsg("complete : find Comments By Page Request");
+            }
         }
 
         return result;
@@ -144,14 +150,20 @@ public class CommentsService {
 
     // TODO : ep idx에 따른 베스트 댓글 리스트 출력
     @Transactional(readOnly = true)
-    public Response<List<CommentsMainResponseDto>> findBestComments() {
+    public Response<List<CommentsMainResponseDto>> findBestComments(int epIdx) {
         Response<List<CommentsMainResponseDto>> result = new Response<List<CommentsMainResponseDto>>();
 
-        result.setData(commentsRepository.findBestComments()
-                .map(CommentsMainResponseDto::new)
-                .collect(Collectors.toList()));
-        result.setCode(0);
-        result.setMsg("complete : find Best Comments");
+        if(!episodeRepository.existsById(epIdx)) {    // 에피소드가 존재하지 않을 때
+            result.setCode(1);
+            result.setMsg("fail : episode not exist");
+        }
+        else{
+            result.setData(commentsRepository.findBestCommentsByEpIdx(epIdx)
+                    .map(CommentsMainResponseDto::new)
+                    .collect(Collectors.toList()));
+            result.setCode(0);
+            result.setMsg("complete : find Best Comments");
+        }
 
         return result;
     }

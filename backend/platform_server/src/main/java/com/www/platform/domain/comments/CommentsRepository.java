@@ -17,15 +17,15 @@ public interface CommentsRepository extends JpaRepository<Comments, Integer> {
             "ORDER BY c.idx DESC")
     Stream<Comments> findAllDesc();
 
-    Page<Comments> findAll(Pageable pageable);
+    Page<Comments> findAllByEpIdx(Pageable pageable, @Param("ep_idx") int epIdx);
 
     @Query(nativeQuery = true,
             value = "SELECT * " +
                     "FROM Comments c " +
-                    "WHERE c.like_cnt >= c.dislike_cnt + 5 " +
+                    "WHERE c.like_cnt >= c.dislike_cnt + 5 AND c.ep_idx = :ep_idx " +
                     "ORDER BY (c.like_cnt - c.dislike_cnt) DESC, c.like_cnt DESC " +
                     "LIMIT 5")
-    Stream<Comments> findBestComments();
+    Stream<Comments> findBestCommentsByEpIdx(@Param("ep_idx") int epIdx);
 
     /**
      * clearAutomatically = true로 설정하면 쿼리 진행 후 persistence context clear
