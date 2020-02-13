@@ -48,11 +48,6 @@ var requestOptions = {
   redirect: 'follow'
 };
 
-fetch("localhost:8080/users", requestOptions)
-  .then(response => response.text())
-  .then(result => console.log(result))
-  .catch(error => console.log('error', error));
-
 export default function Signup() {
     const classes = useStyles();
 
