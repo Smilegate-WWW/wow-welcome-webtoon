@@ -76,23 +76,21 @@ export default function Register({ authenticated, logout }) {
     const handlePlotChange = (e) => {
         setPlot(e.target.value);
     }
-    const handleThumbnailChange = () => {
-        const input = document.querySelector("#thumbnail");
-        const file = input.value
-        const fileSplit = file.split('.');
-        const fileType = fileSplit[1];
-
-        // jpg 타입의 파일이 아닌 경우
-        if (fileType !== "jpg") {
-            alert("jpg 파일을 업로드 해주세요!");
+    const handleThumbnailChange = (e) => {
+        const file = e.target.files[0];
+        let reader = new FileReader();
+        reader.onloadend = () => {
+            console.log("load end");
+        };
+        reader.readAsDataURL(file);
+        if(file.length ===0){
+            alert("파일이 선택되지 않았습니다.");
         }
-        // 파일이 선택되지 않은 경우
-        else if (file == "") {
-            alert("파일이 선택되지 않았습니다!");
+        else if(file.type != "image/jpeg"){
+            alert("jpg 타입의 파일을 선택해주세요!")
         }
-        // 파일의 크기가 너무 큰 경우 
-        else if (file.size > 1048576) {
-            alert("파일의 크기가 너무 큽니다!");
+        else if(file.size > 1048576 ){
+            alert("파일의 크기가 너무 큽니다");
         }
     }
 

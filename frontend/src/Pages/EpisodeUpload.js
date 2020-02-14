@@ -51,6 +51,8 @@ const useStyles = makeStyles(theme => ({
 
 export default function Upload({ authenticated, logout }) {
     const classes = useStyles();
+
+    
     return (
         <div>
             <Header authenticated={authenticated} logout={logout} />

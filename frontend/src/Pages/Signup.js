@@ -52,13 +52,13 @@ export default function Signup() {
 
     const classes = useStyles();
 
-    const [userId, setUserId] = useState('');
-    const [pw, setPw] = useState('');
-    const [pwCheck, setPwCheck] = useState('');
-    const [name, setName] = useState('');
-    const [gender, setGender] = React.useState('');
-    const [birth, setBirth] = useState('');
-    const [email, setEmail] = useState('');
+    const [userId, setUserId] = useState("");
+    const [pw, setPw] = useState("");
+    const [pwCheck, setPwCheck] = useState("");
+    const [name, setName] = useState("");
+    const [gender, setGender] = React.useState("");
+    const [birth, setBirth] = useState("");
+    const [email, setEmail] = useState("");
 
     const handleIdChange = (e) => {
         setUserId(e.target.value);
@@ -129,7 +129,7 @@ export default function Signup() {
              body: raw,
              redirect: 'follow'
            };
-           
+
            fetch("https://localhost:8080/users", requestOptions)
              .then(response => response.text())
              .then(result => console.log(result))
