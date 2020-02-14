@@ -36,18 +36,29 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-var myHeaders = new Headers();
-myHeaders.append("Content-Type", "application/json");
+function checkId(userId){
+    var pattern_spc = /[~!@#$%^&*()_+|<>?:{}]/; //특수 문자
+    var pattern_kor = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/; // 한글체크
 
-var raw = JSON.stringify({ "userid": "exampleID", "pw": "password", "name": "백지수", "birth": "1997-07-02", "gender": 1, "email": "bjisoo72@gmail.com" });
+    if(pattern_kor.test(userId) || pattern_spc.test(userId)){
+        return true;
+    }
+}
 
-var requestOptions = {
-    method: 'POST',
-    headers: myHeaders,
-    body: raw,
-    redirect: 'follow'
-};
+function checkPw(pw){
+    var pattern_spc = /[#$%^&*()_+|<>?:{}]/; //특수 문자
+    if(pattern_spc.test(pw)){
+        return true;
+    }
+}
 
+function checkEmail(email) {	
+    var exptext = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
+            if(exptext.test(email)==false){
+                 return true;
+    }
+    return false;
+}
 export default function Signup() {
 
     const classes = useStyles();
@@ -86,10 +97,21 @@ export default function Signup() {
         if (userId === '' || pw === '' || pwCheck === '' || name === '' || gender === '' || birth === '' || email === '') {
             alert("정보를 모두 입력해주세요!!");
         }
+        else if(checkId(userId)){
+            alert("아이디에 특수문자 또는 한글을 제외해주세요!");
+        }
         else if (pw !== pwCheck) {
             alert("비밀번호가 일치하지 않습니다!!");
         }
-
+        else if(pw.length<8){
+            alert("비밀번호는 8자리 이상으로 설정해주세요!")
+        }
+        else if(checkPw(pw)){
+            alert("비밀번호에 가능한 특수문자는 ~!@ 입니다");
+        }
+        else if(checkEmail(email)){
+            alert("이메일 형식이 올바르지 않습니다!");
+        }
         else {
             //cors 미들웨어 추가
             /*
@@ -130,7 +152,7 @@ export default function Signup() {
              redirect: 'follow'
            };
 
-           fetch("https://localhost:8080/users", requestOptions)
+           fetch("https://172.30.27.82:8080/users", requestOptions)
              .then(response => response.text())
              .then(result => console.log(result))
              .catch(error => console.log('error', error));
