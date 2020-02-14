@@ -1,8 +1,6 @@
-package com.www.platform.domain.comments.likedislike;
+package com.www.core.platform.entity;
 
-import com.www.platform.domain.BaseCreatedTimeEntity;
-import com.www.platform.domain.comments.Comments;
-import com.www.platform.domain.fordevtest.Users;
+import com.www.core.auth.entity.Users;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

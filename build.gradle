@@ -11,8 +11,6 @@ buildscript {
     }
 }
 
-
-
 allprojects {
     group 'com.www'
     version '1.0-SNAPSHOT'
@@ -30,7 +28,6 @@ subprojects {
     }
 
     dependencies {
-        //gradle.startParameter.showStacktrace = org.gradle.api.logging.configuration.ShowStacktrace.ALWAYS
         implementation ('org.springframework.boot:spring-boot-starter-actuator')
         implementation ('org.springframework.boot:spring-boot-starter-data-jpa')
         implementation ('org.springframework.boot:spring-boot-starter-web')
