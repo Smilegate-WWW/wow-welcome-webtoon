@@ -24,11 +24,10 @@ public class CommentsController {
     private CommentsLikeDislikeService commentsLikeDislikeService;
     //private Environment env;
 
-    @GetMapping("/comments/{idx}")
-    public Response<Page<CommentsMainResponseDto>> getComments(@PathVariable("idx") int commentsIdx,
+    @GetMapping("/comments/{epIdx}")
+    public Response<Page<CommentsMainResponseDto>> getComments(@PathVariable("epIdx") int epIdx,
                                                                @RequestParam("page") int page) {
-        System.out.println("idx : " + commentsIdx);
-        return commentsService.findCommentsByPageRequest(page);
+        return commentsService.findCommentsByPageRequest(epIdx, page);
     }
 
     @PostMapping("/comments")
@@ -41,11 +40,9 @@ public class CommentsController {
         return commentsService.delete(dto);
     }
 
-
-
-    @GetMapping("/comments/best")
-    public Response<List<CommentsMainResponseDto>> getBestComments() {
-        return commentsService.findBestComments();
+    @GetMapping("/comments/best/{epIdx}")
+    public Response<List<CommentsMainResponseDto>> getBestComments(@PathVariable("epIdx") int epIdx) {
+        return commentsService.findBestComments(epIdx);
     }
 
     @PostMapping("/comments/like")
