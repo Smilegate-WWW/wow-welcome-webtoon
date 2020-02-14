@@ -38,8 +38,13 @@ public class AuthController {
 	private UserService userService;
 	private JwtTokenProvider jwtTokenProvider;
 
+	@GetMapping
+	public String test() {
+		return "GET MAPPING USERS !!!!!!!!!!! ~~~";
+	}
+	
 	/**
-	 * POST(/users) È¸¿ø°¡ÀÔ ¿äÃ»
+	 * POST(/users) È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã»
 	 * 
 	 * @param user
 	 * @return
@@ -50,11 +55,11 @@ public class AuthController {
 		Response<UserRegisterDto> result = new Response<UserRegisterDto>();
 		result.setCode(userService.register(user));
 		switch (result.getCode()) {
-		case 0:// È¸¿ø°¡ÀÔ ¼º°ø
+		case 0:// È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 			result.setMsg("insert complete");
 			result.setData(user);
 			break;
-		case 1:// È¸¿ø°¡ÀÔ ½ÇÆÐ
+		case 1:// È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 			result.setMsg("insert fail");
 			break;
 		}
@@ -71,12 +76,12 @@ public class AuthController {
 	public Response<String> Login(HttpServletResponse response, @RequestBody UserLoginDto userlogin) {
 		Response<String> result = new Response<String>();
 		Tokens tokens = userService.login(userlogin);
-		if (tokens.getAccessToken() != null) { // ·Î±×ÀÎ ¼º°ø
+		if (tokens.getAccessToken() != null) { // ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 			result.setCode(0);
 			result.setMsg("login complete");
 			result.setData(tokens.getRefreshToken());
 			response.addHeader(HttpHeaders.AUTHORIZATION, "bearer " + tokens.getAccessToken());
-		} else { // ·Î±×ÀÎ ½ÇÆÐ
+		} else { // ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 			result.setCode(2);
 			result.setMsg("auth fail: 'not exist id' or 'wrong pw'");
 		}
@@ -84,7 +89,7 @@ public class AuthController {
 	}
 
 	/**
-	 * DELETE(/users/token) ·Î±×¾Æ¿ô
+	 * DELETE(/users/token) ï¿½Î±×¾Æ¿ï¿½
 	 * @param AccessToken (auth header)
 	 * @param RefreshToken (request body)
 	 * @return expire tokens
@@ -104,11 +109,11 @@ public class AuthController {
 
 		int r=jwtTokenProvider.checkRefreshToken(AccessToken, RefreshToken,useridx);
 		switch(r){
-			case 41: //ÀÌ¹Ì ·Î±×¾Æ¿ô
+			case 41: //ï¿½Ì¹ï¿½ ï¿½Î±×¾Æ¿ï¿½
 				result.setCode(41);
 				result.setMsg("logout");
 				break;
-			case 40: //refresh token Á¸Àç
+			case 40: //refresh token ï¿½ï¿½ï¿½ï¿½
 				jwtTokenProvider.expireToken(jwtTokenProvider.getUserName(AccessToken));
 				result.setCode(41);
 				result.setMsg("logout");
@@ -123,12 +128,12 @@ public class AuthController {
 	}
 	
 	/**
-	 * POST (/users/{user_idx}/token) access token Àç¹ß±Þ 
+	 * POST (/users/{user_idx}/token) access token ï¿½ï¿½ß±ï¿½ 
 	 * @param AccessToken
 	 * @param data
 	 * @param useridx
 	 * @param response
-	 * @return response header¿¡ access token ¹ß±Þ
+	 * @return response headerï¿½ï¿½ access token ï¿½ß±ï¿½
 	 */
 	@PostMapping("/{idx}/token")
 	public Response<String> ReissueToken(@RequestHeader("Authorization") String AccessToken,

@@ -1,6 +1,6 @@
 package com.www.auth.dto;
 
-import com.www.auth.entity.Users;
+import com.www.core.auth.entity.Users;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

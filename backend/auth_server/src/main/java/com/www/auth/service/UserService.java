@@ -1,8 +1,6 @@
 package com.www.auth.service;
 
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.Optional;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -10,8 +8,8 @@ import org.springframework.stereotype.Service;
 import com.www.auth.dto.Tokens;
 import com.www.auth.dto.UserLoginDto;
 import com.www.auth.dto.UserRegisterDto;
-import com.www.auth.entity.Users;
-import com.www.auth.respository.UsersRepository;
+import com.www.core.auth.entity.Users;
+import com.www.core.auth.repository.UsersRepository;
 
 import com.www.auth.service.JwtTokenProvider;
 
@@ -26,16 +24,16 @@ public class UserService {
 	JwtTokenProvider jwtTokenProvider;
 
 	/**
-	 * REGISTER È¸¿ø°¡ÀÔ
-	 * @param userRegisterDto(È¸¿ø°¡ÀÔ Á¤º¸)
+	 * REGISTER È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	 * @param userRegisterDto(È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
 	 * @return result error code 
 	 */
 	public int register(UserRegisterDto user) {
-		// idÁßº¹ÀÏ°æ¿ì code, msg Ãß°¡
+		// idï¿½ßºï¿½ï¿½Ï°ï¿½ï¿½ code, msg ï¿½ß°ï¿½
 		if (userRepository.existsByUserid(user.getUserid())) {
 			return 1; //insert fail
 		}
-		// idÁßº¹¾Æ´Ò°æ¿ì
+		// idï¿½ßºï¿½ï¿½Æ´Ò°ï¿½ï¿½
 		// pw encoding
 		String encodedpw = passwordEncoder.encode(user.getPw());
 		// insert
@@ -45,7 +43,7 @@ public class UserService {
 	}
 
 	/**
-	 * LOGIN ·Î±×ÀÎ
+	 * LOGIN ï¿½Î±ï¿½ï¿½ï¿½
 	 * @param userlogindto (id/pw)
 	 * @return tokens (access/refresh)
 	 */
@@ -57,7 +55,7 @@ public class UserService {
 			return tokens; 
 		}
 		// pw matching
-		Users info = userRepository.findByUserid(user.getUserid()).get(0);
+		Users info = userRepository.findByUserid(user.getUserid());
 		if (passwordEncoder.matches(user.getPw(), info.getPw())) {
 			System.out.println("============"+info.getName());
 			tokens.setAccessToken(jwtTokenProvider.createAccessToken(info.getIdx(),info.getName()));
