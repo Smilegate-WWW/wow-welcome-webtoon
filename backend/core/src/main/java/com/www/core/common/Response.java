@@ -1,4 +1,4 @@
-package com.www.platform.domain;
+package com.www.core.common;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
