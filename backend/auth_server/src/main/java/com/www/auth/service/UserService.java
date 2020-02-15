@@ -24,16 +24,15 @@ public class UserService {
 	JwtTokenProvider jwtTokenProvider;
 
 	/**
-	 * REGISTER ȸ������
-	 * @param userRegisterDto(ȸ������ ����)
+	 * REGISTER 회원가입
+	 * @param userRegisterDto
 	 * @return result error code 
 	 */
 	public int register(UserRegisterDto user) {
-		// id�ߺ��ϰ�� code, msg �߰�
+		// id 중복체크
 		if (userRepository.existsByUserid(user.getUserid())) {
 			return 1; //insert fail
 		}
-		// id�ߺ��ƴҰ��
 		// pw encoding
 		String encodedpw = passwordEncoder.encode(user.getPw());
 		// insert
@@ -43,7 +42,7 @@ public class UserService {
 	}
 
 	/**
-	 * LOGIN �α���
+	 * LOGIN 로그인
 	 * @param userlogindto (id/pw)
 	 * @return tokens (access/refresh)
 	 */
