@@ -48,8 +48,8 @@ const useStyles = makeStyles(theme => ({
         height: 500,
         justify: "center",
     },
-    alarm:{
-        marginLeft:theme.spacing(135)
+    alarm: {
+        marginLeft: theme.spacing(135)
     },
 }));
 
@@ -60,24 +60,24 @@ const MyWebtoons = [
         poster: "http://placeimg.com/128/128/any",
         artist: "이동건",
         rating: 4,
-        register_date:"2020.01.10",
-        update_date:"2020.02.10",
+        register_date: "2020.01.10",
+        update_date: "2020.02.10",
     },
     {
         title: "복학왕",
         poster: "http://placeimg.com/128/128/any",
         artist: "기안84",
         rating: 3,
-        register_date:"2020.01.10",
-        update_date:"2020.02.10",
+        register_date: "2020.01.10",
+        update_date: "2020.02.10",
     },
     {
         title: "여신강림",
         poster: "http://placeimg.com/128/128/any",
         artist: "냥",
         rating: 4,
-        register_date:"2020.01.10",
-        update_date:"2020.02.10",
+        register_date: "2020.01.10",
+        update_date: "2020.02.10",
     }
 ]
 
@@ -86,9 +86,9 @@ export default function MyPage({ authenticated, logout }) {
     const classes = useStyles();
     return (
         <div>
-            <Header authenticated={authenticated} logout={logout}/>
+            <Header authenticated={authenticated} logout={logout} />
 
-            <div className={classes.menu}>
+            <div className={classes.menu} style={{display:"flex"}}>
                 <div className={classes.button}>
                     <Button variant="contained" href="/">
                         <span style={{ color: "#212121", fontWeight: 520 }}>도전만화</span>
@@ -97,15 +97,23 @@ export default function MyPage({ authenticated, logout }) {
                     <Button variant="contained" color="primary" href="/mypage">
                         <span style={{ color: "#fafafa", fontWeight: 550 }}>마이페이지</span>
                     </Button>
+                </div>
+                <div style={{marginLeft:980,mariginTop:30}}>
+                    <a href="/mypage/editInfo"
+                        style={{
+                            color: "black",
+                        }}>
+                        회원정보수정
+                         </a>
                     <FormControlLabel
-                    value="alarm"
-                    control={<Switch color="primary" />}
-                    label={<img src="/Icon/alarm.png" alt="icon"/>}
-                    labelPlacement="start"
-                    className={classes.alarm}
+                        value="alarm"
+                        control={<Switch color="primary" />}
+                        label={<img src="/Icon/alarm.png" alt="icon" />}
+                        labelPlacement="start"
                     />
                 </div>
-                
+
+
             </div>
 
             <div className={classes.link}>
@@ -129,10 +137,10 @@ export default function MyPage({ authenticated, logout }) {
                     <GridList cellHeight={300} className={classes.gridList} spacing={15} cols={4}>
                         {MyWebtoons.map(myWebtoon => (
                             <GridListTile key={myWebtoon} item>
-                                <MyWebtoon title={myWebtoon.title} poster={myWebtoon.poster} artist={myWebtoon.artist} rating={myWebtoon.rating} register_date={myWebtoon.register_date} update_date={myWebtoon.update_date}/>
+                                <MyWebtoon title={myWebtoon.title} poster={myWebtoon.poster} artist={myWebtoon.artist} rating={myWebtoon.rating} register_date={myWebtoon.register_date} update_date={myWebtoon.update_date} />
                             </GridListTile>
                         ))}
-                        <PlusWebtoon href="/mypage/register"/>
+                        <PlusWebtoon href="/mypage/register" />
                     </GridList>
                 </Paper>
             </div>

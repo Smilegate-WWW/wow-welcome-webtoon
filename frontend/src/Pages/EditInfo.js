@@ -36,15 +36,6 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-function checkId(userId){
-    var pattern_spc = /[~!@#$%^&*()_+|<>?:{}]/; //특수 문자
-    var pattern_kor = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/; // 한글체크
-
-    if(pattern_kor.test(userId) || pattern_spc.test(userId)){
-        return true;
-    }
-}
-
 function checkPw(pw){
     var pattern_spc = /[#$%^&*()_+|<>?:{}]/; //특수 문자
     if(pattern_spc.test(pw)){
@@ -52,29 +43,19 @@ function checkPw(pw){
     }
 }
 
-function checkEmail(email) {	
-    var exptext = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
-            if(exptext.test(email)==false){
-                 return true;
-    }
-    return false;
-}
 
-export default function Signup() {
+export default function EditInfo() {
 
     const classes = useStyles();
 
-    const [userId, setUserId] = useState("");
+    //const userid=User.userId;
     const [pw, setPw] = useState("");
     const [pwCheck, setPwCheck] = useState("");
     const [name, setName] = useState("");
     const [gender, setGender] = React.useState("");
     const [birth, setBirth] = useState("");
-    const [email, setEmail] = useState("");
+    //const email=User.email;
 
-    const handleIdChange = (e) => {
-        setUserId(e.target.value);
-    }
     const handlePwChange = (e) => {
         setPw(e.target.value);
     }
@@ -90,16 +71,10 @@ export default function Signup() {
     const handleBirthChange = (e) => {
         setBirth(e.target.value);
     }
-    const handleEmailChange = (e) => {
-        setEmail(e.target.value);
-    }
 
     const handleSubmit = () => {
-        if (userId === '' || pw === '' || pwCheck === '' || name === '' || gender === '' || birth === '' || email === '') {
+        if ( pw === '' || pwCheck === '' || name === '' || gender === '' || birth === '') {
             alert("정보를 모두 입력해주세요!!");
-        }
-        else if(checkId(userId)){
-            alert("아이디에 특수문자 또는 한글을 제외해주세요!");
         }
         else if (pw !== pwCheck) {
             alert("비밀번호가 일치하지 않습니다!!");
@@ -110,14 +85,11 @@ export default function Signup() {
         else if(checkPw(pw)){
             alert("비밀번호에 가능한 특수문자는 ~!@ 입니다");
         }
-        else if(checkEmail(email)){
-            alert("이메일 형식이 올바르지 않습니다!");
-        }
         else {
            var myHeaders = new Headers();
            myHeaders.append("Content-Type", "application/json");
            
-           var raw = JSON.stringify({"userid":userId,"pw":pw,"name":name,"birth":birth,"gender":gender,"email":email});
+           var raw = JSON.stringify({"pw":pw,"name":name,"birth":birth,"gender":gender});
            
            var requestOptions = {
              method: 'POST',
@@ -152,7 +124,13 @@ export default function Signup() {
             >&emsp;WWW</div>
 
             <form className={classes.textField} noValidate autoComplete="off">
-                <TextField id="userid" label="아이디" value={userId} onChange={handleIdChange} variant="outlined" />
+                <TextField 
+                    disabled 
+                    id="userid" 
+                    label="아이디" 
+                    defaultValue="exampleID" 
+                    variant="outlined" 
+                />
                 <TextField
                     id="pw"
                     label="비밀번호"
@@ -173,7 +151,14 @@ export default function Signup() {
 
             <div className={classes.display}>
                 <form className={classes.smallTextField} noValidate autoComplete="off">
-                    <TextField id="name" label="이름" value={name} onChange={handleNameChange} variant="outlined" />
+                    <TextField 
+                    id="name" 
+                    label="이름"
+                    //defaultValue={User.email} 
+                    value={name} 
+                    onChange={handleNameChange} 
+                    variant="outlined" 
+                    />
                 </form>
 
                 <FormControl variant="outlined" className={classes.smallTextField}>
@@ -197,7 +182,7 @@ export default function Signup() {
                     id="birth"
                     label="생년월일"
                     type="date"
-                    defaultValue="2000-01-01"
+                    //defaultValue={User.birth}
                     value={birth}
                     onChange={handleBirthChange}
                     variant="outlined"
@@ -205,12 +190,17 @@ export default function Signup() {
                         shrink: true,
                     }}
                 />
-                <TextField id="email" label="이메일" value={email} onChange={handleEmailChange} variant="outlined" />
+                <TextField 
+                disabled
+                id="email" 
+                label="이메일" 
+                defaultValue="example.email.com" 
+                variant="outlined" />
             </form>
 
             <div className={classes.loginButton}>
                 <Button variant="contained" color="primary" onClick={handleSubmit}>
-                    <span style={{ color: "#fafafa", fontWeight: "bold" }}>회원가입</span>
+                    <span style={{ color: "#fafafa", fontWeight: "bold" }}>회원정보수정</span>
                 </Button>
             </div>
         </div>

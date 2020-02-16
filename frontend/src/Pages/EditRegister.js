@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
     },
     buttons: {
         marginTop: theme.spacing(1),
-        paddingLeft: theme.spacing(80),
+        paddingLeft: theme.spacing(87),
         '& > *': {
             margin: theme.spacing(1),
         },
@@ -42,8 +42,10 @@ const useStyles = makeStyles(theme => ({
 
 
 
-export default function Register({ authenticated, logout }) {
+export default function EditRegister({ authenticated, logout }) {
     const classes = useStyles();
+
+    // 작품정보 받아와서 넘겨주기.
     const [title, setTitle] = React.useState('');
     const [type, setType] = React.useState('');
     const [genre, setGenre] = React.useState({
@@ -92,9 +94,6 @@ export default function Register({ authenticated, logout }) {
         else if(file.size > 1048576 ){
             alert("파일의 크기가 너무 큽니다");
         }
-        else{
-            alert(file.name+"이(가) 선택되었습니다");
-        }
     }
 
     const handleCancleBtnClick = () => {
@@ -139,18 +138,29 @@ export default function Register({ authenticated, logout }) {
                 genre2 = genreTrue[1];
             }
 
-            var raw = JSON.stringify({"title":title,"toon_type":type,"genre1":genre1,"genre2":genre2,"summary":summary,"plot":plot});
-            
-            var requestOptions = {
-              method: 'POST',
-              body: raw,
-              redirect: 'follow'
-            };
-            
-            fetch("/myTitleDetail", requestOptions)
-              .then(response => response.text())
-              .then(result => console.log(result))
-              .catch(error => console.log('error', error));
+            const axios = require('axios');
+            const FormData = require('form-data');
+
+            const form_data = new FormData();
+            form_data.append('title', title);
+            form_data.append('type', type);
+            form_data.append('genre1', genre1);
+            form_data.append('genre2', genre2);
+            form_data.append('summary', summary);
+            form_data.append('plot', plot);
+            form_data.append('thumbnail', thumbnail);
+            form_data.append('end_flag', 1);
+            form_data.append('created_date', null);
+            form_data.append('updated_date', null);
+            form_data.append('episodes', null);
+
+
+            let url = 'localhost:8080/myTitleDetail';
+            axios.post(url, form_data)
+                .then(res => {
+                    console.log(res.data);
+                })
+                .catch(err => console.log(err))
 
         }
     }
@@ -178,6 +188,7 @@ export default function Register({ authenticated, logout }) {
                         <TextField
                             id="title"
                             variant="outlined"
+                            //defualtValue={MyWebtoon.title}
                             size="small"
                             value={title}
                             onChange={handleTitleChange}
@@ -292,6 +303,7 @@ export default function Register({ authenticated, logout }) {
                         <TextField
                             id="summary"
                             variant="outlined"
+                             //defualtValue={MyWebtoon.summary}
                             value={summary}
                             onChange={handleSummaryChange}
                             size="small"
@@ -303,6 +315,7 @@ export default function Register({ authenticated, logout }) {
                         <TextField
                             id="summary"
                             variant="outlined"
+                             //defualtValue={MyWebtoon.plot}
                             value={plot}
                             onChange={handlePlotChange}
                             size="small"
@@ -340,12 +353,9 @@ export default function Register({ authenticated, logout }) {
                     <span style={{ fontWeight: 550 }}>취소</span>
                 </Button>
                 <Button variant="contained" color="primary" onClick={handleSubmit}>
-                    <span style={{ color: "#fafafa", fontWeight: 550 }}>등록</span>
+                    <span style={{ color: "#fafafa", fontWeight: 550 }}>수정</span>
                 </Button>
-                <Button variant="contained" color="primary" href="/mypage/upload" onClick={handleSubmit}>
-                    <span style={{ color: "#fafafa", fontWeight: 550 }}>등록 후 1회 올리기</span>
-                </Button>
-            </div>
+                </div>
         </div >
     )
 }

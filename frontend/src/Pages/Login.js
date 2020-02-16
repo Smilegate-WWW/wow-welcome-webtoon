@@ -58,12 +58,25 @@ export default function Login({ authenticated, login, location }) {
             form_data.append('userid', userid);
             form_data.append('pw', pw);
 
-            let url = 'localhost:8080/users/token';
-            axios.post(url, form_data)
-                .then(res => {
-                    console.log(res.data);
-                })
-                .catch(err => console.log(err));
+            /*
+            var myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+            
+            var raw = JSON.stringify({"userid":userid,"pw":pw});
+            
+            var requestOptions = {
+              method: 'POST',
+              headers: myHeaders,
+              body: raw,
+              redirect: 'follow'
+            };
+            
+            fetch("/users/token", requestOptions)
+              .then(response => response.text())
+              .then(result => console.log(result))
+              .catch(error => console.log('error', error))
+              .then(alert("아이디 및 비밀번호가 일치하지 않습니다"));
+              */
         }
     };
 
