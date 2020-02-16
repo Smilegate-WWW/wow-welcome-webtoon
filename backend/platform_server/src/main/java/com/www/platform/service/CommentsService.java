@@ -1,12 +1,14 @@
 package com.www.platform.service;
 
-import com.www.platform.domain.Response;
+import com.www.core.auth.entity.Users;
+import com.www.core.auth.repository.UsersRepository;
+
+import com.www.core.common.Response;
+import com.www.core.file.entity.Episode;
+import com.www.core.file.repository.EpisodeRepository;
+import com.www.core.platform.entity.Comments;
+import com.www.core.platform.repository.CommentsRepository;
 import com.www.platform.domain.comments.*;
-import com.www.platform.domain.comments.likedislike.CommentsLike;
-import com.www.platform.domain.fordevtest.Episode;
-import com.www.platform.domain.fordevtest.EpisodeRepository;
-import com.www.platform.domain.fordevtest.Users;
-import com.www.platform.domain.fordevtest.UsersRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -37,7 +39,6 @@ public class CommentsService {
     @Transactional
     public Response<Integer> save(CommentsSaveRequestDto dto) {
         Response<Integer> result = new Response<Integer>();
-
         Optional<Users> user = usersRepository.findById(dto.getUsers_idx());
         Optional<Episode> episode = episodeRepository.findById(dto.getEp_idx());
 
@@ -153,7 +154,7 @@ public class CommentsService {
     public Response<List<CommentsMainResponseDto>> findBestComments(int epIdx) {
         Response<List<CommentsMainResponseDto>> result = new Response<List<CommentsMainResponseDto>>();
 
-        if(!episodeRepository.existsById(epIdx)) {    // 에피소드가 존재하지 않을 때
+        if(!episodeRepository.existsById(epIdx)) {  // 에피소드가 존재하지 않을 때
             result.setCode(1);
             result.setMsg("fail : episode not exist");
         }

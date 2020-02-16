@@ -1,5 +1,6 @@
 package com.www.platform.domain.comments;
 
+import com.www.core.platform.entity.Comments;
 import lombok.Getter;
 
 import java.time.LocalDateTime;

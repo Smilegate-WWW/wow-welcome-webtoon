@@ -1,11 +1,15 @@
 package com.www.platform.service;
 
-import com.www.platform.domain.Response;
-import com.www.platform.domain.comments.Comments;
-import com.www.platform.domain.comments.CommentsRepository;
+import com.www.core.auth.entity.Users;
+import com.www.core.auth.repository.UsersRepository;
+import com.www.core.common.Response;
+import com.www.core.platform.entity.Comments;
+import com.www.core.platform.entity.CommentsDislike;
+import com.www.core.platform.entity.CommentsLike;
+import com.www.core.platform.repository.CommentsDislikeRepository;
+import com.www.core.platform.repository.CommentsLikeRepository;
+import com.www.core.platform.repository.CommentsRepository;
 import com.www.platform.domain.comments.likedislike.*;
-import com.www.platform.domain.fordevtest.Users;
-import com.www.platform.domain.fordevtest.UsersRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,15 +32,15 @@ public class CommentsLikeDislikeService {
         Optional<Users> users = usersRepository.findById(dto.getUsers_idx());
         Optional<Comments> comments = commentsRepository.findById(dto.getComments_idx());
 
-        if(!users.isPresent()){ // 유저가 존재하지 않을 때
+        if(!users.isPresent()){
             result.setCode(2);
             result.setMsg("fail : user not exist");
         }
-        else if(!comments.isPresent()){ // 댓글이 존재하지 않을 때
+        else if(!comments.isPresent()){
             result.setCode(3);
             result.setMsg("fail : comment not exist");
         }
-        else if(users.get().getIdx() == comments.get().getUsers().getIdx()){ // 본인 댓글에 좋아요 요청을 할 때 요청 실패
+        else if(users.get().getIdx() == comments.get().getUsers().getIdx()){
             result.setCode(4);
             result.setMsg("fail : users can't request like on their own comments");
         }
@@ -87,15 +91,15 @@ public class CommentsLikeDislikeService {
         Optional<Users> users = usersRepository.findById(dto.getUsers_idx());
         Optional<Comments> comments = commentsRepository.findById(dto.getComments_idx());
 
-        if(!users.isPresent()){ // 유저가 존재하지 않을 때
+        if(!users.isPresent()){
             result.setCode(2);
             result.setMsg("fail : user not exist");
         }
-        else if(!comments.isPresent()){ // 댓글이 존재하지 않을 때
+        else if(!comments.isPresent()){
             result.setCode(3);
             result.setMsg("fail : comment not exist");
         }
-        else if(users.get().getIdx() == comments.get().getUsers().getIdx()){ // 본인 댓글에 싫어요 요청을 할 때 요청 실패
+        else if(users.get().getIdx() == comments.get().getUsers().getIdx()){ 
             result.setCode(4);
             result.setMsg("fail : users can't request dislike on their own comments");
         }

@@ -1,5 +1,6 @@
-package com.www.platform.domain.comments;
+package com.www.core.platform.repository;
 
+import com.www.core.platform.entity.Comments;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
