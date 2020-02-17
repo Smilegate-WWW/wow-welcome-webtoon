@@ -57,8 +57,7 @@ export default function Register({ authenticated, logout }) {
     });
     const [summary, setSummary] = React.useState('');
     const [plot, setPlot] = React.useState('');
-    const [thumbnail, setThumbnail] = React.useState('');
-
+    const [thumbnail,setThumbnail]=React.useState('');
     const genreArray = [genre.daily, genre.gag, genre.fantasy, genre.action, genre.drama, genre.pure, genre.emotion];
 
     const handleTitleChange = (e) => {
@@ -78,6 +77,7 @@ export default function Register({ authenticated, logout }) {
     }
     const handleThumbnailChange = (e) => {
         const file = e.target.files[0];
+        setThumbnail(file);
         let reader = new FileReader();
         reader.onloadend = () => {
             console.log("load end");
@@ -98,7 +98,7 @@ export default function Register({ authenticated, logout }) {
     }
 
     const handleCancleBtnClick = () => {
-        alert("변경된 내용이 저장되지 않았습니다.");
+        alert("변경된 내용이 저장되지 않습니다.");
     }
     const handleSubmit = () => {
         let genreNum = 0
@@ -138,17 +138,25 @@ export default function Register({ authenticated, logout }) {
                 genre1 = genreTrue[0];
                 genre2 = genreTrue[1];
             }
-
-            var raw = JSON.stringify({"title":title,"toon_type":type,"genre1":genre1,"genre2":genre2,"summary":summary,"plot":plot});
             
+            var webtoonInfo = JSON.stringify({"title":title,"toon_type":type,"genre1":genre1,"genre2":genre2,"summary":summary,"plot":plot});
+            
+            var formdata = new FormData();
+            formdata.append("thumbnail",thumbnail);
+            formdata.append("webtoon", webtoonInfo);
+
+            console.log(thumbnail);
+            console.log(webtoonInfo);
+            
+
             var requestOptions = {
               method: 'POST',
-              body: raw,
+              body: formdata,
               redirect: 'follow'
             };
             
             fetch("/myTitleDetail", requestOptions)
-              .then(response => response.text())
+              .then(response => response.json())
               .then(result => console.log(result))
               .catch(error => console.log('error', error));
 
@@ -313,7 +321,6 @@ export default function Register({ authenticated, logout }) {
                         <h5 >썸네일&emsp;&emsp;</h5>
                         <div>
                             <input
-                                value={thumbnail}
                                 accept=".jpg"
                                 id="thumbnail"
                                 type="file"

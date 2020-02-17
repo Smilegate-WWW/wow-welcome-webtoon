@@ -31,7 +31,18 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function Login({ authenticated, login, location }) {
+function success(result) {
+    console.log(result);
+    if(window.history.state==null){
+        window.location.href="/"
+    }
+    else{
+    const history=(window.history.state.state.from.pathname);
+    window.location.href=history;
+    }
+}
+
+export default function Login({ authenticated, location }) {
     const [userid, setUserid] = useState('');
     const [pw, setPw] = useState('');
 
@@ -42,84 +53,63 @@ export default function Login({ authenticated, login, location }) {
             alert("아이디와 비밀번호를 모두 입력하세요");
         }
         else {
-            try {
-                console.log(userid, pw);
-                login( {userid, pw} );
-              } catch (e) {
-                console.log({e});
-                alert('Failed to login');
-                setUserid('');
-                setPw('');
-            }    
-            const axios = require('axios');
-            const FormData = require('form-data');
 
-            const form_data = new FormData();
-            form_data.append('userid', userid);
-            form_data.append('pw', pw);
-
-            /*
             var myHeaders = new Headers();
             myHeaders.append("Content-Type", "application/json");
-            
-            var raw = JSON.stringify({"userid":userid,"pw":pw});
-            
+
+            var raw = JSON.stringify({ "userid": userid, "pw": pw });
+
             var requestOptions = {
-              method: 'POST',
-              headers: myHeaders,
-              body: raw,
-              redirect: 'follow'
+                method: 'POST',
+                headers: myHeaders,
+                body: raw,
+                redirect: 'follow'
             };
-            
+
             fetch("/users/token", requestOptions)
-              .then(response => response.text())
-              .then(result => console.log(result))
-              .catch(error => console.log('error', error))
-              .then(alert("아이디 및 비밀번호가 일치하지 않습니다"));
-              */
+                .then(response => response.json())
+                .then(result => success(result))
+                .catch(error => console.log('error', error))
         }
     };
 
-//이전에 접근하려고 했던 페이지로 리다이렉션
-const { from } = location.state || { from: { pathname: "/" } };
-if (authenticated) return <Redirect to={from} />;
-
-return (
-    <div className={classes.root}>
-        <h1 style={{
-            color: "#ff7043",
-            fontSize: "64px",
-        }}>&emsp;WWW</h1>
+    return (
+        <div className={classes.root}>
+            <h1
+                style={{
+                    color: "#ff7043",
+                    fontSize: "64px",
+                }}>&emsp;WWW</h1>
 
 
-        <form className={classes.textField} noValidate autoComplete="off">
-            <TextField
-                id="userid"
-                label="아이디를 입력해주세요"
-                variant="outlined"
-                value={userid}
-                onChange={({ target: { value } }) => setUserid(value)}
-            />
-            <TextField
-                id="pw"
-                label="비밀번호를 입력해주세요"
-                type="password"
-                autoComplete="current-password"
-                value={pw}
-                onChange={({ target: { value } }) => setPw(value)}
-                variant="outlined"
-            />
-        </form>
+            <form className={classes.textField} noValidate autoComplete="off">
+                <TextField
+                    id="userid"
+                    label="아이디를 입력해주세요"
+                    variant="outlined"
+                    value={userid}
+                    onChange={({ target: { value } }) => setUserid(value)}
+                />
+                <TextField
+                    id="pw"
+                    label="비밀번호를 입력해주세요"
+                    type="password"
+                    autoComplete="current-password"
+                    value={pw}
+                    onChange={({ target: { value } }) => setPw(value)}
+                    variant="outlined"
+                />
+            </form>
 
-        <div className={classes.loginButton}>
-            <Button variant="contained" color="primary" onClick={handleClick}>
-                <span style={{ color: "#fafafa", fontWeight: "bold" }}>로그인</span>
-            </Button>
+            <div className={classes.loginButton}>
+                <Button variant="contained" color="primary" onClick={handleClick}>
+                    <span style={{ color: "#fafafa", fontWeight: "bold" }}>로그인</span>
+                </Button>
+            </div>
+
+            <div className={classes.signup}>
+                <a href="/login/signup">회원가입</a>
+            </div>
         </div>
-
-        <div className={classes.signup}>
-            <a href="/login/signup">회원가입</a>
-        </div>
-    </div>
-);
+    );
 }

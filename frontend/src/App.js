@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { Home, Comment, Login, MyPage, Signup, Register, Webtoon,Episode,Upload,EditInfo,EditRegister} from './Pages';
-import signIn from './TestAuth';
 import AuthRoute from './AuthRoute';
+import signIn from './TestAuth';
 
 export default function App() {
+
+  window.user;
   //user 로그인된 사용자 정보 담은 변수
   const [user, setUser] = useState(null);
   // 인증 여부

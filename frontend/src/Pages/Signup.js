@@ -9,6 +9,8 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
+//라우트 관련
+import { Route } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -36,28 +38,36 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-function checkId(userId){
+function checkId(userId) {
     var pattern_spc = /[~!@#$%^&*()_+|<>?:{}]/; //특수 문자
     var pattern_kor = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/; // 한글체크
 
-    if(pattern_kor.test(userId) || pattern_spc.test(userId)){
+    if (pattern_kor.test(userId) || pattern_spc.test(userId)) {
         return true;
     }
 }
 
-function checkPw(pw){
+function checkPw(pw) {
     var pattern_spc = /[#$%^&*()_+|<>?:{}]/; //특수 문자
-    if(pattern_spc.test(pw)){
+    if (pattern_spc.test(pw)) {
         return true;
     }
 }
 
-function checkEmail(email) {	
+function checkEmail(email) {
     var exptext = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
-            if(exptext.test(email)==false){
-                 return true;
+    if (exptext.test(email) == false) {
+        return true;
     }
     return false;
+}
+
+let pageMov=false;
+
+function success(json) {
+    console.log(json);
+    alert("회원가입 성공");
+    window.location.href="/login";
 }
 
 export default function Signup() {
@@ -98,38 +108,39 @@ export default function Signup() {
         if (userId === '' || pw === '' || pwCheck === '' || name === '' || gender === '' || birth === '' || email === '') {
             alert("정보를 모두 입력해주세요!!");
         }
-        else if(checkId(userId)){
+        else if (checkId(userId)) {
             alert("아이디에 특수문자 또는 한글을 제외해주세요!");
         }
         else if (pw !== pwCheck) {
             alert("비밀번호가 일치하지 않습니다!!");
         }
-        else if(pw.length<8){
+        else if (pw.length < 8) {
             alert("비밀번호는 8자리 이상으로 설정해주세요!")
         }
-        else if(checkPw(pw)){
+        else if (checkPw(pw)) {
             alert("비밀번호에 가능한 특수문자는 ~!@ 입니다");
         }
-        else if(checkEmail(email)){
+        else if (checkEmail(email)) {
             alert("이메일 형식이 올바르지 않습니다!");
         }
         else {
-           var myHeaders = new Headers();
-           myHeaders.append("Content-Type", "application/json");
-           
-           var raw = JSON.stringify({"userid":userId,"pw":pw,"name":name,"birth":birth,"gender":gender,"email":email});
-           
-           var requestOptions = {
-             method: 'POST',
-             headers: myHeaders,
-             body: raw,
-             redirect: 'follow'
-           };
+            var myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
 
-           fetch("/users", requestOptions)
-             .then(response => response.text())
-             .then(result => console.log(result))
-             .catch(error => console.log('error', error));
+            var raw = JSON.stringify({ "userid": userId, "pw": pw, "name": name, "birth": birth, "gender": gender, "email": email });
+
+            var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw,
+                redirect: 'follow'
+            };
+
+            fetch("/users", requestOptions)
+                .then(response => response.json())
+                .then(json => success(json))
+                .catch(error => console.log('error', error));
+
         }
     }
 
@@ -141,13 +152,12 @@ export default function Signup() {
 
     return (
         <div className={classes.root}>
-            <div 
-                onclick="location.href='/'"
+            <div
                 style={{
-                color: "#ff7043",
-                fontSize: "64px",
-                fontWeight: 700,
-                cursor:"hand",
+                    color: "#ff7043",
+                    fontSize: "64px",
+                    fontWeight: 700,
+                    cursor: "hand",
                 }}
             >&emsp;WWW</div>
 
