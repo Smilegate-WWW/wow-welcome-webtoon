@@ -59,7 +59,7 @@ public class UserService {
 			System.out.println("============"+info.getName());
 			tokens.setAccessToken(jwtTokenProvider.createAccessToken(info.getIdx(),info.getName()));
 			System.out.println("access token:"+tokens.getAccessToken());
-			tokens.setRefreshToken(jwtTokenProvider.createRefreshToken(info.getName()));
+			tokens.setRefreshToken(jwtTokenProvider.createRefreshToken(info.getUserid()));
             System.out.println("refresh token:"+tokens.getRefreshToken());
 			//login date time
             LocalDateTime now = LocalDateTime.now();

@@ -26,9 +26,7 @@ import lombok.AllArgsConstructor;
 
 /**
  * User Register, Login API
- * 
  * @author ji-water
- *
  */
 @RestController
 @AllArgsConstructor
@@ -44,8 +42,7 @@ public class AuthController {
 	}
 	
 	/**
-	 * POST(/users) ȸ������ ��û
-	 * 
+	 * POST(/users) 회원가입
 	 * @param user
 	 * @return
 	 */
@@ -55,11 +52,11 @@ public class AuthController {
 		Response<UserRegisterDto> result = new Response<UserRegisterDto>();
 		result.setCode(userService.register(user));
 		switch (result.getCode()) {
-		case 0:// ȸ������ ����
+		case 0: //회원가입 성공
 			result.setMsg("insert complete");
 			result.setData(user);
 			break;
-		case 1:// ȸ������ ����
+		case 1: //회원가입 실패
 			result.setMsg("insert fail");
 			break;
 		}
@@ -76,12 +73,12 @@ public class AuthController {
 	public Response<String> Login(HttpServletResponse response, @RequestBody UserLoginDto userlogin) {
 		Response<String> result = new Response<String>();
 		Tokens tokens = userService.login(userlogin);
-		if (tokens.getAccessToken() != null) { // �α��� ����
+		if (tokens.getAccessToken() != null) { //로그인 성공
 			result.setCode(0);
 			result.setMsg("login complete");
 			result.setData(tokens.getRefreshToken());
 			response.addHeader(HttpHeaders.AUTHORIZATION, "bearer " + tokens.getAccessToken());
-		} else { // �α��� ����
+		} else { //로그인 실패
 			result.setCode(2);
 			result.setMsg("auth fail: 'not exist id' or 'wrong pw'");
 		}
@@ -89,7 +86,7 @@ public class AuthController {
 	}
 
 	/**
-	 * DELETE(/users/token) �α׾ƿ�
+	 * DELETE(/users/token) 로그아웃
 	 * @param AccessToken (auth header)
 	 * @param RefreshToken (request body)
 	 * @return expire tokens
@@ -109,16 +106,16 @@ public class AuthController {
 
 		int r=jwtTokenProvider.checkRefreshToken(AccessToken, RefreshToken,useridx);
 		switch(r){
-			case 41: //�̹� �α׾ƿ�
+			case 41: //이미 로그아웃된 상태
 				result.setCode(41);
 				result.setMsg("logout");
 				break;
-			case 40: //refresh token ����
+			case 40: //refresh token 파기
 				jwtTokenProvider.expireToken(jwtTokenProvider.getUserName(AccessToken));
 				result.setCode(41);
 				result.setMsg("logout");
 				break;
-			case 42:
+			case 42: //에러 존재
 				result.setCode(42);
 				result.setMsg("access denied : maybe captured or faked token");
 				break;
@@ -128,12 +125,12 @@ public class AuthController {
 	}
 	
 	/**
-	 * POST (/users/{user_idx}/token) access token ��߱� 
+	 * POST (/users/{user_idx}/token) access token 재발급
 	 * @param AccessToken
 	 * @param data
 	 * @param useridx
 	 * @param response
-	 * @return response header�� access token �߱�
+	 * @return response header로 access token 전송
 	 */
 	@PostMapping("/{idx}/token")
 	public Response<String> ReissueToken(@RequestHeader("Authorization") String AccessToken,
@@ -149,17 +146,17 @@ public class AuthController {
 		
 		int r=jwtTokenProvider.checkRefreshToken(AccessToken, RefreshToken, useridx);
 		switch(r) {
-		case 40:
+		case 40: //재발급
 			String newAT=jwtTokenProvider.createAccessToken(useridx, jwtTokenProvider.getUserName(AccessToken));
 			response.addHeader(HttpHeaders.AUTHORIZATION, "bearer " + newAT);
 			result.setCode(40);
 			result.setMsg("reissue tokens");
 			break;
-		case 41:
+		case 41: //로그아웃된 상태(토큰 만료)
 			result.setCode(41);
 			result.setMsg("access denied: logout, you need to re-login");
 			break;
-		case 42:
+		case 42: //에러
 			result.setCode(42);
 			result.setMsg("access denied: incorrect access");
 			break;
