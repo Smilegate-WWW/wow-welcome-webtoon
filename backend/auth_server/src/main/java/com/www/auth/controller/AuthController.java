@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.www.auth.dto.Response;
 import com.www.auth.dto.Tokens;
 import com.www.auth.dto.UserDto;
+import com.www.auth.dto.UserInfoDto;
 import com.www.auth.dto.UserLoginDto;
 import com.www.auth.dto.UserRegisterDto;
 import com.www.auth.service.JwtTokenProvider;
@@ -67,16 +68,18 @@ public class AuthController {
 	 * POST(/users/token) LOGIN
 	 * 
 	 * @param userlogindto (id/pw)
-	 * @return auth header: access token, body : refresh token
+	 * @return auth header: access token, body : refresh token & user info
 	 */
 	@PostMapping("/token")
-	public Response<String> Login(HttpServletResponse response, @RequestBody UserLoginDto userlogin) {
-		Response<String> result = new Response<String>();
+	public Response<UserInfoDto> Login(HttpServletResponse response, @RequestBody UserLoginDto userlogin) {
+		Response<UserInfoDto> result = new Response<UserInfoDto>();
 		Tokens tokens = userService.login(userlogin);
 		if (tokens.getAccessToken() != null) { //로그인 성공
 			result.setCode(0);
 			result.setMsg("login complete");
-			result.setData(tokens.getRefreshToken());
+			//json return
+			UserInfoDto info = new UserInfoDto(userService.getUserDto(userlogin.getUserid()),tokens.getRefreshToken());
+			result.setData(info);
 			response.addHeader(HttpHeaders.AUTHORIZATION, "bearer " + tokens.getAccessToken());
 		} else { //로그인 실패
 			result.setCode(2);
@@ -111,7 +114,8 @@ public class AuthController {
 				result.setMsg("logout");
 				break;
 			case 40: //refresh token 파기
-				jwtTokenProvider.expireToken(jwtTokenProvider.getUserName(AccessToken));
+			case 43:
+				jwtTokenProvider.expireToken(useridx);
 				result.setCode(41);
 				result.setMsg("logout");
 				break;
@@ -157,9 +161,13 @@ public class AuthController {
 			result.setMsg("access denied: logout, you need to re-login");
 			break;
 		case 42: //에러
+		case 43:
 			result.setCode(42);
 			result.setMsg("access denied: incorrect access");
 			break;
+		//case 43:
+		//	result.setCode(43);
+		//	result.setMsg("access denied: access token is not invalid or you need to send type 'delete'");
 		}
 		return result;
 		
