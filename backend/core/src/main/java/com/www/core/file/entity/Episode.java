@@ -30,7 +30,7 @@ public class Episode extends BaseTimeEntity {
 	private int ep_hits;
 	
 	@ManyToOne
-	@JoinColumn
+	@JoinColumn(name="webtoon_idx")
 	private Webtoon webtoon;
 	
 	//created_date

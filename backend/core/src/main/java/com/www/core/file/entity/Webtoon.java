@@ -15,13 +15,7 @@ import java.util.List;
 @Data
 @Entity
 @ToString(exclude = "webtoon_idx")
-/*
-@SequenceGenerator(
-		name = "WEBTOON_SEQ_GENERATOR",
-		sequenceName = "WEBTOON_SEQ" ,
-		initialValue = 1, allocationSize = 1
-)
-*/
+
 public class Webtoon extends BaseTimeEntity {
 	
 	@Id
@@ -46,7 +40,7 @@ public class Webtoon extends BaseTimeEntity {
 	@Column
 	private int end_flag;
 	
-	@OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "webtoon")
+	@OneToMany(fetch=FetchType.EAGER,  orphanRemoval = true , cascade = CascadeType.REMOVE, mappedBy = "webtoon")
 	//@JoinColumn(name="webtoon_idx")
 	private List<Episode> episodes = new ArrayList<Episode>();
 	
