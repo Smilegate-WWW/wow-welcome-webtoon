@@ -1,7 +1,6 @@
 package com.www.file.service;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -26,27 +25,24 @@ import com.www.file.dto.WebtoonDto;
 import com.www.file.dto.WebtoonListDto;
 import com.www.file.dto.WebtoonPage;
 
-import lombok.AllArgsConstructor;
 
 //@AllArgsConstructor
 @Service
 public class WebtoonService {
 	
 	private WebtoonRepository webtoonRepository;
-	private EpisodeRepository episodeRepository;
 	
-	//ÇÑ ºí·°¿¡ Á¸ÀçÇÏ´Â ÃÖ´ë ÆäÀÌÁö ¹øÈ£ ¼ö 
+	//í•œ ë¸”ëŸ­ ë‚´ ìµœëŒ€ í˜ì´ì§€ ë²ˆí˜¸ ìˆ˜
 	private static final int BLOCK_PAGE_NUM_COUNT = 5;
-	//ÇÑ ÆäÀÌÁö ÃÖ´ë À¥Å÷ °¹¼ö 
+	//í•œ í˜ì´ì§€ ë‚´ ìµœëŒ€ ì›¹íˆ° ì¶œë ¥ ê°¯ìˆ˜
 	private static final int PAGE_WEBTOON_COUNT = 20;
 	
 	@Value("${custom.path.upload-images}")
 	private String filePath;
 	
 	
-	public WebtoonService(WebtoonRepository webtoonRepository, EpisodeRepository episodeRepository) {
+	public WebtoonService(WebtoonRepository webtoonRepository) {
 		this.webtoonRepository = webtoonRepository;
-		this.episodeRepository = episodeRepository;
 	}
 	
 	public void checkCondition(MultipartFile file,WebtoonDto webtoonDto,Response<WebtoonDto> res) {
@@ -79,23 +75,21 @@ public class WebtoonService {
 	@Transactional
 	public Response<WebtoonDto> createWebtoon(MultipartFile file, WebtoonDto webtoonDto) throws IOException {
 		Response<WebtoonDto> res = new Response<WebtoonDto>();
-		//ÇÊ¼ö ÀÔ·Â Á¶°Ç Ã¼Å©
+		//í•„ìˆ˜ ì¡°ê±´ ì²´í¬
 		checkCondition(file,webtoonDto,res);
 		if(res.getCode()!=0)
 			return res;
 		else {
-			//¸ğµç ÇÊ¼ö ÀÔ·Â Á¶°Ç ÃæÁ·
+			//í•„ìˆ˜ ì…ë ¥ ì¡°ê±´ ë§Œì¡±ì‹œ
 			String fileName = file.getOriginalFilename();
 			System.out.println(fileName);
 			webtoonDto.setThumbnail(fileName);
-			//file ÀúÀå¼Ò¿¡ ÀúÀå
 			
+			//file ì™¸ë¶€ í´ë”ë¡œ ì´ë™
 			File destinationFile = new File(filePath+"/thumbnail/"+fileName);
-			//if(!destinationFile.exists()) System.out.println("¿À·ù!!!!!!!!!!!!!");
 			destinationFile.getParentFile().mkdir();
 			file.transferTo(destinationFile);
-			
-			//webtoonÁ¤º¸ ÀúÀå
+	
 			webtoonRepository.save(webtoonDto.toEntity());
 			res.setData(webtoonDto);
 			return res;
@@ -111,7 +105,7 @@ public class WebtoonService {
 		List<WebtoonListDto> webtoonListDto = new ArrayList<>();
 		int totalpages = page.getTotalPages();
 		    
-		//À¯È¿ ¹üÀ§ ³» ÆäÀÌÁö ¿äÃ»
+		//ìš”ì²­í•œ í˜ì´ì§€ ë²ˆí˜¸ê°€ ìœ íš¨í•œ ë²”ìœ„ì¸ì§€ ì²´í¬
 		if(pageNum>0 && pageNum<=totalpages) {
 			for(Webtoon webtoon : webtoons) {
 				WebtoonListDto webtoonDto = WebtoonListDto.builder()
@@ -121,14 +115,15 @@ public class WebtoonService {
 				
 				List<Episode> episodeList = webtoon.getEpisodes();
 				
-				//°¡Àå ÃÖ½Å È­ ¾÷µ¥ÀÌÆ® ³¯Â¥
+				//ì›¹íˆ° ì—…ë°ì´íŠ¸ì¼ í•„ë“œ 
+				//íšŒì°¨ê°€ 1ê°œ ì´ìƒ ë“±ë¡ëœ ê²½ìš° ê°€ì¥ ìµœì‹  íšŒì°¨ì˜ ì—…ë°ì´íŠ¸ ì‹œê°„ìœ¼ë¡œ ì„¤ì •
 				if(!episodeList.isEmpty()) {
 		        	Episode e = episodeList.get(episodeList.size()-1);
 		        	LocalDateTime lastUpdate = e.getUpdated_date();
 		        	webtoonDto.setLast_updated(lastUpdate);
 		        }
 		        
-		        //µî·ÏµÈ È¸Â÷°¡ ¾øÀ»½Ã
+		        //íšŒì°¨ê°€ ë“±ë¡ë˜ì–´ìˆì§€ ì•Šì€ ê²½ìš° ì›¹íˆ° ìƒì„±ì‹œê°„ìœ¼ë¡œ ì„¤ì •
 		        else {
 		        	webtoonDto.setLast_updated(webtoon.getCreated_date());
 		        }
@@ -153,20 +148,20 @@ public class WebtoonService {
 	public Integer[] getPageList(Integer curPageNum) {
 		Integer[] pageList = new Integer[BLOCK_PAGE_NUM_COUNT];
 		
-		//ÃÑ °Ô½Ã±Û °¹¼ö
+		//ì´ ì—í”¼ì†Œë“œ ê°¯ìˆ˜
 		Double webtoonsTotalCount = Double.valueOf(this.getWebtoonCount());
 		
-		//ÃÑ °Ô½Ã±Û ±âÁØÀ¸·Î °è»êÇÑ ¸¶Áö¸· ÆäÀÌÁö ¹øÈ£ °è»ê (¿Ã¸²)
+		//ì´ ê²Œì‹œê¸€ ê¸°ì¤€ìœ¼ë¡œ ê³„ì‚°í•œ ë§ˆì§€ë§‰ í˜ì´ì§€ ë²ˆí˜¸ ê³„ì‚° (ì˜¬ë¦¼ìœ¼ë¡œ ê³„ì‚°)
 		Integer totalLastPageNum = (int)(Math.ceil((webtoonsTotalCount/PAGE_WEBTOON_COUNT)));
 		
-		//ÇöÀç ÆäÀÌÁö¸¦ ±âÁØÀ¸·Î ºí·°ÀÇ ¸¶Áö¸· ÆäÀÌÁö ¹øÈ£ °è»ê
+		//í˜„ì¬ í˜ì´ì§€ë¥¼ ê¸°ì¤€ìœ¼ë¡œ ë¸”ëŸ­ì˜ ë§ˆì§€ë§‰ í˜ì´ì§€ ë²ˆí˜¸ ê³„ì‚°
 		Integer blockLastPageNum = (totalLastPageNum > curPageNum + BLOCK_PAGE_NUM_COUNT)
 					? curPageNum + BLOCK_PAGE_NUM_COUNT
 					: totalLastPageNum;
-		//ÆäÀÌÁö ½ÃÀÛ ¹øÈ£ Á¶Á¤
+		//í˜ì´ì§€ ì‹œì‘ ë²ˆí˜¸ ì¡°ì •
 		curPageNum = (curPageNum <= 3) ? 1 : curPageNum-2;
 		
-		//ÆäÀÌÁö ¹øÈ£ ÇÒ´ç
+		//í˜ì´ì§€ ë²ˆí˜¸ í• ë‹¹
 		for(int val = curPageNum, idx=0; val <= blockLastPageNum; val++, idx++) {
 			pageList[idx] = val;
 		}
@@ -186,7 +181,6 @@ public class WebtoonService {
 		
 		checkCondition(file, webtoonDto, res);
 		
-		//ÇÊ¼ö Á¶°Ç Ã¼Å©
 		if(res.getCode()!=0)
 			return res;
 		else {
@@ -201,12 +195,11 @@ public class WebtoonService {
 	        webtoon.setTitle(webtoonDto.getTitle());
 	        webtoon.setToon_type(webtoonDto.getToon_type());
 	        
-	        //½æ³×ÀÏ ÀÌ¹ÌÁö°¡ º¯°æµÇ¾úÀ» °æ¿ì 
 	        if(!file.isEmpty()) {
 				String fileName = file.getOriginalFilename();
 				System.out.println(fileName);
 				webtoonDto.setThumbnail(fileName);
-				//file ÀúÀå¼Ò¿¡ ÀúÀå
+				//file ì™¸ë¶€ í´ë”ë¡œ ì´ë™
 				File destinationFile = new File("D:/image/"+fileName);
 				destinationFile.getParentFile().mkdir();
 				file.transferTo(destinationFile);
@@ -221,7 +214,7 @@ public class WebtoonService {
 	
 	public int deleteWebtoon(int idx) {
         
-        //Á¸ÀçÇÏÁö ¾Ê´Â À¥Å÷
+        //í•´ë‹¹ ì›¹íˆ° idxê°€ ìœ íš¨í•œì§€ ì²´í¬
         if(!webtoonRepository.existsById(idx)) {
         	return 1;
         }

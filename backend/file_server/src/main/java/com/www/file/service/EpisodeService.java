@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import com.www.core.file.entity.*;
@@ -20,10 +19,7 @@ import com.www.file.dto.EpisodeListDto;
 import com.www.file.dto.EpisodePage;
 import com.www.file.dto.EpisodeRegistDto;
 import com.www.core.common.Response;
-import com.www.file.dto.WebtoonDto;
-import com.www.file.dto.WebtoonPage;
 
-import lombok.AllArgsConstructor;
 
 @Service
 public class EpisodeService {
@@ -31,9 +27,9 @@ public class EpisodeService {
 	private WebtoonRepository webtoonRepository;
 	private EpisodeRepository episodeRepository;
 	
-	//ÇÑ ºí·°¿¡ Á¸ÀçÇÏ´Â ÃÖ´ë ÆäÀÌÁö ¹øÈ£ ¼ö 
+	//í•œ ë¸”ëŸ­ ë‚´ ìµœëŒ€ í˜ì´ì§€ ë²ˆí˜¸ ìˆ˜
 	private static final int BLOCK_PAGE_NUM_COUNT = 5;
-	//ÇÑ ÆäÀÌÁö ÃÖ´ë È¸Â÷ °¹¼ö 
+	//í•œ í˜ì´ì§€ ë‚´ ìµœëŒ€ íšŒì°¨ ì¶œë ¥ ê°¯ìˆ˜
 	private static final int PAGE_EPISODE_COUNT = 7;
 		
 	@Value("${custom.path.upload-images}")
@@ -60,7 +56,7 @@ public class EpisodeService {
 	    
 	    int totalpages = page.getTotalPages();
 	    
-	    //À¯È¿ ¹üÀ§ ³» ÆäÀÌÁö ¿äÃ»
+	    //ìš”ì²­í•œ í˜ì´ì§€ ë²ˆí˜¸ê°€ ìœ íš¨í•œ ë²”ìœ„ì¸ì§€ ì²´í¬
 	    if(pageNum>0 && pageNum<=totalpages) {
 	    	List<Episode> episodeList = page.getContent();
 		    for(Episode episode : episodeList) {
@@ -95,21 +91,21 @@ public class EpisodeService {
 	public Integer[] getPageList(Integer curPageNum, int webtoon_idx) {
 		Integer[] pageList = new Integer[BLOCK_PAGE_NUM_COUNT];
 		
-		//ÃÑ °Ô½Ã±Û °¹¼ö
+		//ì´ ì—í”¼ì†Œë“œ ê°¯ìˆ˜
 		Double episodesTotalCount = Double.valueOf(this.getEpisodeCount(webtoon_idx));
 		
-		//ÃÑ °Ô½Ã±Û ±âÁØÀ¸·Î °è»êÇÑ ¸¶Áö¸· ÆäÀÌÁö ¹øÈ£ °è»ê (¿Ã¸²)
+		//ì´ ê²Œì‹œê¸€ ê¸°ì¤€ìœ¼ë¡œ ê³„ì‚°í•œ ë§ˆì§€ë§‰ í˜ì´ì§€ ë²ˆí˜¸ ê³„ì‚° (ì˜¬ë¦¼ìœ¼ë¡œ ê³„ì‚°)
 		Integer totalLastPageNum = (int)(Math.ceil((episodesTotalCount/PAGE_EPISODE_COUNT)));
 		
-		//ÇöÀç ÆäÀÌÁö¸¦ ±âÁØÀ¸·Î ºí·°ÀÇ ¸¶Áö¸· ÆäÀÌÁö ¹øÈ£ °è»ê
+		//í˜„ì¬ í˜ì´ì§€ë¥¼ ê¸°ì¤€ìœ¼ë¡œ ë¸”ëŸ­ì˜ ë§ˆì§€ë§‰ í˜ì´ì§€ ë²ˆí˜¸ ê³„ì‚°
 		Integer blockLastPageNum = (totalLastPageNum > curPageNum + BLOCK_PAGE_NUM_COUNT)
 					? curPageNum + BLOCK_PAGE_NUM_COUNT
 					: totalLastPageNum;
 		
-		//ÆäÀÌÁö ½ÃÀÛ ¹øÈ£ Á¶Á¤
+		//í˜ì´ì§€ ì‹œì‘ ë²ˆí˜¸ ì¡°ì •
 		curPageNum = (curPageNum <= 3) ? 1 : curPageNum-2;
 		
-		//ÆäÀÌÁö ¹øÈ£ ÇÒ´ç
+		//í˜ì´ì§€ ë²ˆí˜¸ í• ë‹¹
 		for(int val = curPageNum, idx=0; val <= blockLastPageNum; val++, idx++) {
 			pageList[idx] = val;
 		}
@@ -117,7 +113,7 @@ public class EpisodeService {
 		return pageList;
 	}
 	
-
+	//í•„ìˆ˜ ì¡°ê±´ ì²´í¬
 	public void checkCondition(MultipartFile thumbnail, MultipartFile[] manuscript, EpisodeDto episodeDto,Response<EpisodeDto> res) {
 		
 		if(episodeDto.getTitle()==null) {
@@ -132,14 +128,6 @@ public class EpisodeService {
 			res.setMsg("insert fail: need to register thumbnail");
 			return;
 		}
-		
-		/*
-		if(manuscript[0].isEmpty()) {
-			res.setCode(14);
-			res.setMsg("insert fail: need to register thumbnail");
-			return;
-		}
-		*/
 		
 		if(episodeDto.getAuthor_comment()==null) {
 			res.setCode(15);
@@ -156,7 +144,7 @@ public class EpisodeService {
 		
 		Response<EpisodeDto> res = new Response<EpisodeDto>();
 		
-		//ÇØ´ç À¥Å÷ÀÌ Á¸ÀçÇÏÁö ¾Ê´Â °æ¿ì 
+		//ìœ íš¨í•œ ì›¹íˆ° idxê°€ ì•„ë‹Œê²½ìš° 
 		if(!webtoonRepository.existsById(webtoon_idx)) {
 			res.setCode(1);
 			res.setMsg("fail: Webtoon do not exists");
@@ -164,16 +152,9 @@ public class EpisodeService {
         }
 		
 		checkCondition(thumbnail, manuscripts, episodeDto, res);
-		//webtoon idx·Î ÇØ´ç webtoon entity Ã£°í ¼³Á¤ 
 		Optional<Webtoon> WebtoonEntityWrapper = webtoonRepository.findById(webtoon_idx);
         Webtoon webtoon = WebtoonEntityWrapper.get();
-        //episodeDto¿¡ ÇØ´ç webtoon ¿¬°á
-        //episodeDto.setWebtoon(webtoon);
-        //episodeDto.toEntity().setWebtoon(webtoon);
-       
-        /*
-         * file°ü·Ã dbÀúÀå 
-         */
+     
         
         int lastno;
         /*
@@ -183,14 +164,14 @@ public class EpisodeService {
 	    		*/
         List<Episode> episodeList = webtoon.getEpisodes();
         
-        //Ã¹ È¸Â÷ µî·Ï ¾Æ´Ò ½Ã °¡Àå ³ªÁß È¸Â÷ +1 
+        //ì²« íšŒì°¨ ë“±ë¡ì´ ì•„ë‹ ì‹œ ê°€ì¥ ë§ˆì§€ë§‰ íšŒì°¨ ë²ˆí˜¸ +1
         if(!episodeList.isEmpty()) {
         	Episode e = episodeList.get(episodeList.size()-1);
         	lastno = e.getEp_no();
         	episodeDto.setEp_no(lastno+1);
         }
         
-        //Ã¹ È¸Â÷ µî·Ï½Ã
+        //ì²« íšŒì°¨ ë“±ë¡ì‹œ
         else {
         	episodeDto.setEp_no(1);
         }
@@ -211,7 +192,6 @@ public class EpisodeService {
         
         EpisodeRegistDto ep = new EpisodeRegistDto(episodeDto,webtoon);
       
-        //episodeDto »ı¼º ¹× ÀúÀå
 		episodeRepository.save(ep.toEntity());
 		res.setData(episodeDto);
 		return res;
@@ -232,7 +212,7 @@ public class EpisodeService {
 			}
 		}
 		
-		//È¸Â÷ Á¸ÀçÇÏÁö ¾Ê´Â °æ¿ì 
+		//ìœ íš¨í•œ ì—í”¼ì†Œë“œê°€ ì•„ë‹ ì‹œ 
 		if(episode.getTitle()==null) {
 			res.setCode(1);
       		res.setMsg("fail: Episode do not exists");
@@ -275,7 +255,7 @@ public class EpisodeService {
 			}
 		}
 		
-		//È¸Â÷ Á¸ÀçÇÏÁö ¾Ê´Â °æ¿ì 
+		//ìœ íš¨í•œ ì—í”¼ì†Œë“œê°€ ì•„ë‹ ì‹œ 
 		if(episode.getTitle()==null) {
 			return 1;
 		}

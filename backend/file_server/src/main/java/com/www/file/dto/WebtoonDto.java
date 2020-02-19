@@ -1,9 +1,6 @@
 package com.www.file.dto;
 
-import java.time.LocalDateTime;
-import java.util.List;
 import com.www.core.file.entity.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,7 +25,6 @@ public class WebtoonDto {
 	
 	public Webtoon toEntity() {
 		Webtoon build = Webtoon.builder()
-				//.idx(idx)
 				.title(title)
 				.toon_type(toon_type)
 				.genre1(genre1)

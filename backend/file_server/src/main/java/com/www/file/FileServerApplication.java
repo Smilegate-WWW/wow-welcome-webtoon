@@ -7,7 +7,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import com.www.file.property.FileUploadProperties;
 
 @EntityScan(basePackages="com.www.core")
 @EnableJpaRepositories(basePackages="com.www.core") 

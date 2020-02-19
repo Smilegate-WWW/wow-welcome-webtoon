@@ -34,7 +34,6 @@ public class EpisodeDto {
 				.author_comment(author_comment)
 				.thumbnail(thumbnail)
 				.contents(contents)
-				//.webtoon(webtoon)
 				.build();
 		return build;
 	}
