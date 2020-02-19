@@ -45,7 +45,7 @@ public class Webtoon extends TimeEntity{
 	private int users_idx;
 	@Column
 	private String title;
-	@Column
+	@Column(nullable = false)
 	private int toon_type;
 	@Column
 	private int genre1;
@@ -60,7 +60,7 @@ public class Webtoon extends TimeEntity{
 	@Column
 	private int end_flag;
 	
-	@OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "webtoon")
+	@OneToMany(fetch=FetchType.EAGER,  orphanRemoval = true , cascade = CascadeType.REMOVE, mappedBy = "webtoon")
 	//@JoinColumn(name="webtoon_idx")
 	private List<Episode> episodes = new ArrayList<Episode>();
 	

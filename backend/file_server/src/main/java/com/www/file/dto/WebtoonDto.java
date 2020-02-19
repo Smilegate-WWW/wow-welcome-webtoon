@@ -27,8 +27,7 @@ public class WebtoonDto {
 	private int end_flag;
 	//private LocalDateTime created_date;
 	//private LocalDateTime updated_date;
-	
-	private List<Episode> episodes;
+	//private List<Episode> episodes;
 	
 	public Webtoon toEntity() {
 		Webtoon build = Webtoon.builder()
@@ -45,10 +44,12 @@ public class WebtoonDto {
 		return build;
 	}
 	
+	/*
 	@Builder
 	public WebtoonDto(List<Episode> episodes) {
 		this.episodes = episodes;
 	}
+	*/
 	
 
 }

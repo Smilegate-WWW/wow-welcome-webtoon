@@ -14,4 +14,7 @@ spring:
     show-sql: true
   servlet:    multipart:      enabled: true
       max-file-size: 50MB      max-request-size: 50MB
-      location: D:\upload\
+custom:
+  path:
+    upload-images : 'D:/upload/'
+  

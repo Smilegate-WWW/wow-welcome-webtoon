@@ -7,9 +7,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import com.www.file.property.FileUploadProperties;
 
-@EnableConfigurationProperties({
-	FileUploadProperties.class
-})
+
+@EnableConfigurationProperties
 @EnableJpaAuditing
 @SpringBootApplication
 public class FileServerApplication {

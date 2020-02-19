@@ -2,7 +2,9 @@ package com.www.file.property;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(prefix="file")
+//@ConfigurationProperties(prefix="file")
+@ConfigurationProperties(prefix="custom")
+
 public class FileUploadProperties {
     private String uploadDir;
  
