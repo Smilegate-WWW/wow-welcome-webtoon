@@ -16,13 +16,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.www.file.domain.entity.Episode;
-import com.www.file.domain.entity.Webtoon;
-import com.www.file.domain.repository.EpisodeRepository;
-import com.www.file.domain.repository.WebtoonRepository;
+import com.www.core.file.entity.*;
+import com.www.core.file.repository.*;
+
 import com.www.file.dto.EpisodeDto;
 import com.www.file.dto.EpisodeListDto;
-import com.www.file.dto.Response;
+import com.www.core.common.Response;
 import com.www.file.dto.WebtoonDto;
 import com.www.file.dto.WebtoonListDto;
 import com.www.file.dto.WebtoonPage;

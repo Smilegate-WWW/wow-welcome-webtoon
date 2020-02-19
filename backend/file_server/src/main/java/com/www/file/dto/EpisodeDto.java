@@ -4,14 +4,14 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 
-import com.www.file.domain.entity.Episode;
-import com.www.file.domain.entity.Webtoon;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
+import com.www.core.file.entity.*;
 
 
 @Getter

@@ -2,10 +2,7 @@ package com.www.file.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
-import com.www.file.domain.entity.Episode;
-import com.www.file.domain.entity.Webtoon;
-
+import com.www.core.file.entity.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

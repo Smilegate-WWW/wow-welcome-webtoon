@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -23,7 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.www.file.domain.repository.WebtoonRepository;
+import com.www.core.file.repository.*;
 import com.www.file.dto.WebtoonDto;
 import com.www.file.dto.WebtoonListDto;
 import com.www.file.dto.WebtoonPage;
@@ -32,29 +33,27 @@ import com.www.file.service.WebtoonService;
 import com.www.file.dto.EpisodeDto;
 import com.www.file.dto.EpisodeListDto;
 import com.www.file.dto.EpisodePage;
-import com.www.file.dto.Response;
+import com.www.core.common.Response;
 
 @RestController
 public class WebtoonController {
 	@Autowired
 	private WebtoonRepository webtoonRepository;
-	//@Autowired
-	//private FileUploadService service;
+	
 	@Autowired
 	private WebtoonService webtoonService;
 	
 	@Autowired
 	private EpisodeService episodeService;
 	
-	@RequestMapping("/")
-	public String index() {
-		return "Greetings from Spring Boot!";
-	}
-	
 	//신규 웹툰 등록
 	//예외처리 : 필수 입력 조건 체크
 	@PostMapping("/myTitleDetail")
-	public Response<WebtoonDto> registWebtoon(@RequestPart("thumbnail") MultipartFile file, @RequestPart("webtoon") WebtoonDto webtoonDto) throws IOException {
+	public Response<WebtoonDto> registWebtoon(@RequestHeader("Authorization") String AccessToken,
+			@RequestPart("thumbnail") MultipartFile file, 
+			@RequestPart("webtoon") WebtoonDto webtoonDto) throws IOException {
+		//System.out.println("실행중");
+		
 		return webtoonService.createWebtoon(file, webtoonDto);
 		
 	}
