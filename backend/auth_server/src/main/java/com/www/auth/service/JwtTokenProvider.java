@@ -2,6 +2,7 @@ package com.www.auth.service;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -10,9 +11,15 @@ import javax.xml.bind.DatatypeConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.www.core.auth.entity.Users;
+import com.www.core.auth.repository.UsersRepository;
+
 import io.jsonwebtoken.*;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Service
 public class JwtTokenProvider {
@@ -22,12 +29,15 @@ public class JwtTokenProvider {
 	private SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 	private byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(secretKey);
 	private Key KEY = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
-	private long tokenValidMilisecond = 1000L * 60 * 60; // À¯È¿ 1½Ã°£(1000*60*60)
+	private long tokenValidMilisecond = 1000L * 60 * 60; // 1000ms(1sec), 1000*60*60==í•œì‹œê°„
+
 
 	@Autowired
 	RedisTemplate<String, Object> redisTemplate;
+	@Autowired
+	UsersRepository usersRepository;
 
-	// access jwt ÅäÅ« »ı¼º
+	// access jwt ë°œê¸‰
 	public String createAccessToken(int user_idx, String user_name) {
 		// payload
 		Claims claims = Jwts.claims();
@@ -40,90 +50,99 @@ public class JwtTokenProvider {
 				.compact();
 	}
 
-	// refresh token
-	public String createRefreshToken(String user_name) {
+	// refresh token ë°œê¸‰
+	public String createRefreshToken(String user_id) {
 		System.out.println("redis template:" + redisTemplate);
 
 		Date now = new Date();
 		String refreshToken = Jwts.builder().setHeaderParam("typ", "jwt").setIssuedAt(now)
-				.setExpiration(new Date(now.getTime() + tokenValidMilisecond * 24)) // ÀÏ´Ü ÇÏ·ç¸¸ À¯È¿
+				.setExpiration(new Date(now.getTime() + tokenValidMilisecond * 24)) // ï¿½Ï´ï¿½ ï¿½Ï·ç¸¸ ï¿½ï¿½È¿
 				.signWith(KEY, signatureAlgorithm).compact();
 		// redis set
 		ValueOperations<String, Object> vop = redisTemplate.opsForValue();
-		vop.set(user_name, refreshToken);
-		// 24½Ã°£ ÀÌÈÄ refresh token ÀÚµ¿ »èÁ¦
-		redisTemplate.expire(user_name, tokenValidMilisecond * 24, TimeUnit.MILLISECONDS); 
+		vop.set(user_id, refreshToken);
+		// 24ì‹œê°„ í›„ì— ë§Œë£Œ
+		redisTemplate.expire(user_id, tokenValidMilisecond * 24, TimeUnit.MILLISECONDS);
 
 		return refreshToken;
 	}
 
-	// jwt token¿¡¼­ idxÃßÃâ
+	// access tokenì—ì„œ user idx íŒŒì‹±
 	public int getUserIdx(String token) {
 		try {
 			return (int) Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("user_idx");
 		} catch (ExpiredJwtException e) {
 			return (int) e.getClaims().get("user_idx");
+		} catch (Exception e) { // error
+			return -1;
 		}
 	}
 
-	// jwt token¿¡¼­ name ÃßÃâ
+	// access tokenì—ì„œ user name íŒŒì‹±
 	public String getUserName(String token) {
 		try {
 			return (String) Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("user_name");
 		} catch (ExpiredJwtException e) {
 			return (String) e.getClaims().get("user_name");
+		} catch (Exception e) { // error
+			return e.getMessage();
 		}
 	}
 
-	// Jwt ÅäÅ«ÀÇ À¯È¿¼º È®ÀÎ
+	// token ìœ íš¨ì„± ê²€ì‚¬
 	public int validateToken(String jwtToken) {
-		System.out.println("validateToken parameter:"+jwtToken);
 		try {
 			Date now = new Date();
-			long time = (Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken).getBody().getExpiration().getTime()-now.getTime());
-			System.out.println("³²Àº ½Ã°£! : "+time);
-			if(time < 1000L*30) {
-				return 1; //30ÃÊ ³²¾ÒÀ» °æ¿ì¿¡µµ expiredµÆ´Ù°í ÆÇ´Ü
+			long time = (Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken).getBody().getExpiration()
+					.getTime() - now.getTime());
+			System.out.println("í† í° ì‹œê°„! : " + time);
+			if (time < 1000L * 30) { //exp timeì´ 30ì´ˆë¯¸ë§Œìœ¼ë¡œ ë‚¨ì•˜ì„ ê²½ìš° ë§Œë£Œë¡œ ê°„ì£¼
+				return 1; //expired 
 			}
-			return 0; // À¯È¿
+			return 0; //valid
 		} catch (ExpiredJwtException e) {
-			return 1; // expired
+			return 1; //expired
 		} catch (Exception e) {
-			System.out.println("validateToken ¿¡·¯!!!:"+e);
-			return 2; // ±¸Á¶ÀûÀÎ ¹®Á¦ ÀÖÀ½
+			System.out.println(e.getMessage());
+			return 2; //invalid
 		}
 	}
 
-	// refresh token °ËÁõ
+	// refresh token
 	public int checkRefreshToken(String accessT, String refreshT, int idx) {
-		// ÅäÅ« À¯È¿ÇÑÁö °Ë»ç (access tokenÀº Àç¹ß±Ş ÇÊ¿äÇÑ »óÅÂ¿©¾ßÇÔ!)
-		if (validateToken(accessT) == 1 && validateToken(refreshT) < 2 && getUserIdx(accessT) == idx) {
-			String user_name = getUserName(accessT);
+		int accessT_valid = validateToken(accessT);
+		int refreshT_valid = validateToken(refreshT);
+		System.out.println("accessT idx : "+getUserIdx(accessT));
+		if (accessT_valid < 2 && refreshT_valid < 2 && getUserIdx(accessT) == idx) {
 			try {
 				ValueOperations<String, Object> vop = redisTemplate.opsForValue();
-				String redis_T = (String) vop.get(user_name);
+				String redis_T = (String) vop.get(usersRepository.findByIdx(idx).getUserid());
 				System.out.println("redis refresh token: " + redis_T);
 
 				if (redis_T == null)
-					return 41; // Àç ·Î±×ÀÎ ÇÊ¿ä (·Î±×¾Æ¿ô)
-				if (redis_T.equals(refreshT))
-					return 40; // access token Àç¹ß±Ş
+					return 41; //refresh token ë§Œë£Œ (ë¡œê·¸ì•„ì›ƒ)
+				if (redis_T.equals(refreshT)) {
+					if(accessT_valid==1&&refreshT_valid==0)
+						return 40; //access token ì¬ë°œê¸‰ ê°€ëŠ¥
+					if(accessT_valid==0&&refreshT_valid==0)
+						return 43; //logoutí•„ìš”,ì¬ë°œê¸‰ë¶ˆê°€
+				}
 				else
-					return 42; // ¹ŞÀº refresh token°ú ÀúÀåµÈ refresh token °°Áö¾ÊÀ½
+					return 42; //í´ë¼ê°€ ë³´ë‚¸ refresh tokenê³¼ ì„œë²„ì— ì €ì¥ëœ tokenì´ ë‹¤ë¥¸ ê²½ìš°
 			} catch (Exception e) {
-				System.out.println(e);
-				return 42; // error Á¸Àç
+				System.out.println("refreshT check error "+e);
+				return 42; 
 			}
 		}
-		return 42; // À¯È¿ÇÏÁö¾ÊÀº ÅäÅ«µé
+		return 42; //ìœ íš¨í•˜ì§€ ì•Šì€ í† í°ë“¤
 	}
 
-	// redis refresh token »èÁ¦
-	public void expireToken(String name) {
+	// redis refresh token ì²´í¬ 
+	public void expireToken(int idx) {
 		try {
-			redisTemplate.delete(name);
+			redisTemplate.delete(usersRepository.findByIdx(idx).getUserid());
 		} catch (Exception e) {
-			System.out.println("»èÁ¦ ¿¡·¯¹ß»ı!!!!" + e);
+			System.out.println(e.getMessage());
 		}
 	}
 }

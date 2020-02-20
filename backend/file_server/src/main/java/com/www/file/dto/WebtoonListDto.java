@@ -10,20 +10,15 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class EpisodeListDto {
-	
-	private int ep_no;
+public class WebtoonListDto {
 	private String title;
-	private String thumnail;
 	private LocalDateTime created_date;
+	private LocalDateTime last_updated;
 	
-	@Builder 
-	public EpisodeListDto(int ep_no, String title, String thumbnail, LocalDateTime created_date) {
-		this.ep_no = ep_no;
+	@Builder
+	public WebtoonListDto(String title, LocalDateTime created_date, LocalDateTime last_updated) {
 		this.title = title;
-		this.thumnail = thumbnail;
 		this.created_date = created_date;
+		this.last_updated = last_updated;
 	}
-	
-
 }

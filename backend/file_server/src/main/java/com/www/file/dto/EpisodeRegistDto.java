@@ -1,8 +1,5 @@
 package com.www.file.dto;
-
-import com.www.file.domain.entity.Episode;
-import com.www.file.domain.entity.Webtoon;
-
+import com.www.core.file.entity.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

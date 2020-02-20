@@ -1,12 +1,12 @@
 server:
     address: localhost
-    port: 8080
+    port: 8081
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/www?serverTimezone=UTC&characterEncoding=UTF-8
+    url: jdbc:mysql://localhost:3306/wwwdb?serverTimezone=UTC&characterEncoding=UTF-8
     username: root
-    password: 1378
+    password: root
   jpa:
     database: mysql
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
@@ -14,4 +14,7 @@ spring:
     show-sql: true
   servlet:    multipart:      enabled: true
       max-file-size: 50MB      max-request-size: 50MB
-      location: D:\upload\
+custom:
+  path:
+    upload-images : 'D:/upload/'
+  

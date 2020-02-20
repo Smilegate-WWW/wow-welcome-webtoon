@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.www.auth.dto.Tokens;
+import com.www.auth.dto.UserDto;
 import com.www.auth.dto.UserLoginDto;
 import com.www.auth.dto.UserRegisterDto;
 import com.www.core.auth.entity.Users;
@@ -59,12 +60,22 @@ public class UserService {
 			System.out.println("============"+info.getName());
 			tokens.setAccessToken(jwtTokenProvider.createAccessToken(info.getIdx(),info.getName()));
 			System.out.println("access token:"+tokens.getAccessToken());
-			tokens.setRefreshToken(jwtTokenProvider.createRefreshToken(info.getName()));
+			tokens.setRefreshToken(jwtTokenProvider.createRefreshToken(info.getUserid()));
             System.out.println("refresh token:"+tokens.getRefreshToken());
 			//login date time
             LocalDateTime now = LocalDateTime.now();
             userRepository.updateLoginDate(now, info.getIdx());
 		} 
 		return tokens;
+	}
+	
+	public UserDto getUserDto(String user_id) {
+		UserDto userDto = new UserDto();
+		Users info = userRepository.findByUserid(user_id);
+		userDto.setBirth(info.getBirth());
+		userDto.setGender(info.getGender());
+		userDto.setName(info.getName());
+		userDto.setUserid(user_id);
+		return userDto;
 	}
 }

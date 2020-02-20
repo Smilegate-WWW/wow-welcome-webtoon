@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 public interface UsersRepository extends JpaRepository<Users, Integer>{
 
 	Users findByUserid(String userid);
+	Users findByIdx(int idx);
 	
 	boolean existsByUserid(String userid);
 	

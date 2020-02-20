@@ -1,12 +1,6 @@
 package com.www.file.dto;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import com.www.file.domain.entity.Episode;
-import com.www.file.domain.entity.Webtoon;
-
-import lombok.Builder;
+import com.www.core.file.entity.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,12 +21,10 @@ public class WebtoonDto {
 	private int end_flag;
 	//private LocalDateTime created_date;
 	//private LocalDateTime updated_date;
-	
-	private List<Episode> episodes;
+	//private List<Episode> episodes;
 	
 	public Webtoon toEntity() {
 		Webtoon build = Webtoon.builder()
-				//.idx(idx)
 				.title(title)
 				.toon_type(toon_type)
 				.genre1(genre1)
@@ -45,10 +37,12 @@ public class WebtoonDto {
 		return build;
 	}
 	
+	/*
 	@Builder
 	public WebtoonDto(List<Episode> episodes) {
 		this.episodes = episodes;
 	}
+	*/
 	
 
 }

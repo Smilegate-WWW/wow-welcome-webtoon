@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * Users Entity (DB User info table mapping)
+ * 
  * @author bjiso
  *
  */
@@ -24,37 +25,38 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Users extends BaseTimeEntity {
 
-    @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private int idx;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int idx;
 
-    @Column(length=20, nullable=false)
-    private String userid;
+	@Column(length = 20, nullable = false)
+	private String userid;
 
-    @Column(length = 64, nullable = false)
-    private String pw;
+	@Column(length = 64, nullable = false)
+	private String pw;
 
-    @Column(length = 12, nullable = false)
-    private String name;
+	@Column(length = 12, nullable = false)
+	private String name;
 
-    @Column(nullable = false)
-    private Date birth;
+	@Column(nullable = false)
+	private Date birth;
 
-    @Column(nullable = false)
-    private int gender;
+	@Column(nullable = false)
+	private int gender;
 
-    @Column(nullable = false, length=45)
-    private String email;
+	@Column(nullable = false, length = 45)
+	private String email;
 
-    @Column
-    private LocalDateTime login_date;
+	@Column
+	private LocalDateTime login_date;
 
-    @Builder
-    public Users(String id, String e_pw, String name, Date birth, int gender, String email) {
-        this.userid = id;
-        this.pw = e_pw;
-        this.name = name;
-        this.birth = birth;
-        this.gender = gender;
-        this.email = email;
-    }
+	@Builder
+	public Users(String id, String e_pw, String name, Date birth, int gender, String email) {
+		this.userid = id;
+		this.pw = e_pw;
+		this.name = name;
+		this.birth = birth;
+		this.gender = gender;
+		this.email = email;
+	}
 }
