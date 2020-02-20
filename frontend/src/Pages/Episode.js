@@ -129,7 +129,7 @@ function a11yProps(index) {
     };
 }
 
-export default function Episode({ authenticated, logout }) {
+export default function Episode() {
     const classes = useStyles();
     const [state, setState] = React.useState({
         score: '',
@@ -147,7 +147,7 @@ export default function Episode({ authenticated, logout }) {
     };
     return (
         <div>
-            <Header authenticated={authenticated} logout={logout} />
+            <Header/>
 
             <div className={classes.menu}>
                 <div className={classes.button}>

@@ -85,7 +85,7 @@ function a11yProps(index) {
   };
 }
 
-export default function Header({ authenticated, logout}) {
+export default function Header() {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
@@ -118,8 +118,8 @@ export default function Header({ authenticated, logout}) {
               <span style={{ color: "#fafafa", fontWeight: 550 }}>만화 업로드</span>
             </Button>
           </div>
-          {authenticated ? (
-            <LogoutButton logout={logout} />
+          {localStorage.getItem("AUTHORIZATION") ? (
+            <LogoutButton/>
           ) :
             <Button variant="contained" color="primary" href="http://localhost:3000/login">
               <span style={{ color: "#fafafa", fontWeight: 550 }}>로그인</span>

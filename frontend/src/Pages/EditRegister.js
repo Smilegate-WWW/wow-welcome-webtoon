@@ -42,7 +42,7 @@ const useStyles = makeStyles(theme => ({
 
 
 
-export default function EditRegister({ authenticated, logout }) {
+export default function EditRegister() {
     const classes = useStyles();
 
     // 작품정보 받아와서 넘겨주기.
@@ -138,35 +138,11 @@ export default function EditRegister({ authenticated, logout }) {
                 genre2 = genreTrue[1];
             }
 
-            const axios = require('axios');
-            const FormData = require('form-data');
-
-            const form_data = new FormData();
-            form_data.append('title', title);
-            form_data.append('type', type);
-            form_data.append('genre1', genre1);
-            form_data.append('genre2', genre2);
-            form_data.append('summary', summary);
-            form_data.append('plot', plot);
-            form_data.append('thumbnail', thumbnail);
-            form_data.append('end_flag', 1);
-            form_data.append('created_date', null);
-            form_data.append('updated_date', null);
-            form_data.append('episodes', null);
-
-
-            let url = 'localhost:8080/myTitleDetail';
-            axios.post(url, form_data)
-                .then(res => {
-                    console.log(res.data);
-                })
-                .catch(err => console.log(err))
-
         }
     }
     return (
         <div>
-            <Header authenticated={authenticated} logout={logout} />
+            <Header />
 
             <div className={classes.menu}>
                 <div className={classes.button}>

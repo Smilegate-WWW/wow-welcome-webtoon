@@ -81,12 +81,29 @@ const MyWebtoons = [
     }
 ]
 
+function getWebtoonList(result){
+    console.log(result);
+    
+}
 
-export default function MyPage({ authenticated, logout }) {
+export default function MyPage() {
     const classes = useStyles();
+
+    const getWebtoon =() =>{
+        var requestOptions = {
+            method: 'GET',
+            redirect: 'follow'
+          };
+          
+          fetch("/myTitleList?page=1", requestOptions)
+            .then(response => response.text())
+            .then(result => getWebtoonList(result))
+            .catch(error => console.log('error', error));
+    };
+
     return (
         <div>
-            <Header authenticated={authenticated} logout={logout} />
+            <Header />
 
             <div className={classes.menu} style={{display:"flex"}}>
                 <div className={classes.button}>

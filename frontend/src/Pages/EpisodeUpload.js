@@ -49,13 +49,13 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function Upload({ authenticated, logout }) {
+export default function Upload() {
     const classes = useStyles();
 
     
     return (
         <div>
-            <Header authenticated={authenticated} logout={logout} />
+            <Header/>
 
             <div className={classes.menu}>
                 <div className={classes.button}>

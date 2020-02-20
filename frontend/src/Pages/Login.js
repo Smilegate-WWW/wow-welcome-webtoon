@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Redirect } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 //아이디,비번 입력창
 import TextField from '@material-ui/core/TextField';
@@ -33,16 +32,29 @@ const useStyles = makeStyles(theme => ({
 
 function success(result) {
     console.log(result);
-    if(window.history.state==null){
-        window.location.href="/"
+    // 사용자 정보 저장
+    if (result.code == 0) {
+        localStorage.setItem("USERID", result.data.userid);
+        localStorage.setItem("NAME", result.data.name);
+        localStorage.setItem("BIRTH", result.data.birth);
+        localStorage.setItem("GENDER", result.data.gender);
+        localStorage.setItem("REFRESHTOKEN", result.data.token);
+
+        if (window.history.state == null) {
+            window.location.href = "/"
+        }
+        else {
+            const history = (window.history.state.state.from.pathname);
+            window.location.href = history;
+        }
     }
-    else{
-    const history=(window.history.state.state.from.pathname);
-    window.location.href=history;
+
+    else if (result.code == 2) {
+        alert("아이디, 비밀번호가 일치하지 않습니다!")
     }
 }
 
-export default function Login({ authenticated, location }) {
+export default function Login() {
     const [userid, setUserid] = useState('');
     const [pw, setPw] = useState('');
 
@@ -67,9 +79,18 @@ export default function Login({ authenticated, location }) {
             };
 
             fetch("/users/token", requestOptions)
-                .then(response => response.json())
-                .then(result => success(result))
+                .then(response => {
+                    localStorage.setItem("AUTHORIZATION", response.headers.get('Authorization'))
+                    var temp = localStorage.getItem("AUTHORIZATION")
+                    var jwt_decode = require('jwt-decode')
+                    var decodeToken = jwt_decode(temp.replace("bearer ", ""))
+                    localStorage.setItem("USER_IDX", decodeToken.user_idx)
+                    response.json().then(
+                        result => success(result)
+                    )
+                })
                 .catch(error => console.log('error', error))
+
         }
     };
 

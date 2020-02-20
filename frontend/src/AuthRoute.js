@@ -2,12 +2,12 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 
-function AuthRoute({ authenticated, component: Component, render, ...rest }) {
+function AuthRoute({ component: Component, render, ...rest }) {
   return (
     <Route
       {...rest}
       render={props =>
-        authenticated ? (
+        localStorage.getItem("AUTHORIZATION") ? (
           render ? render(props) : <Component {...props} />
         ) : (
           <Redirect

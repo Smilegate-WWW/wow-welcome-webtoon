@@ -105,7 +105,7 @@ const myComments = [
 ];
 
 
-export default function Comment({authenticated,logout}) {
+export default function Comment() {
     const classes = useStyles();
     const [checked, setChecked] = React.useState(true);
 
@@ -113,10 +113,9 @@ export default function Comment({authenticated,logout}) {
         setChecked(event.target.checked);
     };
     
-    console.log(authenticated)
     return (
         <div>
-            <Header authenticated={authenticated} logout={logout}/>
+            <Header/>
 
             <div className={classes.menu}>
                 <div className={classes.button}>

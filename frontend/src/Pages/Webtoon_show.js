@@ -68,11 +68,11 @@ const episodes = [
     },
 ];
 
-export default function Webtoon({ authenticated, logout }) {
+export default function Webtoon() {
     const classes = useStyles();
     return (
         <div>
-            <Header authenticated={authenticated} logout={logout} />
+            <Header/>
 
             <div className={classes.menu}>
                 <div className={classes.button}>

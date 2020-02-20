@@ -42,7 +42,7 @@ const useStyles = makeStyles(theme => ({
 
 
 
-export default function Register({ authenticated, logout }) {
+export default function Register() {
     const classes = useStyles();
     const [title, setTitle] = React.useState('');
     const [type, setType] = React.useState('');
@@ -164,7 +164,7 @@ export default function Register({ authenticated, logout }) {
     }
     return (
         <div>
-            <Header authenticated={authenticated} logout={logout} />
+            <Header/>
 
             <div className={classes.menu}>
                 <div className={classes.button}>

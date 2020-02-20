@@ -135,7 +135,7 @@ function a11yProps(index) {
 
 
 
-export default function Home({ authenticated, login, logout }) {
+export default function Home() {
 
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
@@ -146,7 +146,7 @@ export default function Home({ authenticated, login, logout }) {
 
     return (
         <div>
-            <Header authenticated={authenticated} logout={logout} />
+            <Header/>
 
             <div className={classes.menu}>
                 <div className={classes.button}>

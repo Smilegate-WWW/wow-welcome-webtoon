@@ -44,17 +44,14 @@ function checkPw(pw){
 }
 
 
-export default function EditInfo() {
-
+export default function EditInfo() {    
     const classes = useStyles();
 
-    //const userid=User.userId;
     const [pw, setPw] = useState("");
     const [pwCheck, setPwCheck] = useState("");
     const [name, setName] = useState("");
     const [gender, setGender] = React.useState("");
     const [birth, setBirth] = useState("");
-    //const email=User.email;
 
     const handlePwChange = (e) => {
         setPw(e.target.value);
@@ -75,6 +72,7 @@ export default function EditInfo() {
     const handleSubmit = () => {
         if ( pw === '' || pwCheck === '' || name === '' || gender === '' || birth === '') {
             alert("정보를 모두 입력해주세요!!");
+            console.log(pw);console.log(pwCheck);console.log(name);console.log(gender);
         }
         else if (pw !== pwCheck) {
             alert("비밀번호가 일치하지 않습니다!!");
@@ -114,7 +112,6 @@ export default function EditInfo() {
     return (
         <div className={classes.root}>
             <div 
-                onclick="location.href='/'"
                 style={{
                 color: "#ff7043",
                 fontSize: "64px",
@@ -128,7 +125,7 @@ export default function EditInfo() {
                     disabled 
                     id="userid" 
                     label="아이디" 
-                    defaultValue="exampleID" 
+                    defaultValue={localStorage.getItem("USERID")} 
                     variant="outlined" 
                 />
                 <TextField
@@ -152,12 +149,10 @@ export default function EditInfo() {
             <div className={classes.display}>
                 <form className={classes.smallTextField} noValidate autoComplete="off">
                     <TextField 
-                    id="name" 
+                    id="name"
                     label="이름"
-                    //defaultValue={User.email} 
-                    value={name} 
-                    onChange={handleNameChange} 
-                    variant="outlined" 
+                    defaultValue={localStorage.getItem("NAME")}
+                    variant="outlined"
                     />
                 </form>
 
@@ -168,6 +163,7 @@ export default function EditInfo() {
                         labelId="gender_label"
                         id="gender"
                         value={gender}
+                        defaultValue={localStorage.getItem("GENDER")}
                         onChange={handleGenderChange}
                         labelWidth={labelWidth}
                     >
@@ -182,7 +178,6 @@ export default function EditInfo() {
                     id="birth"
                     label="생년월일"
                     type="date"
-                    //defaultValue={User.birth}
                     value={birth}
                     onChange={handleBirthChange}
                     variant="outlined"

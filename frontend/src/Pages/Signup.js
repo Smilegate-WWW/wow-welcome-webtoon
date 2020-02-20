@@ -9,8 +9,6 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-//라우트 관련
-import { Route } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -124,6 +122,7 @@ export default function Signup() {
             alert("이메일 형식이 올바르지 않습니다!");
         }
         else {
+            console.log(name);
             var myHeaders = new Headers();
             myHeaders.append("Content-Type", "application/json");
 
@@ -181,7 +180,7 @@ export default function Signup() {
                 />
             </form>
 
-            <div className={classes.display}>
+            <div className={classes.display}>s
                 <form className={classes.smallTextField} noValidate autoComplete="off">
                     <TextField id="name" label="이름" value={name} onChange={handleNameChange} variant="outlined" />
                 </form>
