@@ -150,7 +150,7 @@ public class AuthController {
 		
 		int r=jwtTokenProvider.checkRefreshToken(AccessToken, RefreshToken, useridx);
 		switch(r) {
-		case 40: //재발급
+		case 40: //재발급 (code 0)
 			String newAT=jwtTokenProvider.createAccessToken(useridx, jwtTokenProvider.getUserName(AccessToken));
 			response.addHeader(HttpHeaders.AUTHORIZATION, "bearer " + newAT);
 			result.setCode(40);
