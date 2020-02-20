@@ -39,21 +39,38 @@ public class EpisodeService {
 		this.webtoonRepository = webtoonRepository;
 		this.episodeRepository = episodeRepository;
 	}
+	//필수 조건 체크
+	public void checkCondition(MultipartFile thumbnail, MultipartFile[] manuscript, EpisodeDto episodeDto,Response<EpisodeDto> res) {
+		
+		if(episodeDto.getTitle()==null) {
+			res.setCode(10);
+			res.setMsg("insert fail: need to register title");
+			return;
+		}
+		
+		if(thumbnail.isEmpty()) {
+			res.setCode(13);
+			res.setMsg("insert fail: need to register thumbnail");
+			return;
+		}
+		
+		if(episodeDto.getAuthor_comment()==null) {
+			res.setCode(15);
+			res.setMsg("insert fail: need to register author_comment");
+			return;
+		}
+		
+		res.setCode(0);
+		res.setMsg("insert complete");
+	}
 	
 	@Transactional
 	public List<EpisodeListDto> getEpisodeList(int idx, Integer pageNum, Response<EpisodePage> res) {
-		Pageable pageable = PageRequest.of(pageNum-1, PAGE_EPISODE_COUNT);
-		Page<Episode> page = episodeRepository.findAllByWebtoonIdx(pageable,idx);
 		
-		//Optional<Webtoon> WebtoonEntityWrapper = webtoonRepository.findById(idx);
-	    //Webtoon webtoon = WebtoonEntityWrapper.get();
+		Pageable pageable = PageRequest.of(pageNum-1, PAGE_EPISODE_COUNT);
+		Page<Episode> page = episodeRepository.findAllByWebtoonIdx(pageable,idx);		
 	    List<EpisodeListDto> episodeDtoList = new ArrayList<>();
-	    /*
-	    WebtoonDto webtoonDto = WebtoonDto.builder()
-	    		.episodes(webtoon.getEpisodes())
-	    		.build();
-	    		*/
-	    
+	 
 	    int totalpages = page.getTotalPages();
 	    
 	    //요청한 페이지 번호가 유효한 범위인지 체크
@@ -113,31 +130,7 @@ public class EpisodeService {
 		return pageList;
 	}
 	
-	//필수 조건 체크
-	public void checkCondition(MultipartFile thumbnail, MultipartFile[] manuscript, EpisodeDto episodeDto,Response<EpisodeDto> res) {
-		
-		if(episodeDto.getTitle()==null) {
-			res.setCode(10);
-			res.setMsg("insert fail: need to register title");
-			return;
-		}
-		
-		
-		if(thumbnail.isEmpty()) {
-			res.setCode(13);
-			res.setMsg("insert fail: need to register thumbnail");
-			return;
-		}
-		
-		if(episodeDto.getAuthor_comment()==null) {
-			res.setCode(15);
-			res.setMsg("insert fail: need to register author_comment");
-			return;
-		}
-		
-		res.setCode(0);
-		res.setMsg("insert complete");
-	}
+
 	
 	@Transactional
 	public Response<EpisodeDto> addEpisode(int webtoon_idx, MultipartFile thumbnail, MultipartFile[] manuscripts, EpisodeDto episodeDto) {
@@ -220,7 +213,6 @@ public class EpisodeService {
 		}
 		
         checkCondition(thumbnail, manuscripts, episodeDto, res);
-        
         episode.setAuthor_comment(episodeDto.getAuthor_comment());
         episode.setTitle(episodeDto.getTitle());
         
@@ -241,8 +233,8 @@ public class EpisodeService {
         return res;
 	}
 	
-	public int deleteEpisode(int webtoon_idx, int ep_no) {
-		
+	public Response<Integer> deleteEpisode(int webtoon_idx, int ep_no) {
+		Response<Integer> res = new Response<Integer>();
 		Optional<Webtoon> webtoonWrapper = webtoonRepository.findById(webtoon_idx);
 		Webtoon webtoon = webtoonWrapper.get();
 		List<Episode> epList = webtoon.getEpisodes();
@@ -257,14 +249,17 @@ public class EpisodeService {
 		
 		//유효한 에피소드가 아닐 시 
 		if(episode.getTitle()==null) {
-			return 1;
+			res.setCode(1);
+			res.setMsg("delete fail. Episode do not exists");
 		}
 		 
         else {
-        	
             episodeRepository.delete(episode);
-        	return 0;
+            res.setMsg("delete complete");
+            res.setCode(0);
         }
+		
+		return res;
         
 	}
 

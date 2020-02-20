@@ -18,8 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.www.core.file.entity.*;
 import com.www.core.file.repository.*;
 
-import com.www.file.dto.EpisodeDto;
-import com.www.file.dto.EpisodeListDto;
 import com.www.core.common.Response;
 import com.www.file.dto.WebtoonDto;
 import com.www.file.dto.WebtoonListDto;
@@ -165,7 +163,6 @@ public class WebtoonService {
 		for(int val = curPageNum, idx=0; val <= blockLastPageNum; val++, idx++) {
 			pageList[idx] = val;
 		}
-		
 		return pageList;
 	}
 	
@@ -209,21 +206,23 @@ public class WebtoonService {
 	        res.setData(webtoonDto);
 	        return res;
 		}
-		
 	}
 	
-	public int deleteWebtoon(int idx) {
-        
+	public Response<Integer> deleteWebtoon(int idx) {
+		Response<Integer> res = new Response<Integer>();
         //해당 웹툰 idx가 유효한지 체크
         if(!webtoonRepository.existsById(idx)) {
-        	return 1;
+        	res.setCode(1);
+			res.setMsg("delete fail. Webtoon do not exists");
         }
         else {
         	Optional<Webtoon> WebtoonEntityWrapper = webtoonRepository.findById(idx);
             Webtoon webtoon = WebtoonEntityWrapper.get();
         	webtoonRepository.delete(webtoon);
-        	return 0;
+        	res.setMsg("delete complete");
+            res.setCode(0);
         }
+        return res;
         
 	}
 
