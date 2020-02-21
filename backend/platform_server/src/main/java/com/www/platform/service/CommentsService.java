@@ -8,7 +8,9 @@ import com.www.core.file.entity.Episode;
 import com.www.core.file.repository.EpisodeRepository;
 import com.www.core.platform.entity.Comments;
 import com.www.core.platform.repository.CommentsRepository;
-import com.www.platform.domain.comments.*;
+import com.www.platform.dto.CommentsDeleteRequestDto;
+import com.www.platform.dto.CommentsMainResponseDto;
+import com.www.platform.dto.CommentsSaveRequestDto;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -149,7 +151,6 @@ public class CommentsService {
         return result;
     }
 
-    // TODO : ep idx에 따른 베스트 댓글 리스트 출력
     @Transactional(readOnly = true)
     public Response<List<CommentsMainResponseDto>> findBestComments(int epIdx) {
         Response<List<CommentsMainResponseDto>> result = new Response<List<CommentsMainResponseDto>>();

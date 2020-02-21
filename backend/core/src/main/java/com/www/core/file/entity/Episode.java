@@ -28,7 +28,9 @@ public class Episode extends BaseTimeEntity {
 	private String contents;
 	@Column
 	private int ep_hits;
-	
+	@Column
+	private float rating_avg;
+
 	@ManyToOne
 	@JoinColumn(name="webtoon_idx")
 	private Webtoon webtoon;
@@ -38,7 +40,7 @@ public class Episode extends BaseTimeEntity {
 	
 	@Builder
 	public Episode(Webtoon webtoon, String title, int ep_no, String author_comment, 
-			String thumbnail, String contents, int ep_hits) {
+			String thumbnail, String contents, int ep_hits, float rating_avg) {
 		//this.idx = idx;
 		this.webtoon = webtoon;
 		//this.webtoon_idx = webtoon_idx;
@@ -48,7 +50,7 @@ public class Episode extends BaseTimeEntity {
 		this.thumbnail = thumbnail;
 		this.contents = contents;
 		this.ep_hits = ep_hits;
-		
+		this.rating_avg = rating_avg;
 	}
 	
 

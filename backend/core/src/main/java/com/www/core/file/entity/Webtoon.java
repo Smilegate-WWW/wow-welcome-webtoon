@@ -39,16 +39,18 @@ public class Webtoon extends BaseTimeEntity {
 	private String thumbnail;
 	@Column
 	private int end_flag;
-	
+	@Column
+	private float ep_rating_avg;
+
 	@OneToMany(fetch=FetchType.EAGER,  orphanRemoval = true , cascade = CascadeType.REMOVE, mappedBy = "webtoon")
 	//@JoinColumn(name="webtoon_idx")
 	private List<Episode> episodes = new ArrayList<Episode>();
 	
 	
 	@Builder
-	public Webtoon(int idx, /*int users_idx,*/ String title, int toon_type, int genre1, 
-			int genre2, String summary, String plot, String thumbnail, int end_flag,
-			LocalDateTime created_date, LocalDateTime updated_date) {
+	public Webtoon(int idx, /*int users_idx,*/ String title, int toon_type, int genre1,
+				   int genre2, String summary, String plot, String thumbnail, int end_flag,
+				   float ep_rating_avg, LocalDateTime created_date, LocalDateTime updated_date) {
 		this.idx = idx;
 		//this.users_idx = users_idx;
 		this.title = title;
@@ -59,6 +61,7 @@ public class Webtoon extends BaseTimeEntity {
 		this.plot = plot;
 		this.thumbnail = thumbnail;
 		this.end_flag = end_flag;
+		this.ep_rating_avg = ep_rating_avg;
 	}
 
 }
