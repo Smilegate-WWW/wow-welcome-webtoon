@@ -81,31 +81,31 @@ const MyWebtoons = [
     }
 ]
 
-function getWebtoonList(result){
-    console.log(result);
-    
+function getWebtoon() {
+
+    var requestOptions = {
+        method: 'GET',
+        redirect: 'follow'
+    };
+
+    fetch("/myTitleList?page=1", requestOptions)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+
+
 }
 
 export default function MyPage() {
     const classes = useStyles();
 
-    const getWebtoon =() =>{
-        var requestOptions = {
-            method: 'GET',
-            redirect: 'follow'
-          };
-          
-          fetch("/myTitleList?page=1", requestOptions)
-            .then(response => response.text())
-            .then(result => getWebtoonList(result))
-            .catch(error => console.log('error', error));
-    };
+    getWebtoon();
 
     return (
         <div>
             <Header />
 
-            <div className={classes.menu} style={{display:"flex"}}>
+            <div className={classes.menu} style={{ display: "flex" }}>
                 <div className={classes.button}>
                     <Button variant="contained" href="/">
                         <span style={{ color: "#212121", fontWeight: 520 }}>도전만화</span>
@@ -115,7 +115,7 @@ export default function MyPage() {
                         <span style={{ color: "#fafafa", fontWeight: 550 }}>마이페이지</span>
                     </Button>
                 </div>
-                <div style={{marginLeft:980,mariginTop:30}}>
+                <div style={{ marginLeft: 980, mariginTop: 30 }}>
                     <a href="/mypage/editInfo"
                         style={{
                             color: "black",

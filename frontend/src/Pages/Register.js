@@ -138,12 +138,16 @@ export default function Register() {
                 genre1 = genreTrue[0];
                 genre2 = genreTrue[1];
             }
-            
+
+            var myHeaders = new Headers();
+            myHeaders.append("Content-Type","multipart/form-data");
+            myHeaders.append("Authorization", localStorage.getItem("AUTHORIZATION"));
+
             var webtoonInfo = JSON.stringify({"title":title,"toon_type":type,"genre1":genre1,"genre2":genre2,"summary":summary,"plot":plot});
-            
+
             var formdata = new FormData();
             formdata.append("thumbnail",thumbnail);
-            formdata.append("webtoon", webtoonInfo);
+            formdata.append()
 
             console.log(thumbnail);
             console.log(webtoonInfo);
@@ -151,6 +155,7 @@ export default function Register() {
 
             var requestOptions = {
               method: 'POST',
+              headers: myHeaders,
               body: formdata,
               redirect: 'follow'
             };

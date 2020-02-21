@@ -87,6 +87,7 @@ export default function EditInfo() {
            var myHeaders = new Headers();
            myHeaders.append("Content-Type", "application/json");
            
+
            var raw = JSON.stringify({"pw":pw,"name":name,"birth":birth,"gender":gender});
            
            var requestOptions = {
@@ -151,7 +152,8 @@ export default function EditInfo() {
                     <TextField 
                     id="name"
                     label="이름"
-                    defaultValue={localStorage.getItem("NAME")}
+                    value={name}
+                    onChange={handleNameChange}
                     variant="outlined"
                     />
                 </form>

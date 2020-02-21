@@ -25,19 +25,19 @@ export default function App() {
             <Login/>
           )}
         />
-        <Route 
+        <AuthRoute 
           path="/mypage/comment" 
           render={props => (
-            <Comment/>
+            <Comment {...props}/>
           )}
         />
         <Route path="/login/signup" component={Signup} />
-        <Route path="/mypage/register" component={Register} />
+        <AuthRoute path="/mypage/register" render={props => <Register {...props} />}/>
         <Route exact path="/webtoon" component={Webtoon}/>
         <Route path="/webtoon/episode" component={Episode}/>
-        <Route path="/mypage/upload" component={Upload}/>
-        <Route path="/mypage/editInfo" component={EditInfo}/>
-        <Route path="/mypage/editRegister" component={EditRegister}/>
+        <AuthRoute path="/mypage/upload" render={props => <Upload {...props}/>}/>
+        <AuthRoute path="/mypage/editInfo" render={props => <EditInfo {...props}/>}/>
+        <AuthRoute path="/mypage/editRegister" render={props => <EditRegister {...props}/>}/>
       </Switch>
     </div>
   );
