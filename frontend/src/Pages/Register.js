@@ -144,10 +144,19 @@ export default function Register() {
             myHeaders.append("Authorization", localStorage.getItem("AUTHORIZATION"));
 
             var webtoonInfo = JSON.stringify({"title":title,"toon_type":type,"genre1":genre1,"genre2":genre2,"summary":summary,"plot":plot});
+            
+            const fs=require("fs");
+
+            fs.writeFile('./webtoon.json','webtoonInfo',function(err){ 
+                if (err === null) { console.log('success'); } 
+                else { console.log('fail'); } 
+            });
+
+            fs.readdir('./webtoon.json',function(err,filelist){ console.log(filelist); });
 
             var formdata = new FormData();
             formdata.append("thumbnail",thumbnail);
-            formdata.append()
+            formdata.append("webtoon", webtoonInfo);
 
             console.log(thumbnail);
             console.log(webtoonInfo);

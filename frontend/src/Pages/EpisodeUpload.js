@@ -32,30 +32,87 @@ const useStyles = makeStyles(theme => ({
         fontSize: 12,
         padding: 5,
         color: "grey",
-        marginLeft: 10
+        marginLeft: 10,
     },
-    buttons:{
-        marginTop:theme.spacing(1),
-        paddingLeft:theme.spacing(85),
+    buttons: {
+        marginTop: theme.spacing(1),
+        paddingLeft: theme.spacing(85),
         '& > *': {
             margin: theme.spacing(1),
         },
     },
-    upload:{
-        variant:"contained", 
-        height:30, 
-        marginTop:20,
-        marginRight:10
+    upload: {
+        variant: "contained",
+        height: 30,
+        marginTop: 20,
+        marginRight: 10
     },
 }));
 
 export default function Upload() {
+    const [comment, setComment] = React.useState('');
+    const [thumbnail, setThumbnail] = React.useState('');
+    var images=new Array();
+    var imageNum=0;
+
     const classes = useStyles();
 
-    
+    const handleCommentChange = (e) => {
+        setComment(e.target.value);
+    }
+
+    const handleImageChange = (e) => {
+        
+        const file = e.target.files[0];
+        images[imageNum]=file;
+
+        let reader = new FileReader();
+        reader.onloadend = () => {
+            console.log("load end");
+        };
+        reader.readAsDataURL(file);
+        if (file.length === 0) {
+            alert("파일이 선택되지 않았습니다.");
+        }
+        else if (file.type != "image/jpeg") {
+            alert("jpg 타입의 파일을 선택해주세요!")
+        }
+        else if (file.size > 1048576) {
+            alert("파일의 크기가 너무 큽니다");
+        }
+        else {
+            imageNum++;
+            alert(file.name + "이(가) 선택되었습니다 \n\n 선택된 이미지: "+imageNum+"개");
+            console.log(images);
+        }
+    }
+
+    const handleThumbnailChange = (e) => {
+        const file = e.target.files[0];
+        setThumbnail(file);
+        let reader = new FileReader();
+        reader.onloadend = () => {
+            console.log("load end");
+        };
+        reader.readAsDataURL(file);
+        if (file.length === 0) {
+            alert("파일이 선택되지 않았습니다.");
+        }
+        else if (file.type != "image/jpeg") {
+            alert("jpg 타입의 파일을 선택해주세요!")
+        }
+        else if (file.size > 1048576) {
+            alert("파일의 크기가 너무 큽니다");
+        }
+        else {
+            alert(file.name + "이(가) 선택되었습니다");
+        }
+    }
+
+
     return (
         <div>
-            <Header/>
+            <Header />
 
             <div className={classes.menu}>
                 <div className={classes.button}>
@@ -69,7 +126,7 @@ export default function Upload() {
                 </div>
             </div>
 
-            <div className={classes.body} style={{ borderTop: '1px solid grey' ,borderBottom:'1px solid grey'}}>
+            <div className={classes.body} style={{ borderTop: '1px solid grey', borderBottom: '1px solid grey' }}>
                 <h4>회차 등록</h4>
                 <div style={{ marginLeft: 5 }}>
                     <div style={{ display: "flex", height: 50, }}>
@@ -78,7 +135,7 @@ export default function Upload() {
                             id="episodeNo"
                             variant="outlined"
                             size="small"
-                            label="5"
+                            label="5" //임의 설정
                             style={{ width: 100 }}
                             InputProps={{
                                 readOnly: true,
@@ -92,47 +149,67 @@ export default function Upload() {
 
                     <div style={{ display: "flex" }}>
                         <h5>썸네일 이미지&emsp;</h5>
-                        <Button className={classes.thumbnail}>
-                            <h5>202X120</h5>
-                        </Button>
-                        <Button className={classes.thumbnail}>
-                            <h5>600x315</h5>
-                        </Button>
-                        <div style={{ marginTop: 60,}}>
+                        <div>
+                            <input
+                                accept=".jpg"
+                                id="thumbnail"
+                                type="file"
+                                style={{ display: "none" }}
+                                onChange={handleThumbnailChange}
+                            />
+                            <label htmlFor="thumbnail">
+                                <Button variant="contained" component="span" style={{ height: 100, width: 100, marginLeft: 10 }}>
+                                    430 X 330
+                                </Button>
+                            </label>
+                        </div>
+                        <div style={{ marginTop: 80, }}>
                             <body1 className={classes.fontStyle}>
                                 썸네일을 업로드 하지 않으면 자동 생성 됩니다.
                             </body1>
-                            <p className={classes.fontStyle} style={{marginTop:0}}>
-                                600X315는 SNS 등에 회차 공유시 노출되는 이미지입니다.
-                            </p>
                         </div>
                     </div>
 
-                    <div style={{display:"flex"}}>
+                    <div style={{ display: "flex" }}>
                         <h5>원고 등록&emsp;&emsp;&emsp;&emsp;</h5>
-                        <input 
-                            type="file" 
-                            name="file" 
-                            onChange={null} 
-                            className={classes.upload}
-                        />
-                        <Button variant="contained" style={{height:30, marginTop:20,marginRight:10}}>
-                           업로드
-                        </Button>
-                        <Button variant="contained" style={{height:30, marginTop:20}}>
-                            전체 보기
-                        </Button>
-                    </div>
+                        <div>
+                            <input
+                                accept=".jpg"
+                                id="images"
+                                type="file"
+                                style={{ display: "none" }}
+                                onChange={handleImageChange}
+                            />
+                            <label htmlFor="images">
+                                <Button variant="contained" component="span" style={{ height: 30, marginTop: 20, marginRight: 10 }}>
+                                    원고 등록
+                                </Button>
+                            </label>
 
+                            <Button variant="contained" style={{ height: 30, marginTop: 20 }}>
+                                전체 보기
+                            </Button>
+                        </div>
+
+                    </div>
+                    <h5>작가의 말</h5>
+                    <TextField
+                        id="summary"
+                        variant="outlined"
+                        value={comment}
+                        onChange={handleCommentChange}
+                        size="small"
+                        style={{ width: 800 }}
+                    />
                 </div>
             </div >
-            
-            <div className={classes.buttons} style={{display:"flex"}}>
+
+            <div className={classes.buttons} style={{ display: "flex" }}>
                 <Button variant="contained" href="/mypage">
-                    <span style={{fontWeight:550}}>취소</span>
+                    <span style={{ fontWeight: 550 }}>취소</span>
                 </Button>
                 <Button variant="contained" color="primary" >
-                    <span style={{color:"#fafafa",fontWeight:550}}>등록</span>
+                    <span style={{ color: "#fafafa", fontWeight: 550 }}>등록</span>
                 </Button>
             </div>
         </div>

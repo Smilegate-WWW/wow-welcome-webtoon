@@ -89,8 +89,10 @@ function getWebtoon() {
     };
 
     fetch("/myTitleList?page=1", requestOptions)
-        .then(response => response.text())
-        .then(result => console.log(result))
+        .then(response => {
+            response.json()
+            console.log(response);
+        })
         .catch(error => console.log('error', error));
 
 

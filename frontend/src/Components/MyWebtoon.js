@@ -37,7 +37,7 @@ class MyWebtoon extends Component {
                                 <Typography>업데이트일&ensp;{this.props.update_date}</Typography>
                                 <div style={{ display: "flex", margin:3}}>
                                     <Button variant="contained" href="/mypage/editRegister" style={{marginRight:10}}>작품 정보 수정</Button>
-                                    <Button variant="contained">회차 관리</Button>
+                                    <Button variant="contained" href="/mypage/editEpisode">회차 관리</Button>
                                 </div>
                             </CardContent>
                         </CardActionArea>
