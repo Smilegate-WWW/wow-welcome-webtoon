@@ -30,26 +30,39 @@ public class StarRatingService {
     private EpisodeRepository episodeRepository;
     private WebtoonRepository webtoonRepository;
 
+    public Response<StarRatingDto> getEpisodeRating(int epIdx) {
+        Response<StarRatingDto> result = new Response<StarRatingDto>();
+
+        // TODO : episode 존재유무 예외처리
+
+        StarRatingDto starRatingDto =
+                new StarRatingDto(starRatingRepository.getRatingAvgByEpIdx(epIdx));
+        result.setCode(0);
+        result.setMsg("complete : get episode star rating");
+        result.setData(starRatingDto);
+        return result;
+    }
+
     @Transactional
-    public Response<String> insertStarRating(int epIdx, StarRatingDto dto) {
+    public Response<String> insertStarRating(int epIdx, int usersIdx, float rating) {
         Response<String> result = new Response<String>();
 
-        if(starRatingRepository.existsByEpIdxAndUsersIdx(epIdx, dto.getUsers_idx()))
+        if(starRatingRepository.existsByEpIdxAndUsersIdx(epIdx, usersIdx))
         {
             result.setCode(1);
             result.setMsg("fail : have already given rating");
         }
         else
         {
-            Optional<Users> user = usersRepository.findById(dto.getUsers_idx());
+            Optional<Users> user = usersRepository.findById(usersIdx);
             Optional<Episode> episode = episodeRepository.findById(epIdx);
 
-            // TODO : user, episode 존재유무 예외처리
+            // TODO : episode 존재유무 예외처리
 
             StarRating starRating = StarRating.builder()
                     .users(user.get())
                     .ep(episode.get())
-                    .rating(dto.getRating())
+                    .rating(rating)
                     .build();
             starRatingRepository.save(starRating);
 
@@ -62,11 +75,4 @@ public class StarRatingService {
 
         return result;
     }
-
-    /**
-     * public Response<StarRatingDto> getWebtoonRating(int webtoonIdx) {
-     *
-     *     }
-     *
-     */
 }

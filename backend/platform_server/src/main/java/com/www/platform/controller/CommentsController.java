@@ -16,8 +16,6 @@ import java.util.List;
 @AllArgsConstructor
 public class CommentsController {
 
-    private UsersRepository usersRepository;
-    private CommentsRepository commentsRepository;
     private CommentsService commentsService;
     private CommentsLikeDislikeService commentsLikeDislikeService;
     //private Environment env;

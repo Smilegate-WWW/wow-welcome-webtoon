@@ -13,13 +13,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class StarRatingDto {
-    // 테스트용 token 사용하게 되면 float rating만 남겨놓음
-    int users_idx;
     float rating;
 
     @Builder
-    public StarRatingDto(int users_idx, float rating) {
-        this.users_idx = users_idx;
+    public StarRatingDto(float rating) {
         this.rating = rating;
     }
 }
