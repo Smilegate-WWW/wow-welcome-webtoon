@@ -21,7 +21,7 @@ public interface EpisodeRepository extends JpaRepository<Episode, Integer>{
 	@Query(value = "UPDATE Episode e " +
 			"SET e.rating_avg = (SELECT AVG(rating) " +
 			"FROM star_rating s " +
-			"WHERE s.ep_idx = :ep_idx) " +
+			"WHERE s.ep_idx = :ep_idx) , e.rating_person_total = e.rating_person_total + 1 " +
 			"WHERE e.idx = :ep_idx", nativeQuery = true)
-	void updateRatingAvg(@Param("ep_idx") int epIdx);
+	void updateRatingAvgAndPersonTotal(@Param("ep_idx") int epIdx);
 }

@@ -12,11 +12,13 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class StarRatingDto {
+public class EpisodeStarRatingResponseDto {
     float rating;
+    int person_total;
 
     @Builder
-    public StarRatingDto(float rating) {
+    public EpisodeStarRatingResponseDto(float rating, int person_total) {
         this.rating = rating;
+        this.person_total = person_total;
     }
 }

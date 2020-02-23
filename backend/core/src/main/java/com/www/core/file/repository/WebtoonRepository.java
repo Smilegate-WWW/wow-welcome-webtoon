@@ -13,7 +13,8 @@ public interface WebtoonRepository extends JpaRepository<Webtoon, Integer>{
     @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Transactional
     @Query(value = "UPDATE webtoon w " +
-            "SET w.ep_rating_avg = (SELECT AVG(rating_avg) " +
+            "SET w.ep_rating_avg = (SELECT " +
+            "SUM(e.rating_avg * e.rating_person_total) / SUM(e.rating_person_total) " +
             "FROM episode e " +
             "WHERE e.webtoon_idx = :webtoon_idx) " +
             "WHERE w.idx = :webtoon_idx", nativeQuery = true)

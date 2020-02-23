@@ -6,13 +6,7 @@ import com.www.core.common.Response;
 import com.www.core.file.entity.Episode;
 import com.www.core.file.repository.EpisodeRepository;
 import com.www.core.file.repository.WebtoonRepository;
-import com.www.core.platform.entity.Comments;
-import com.www.core.platform.entity.CommentsDislike;
-import com.www.core.platform.entity.CommentsLike;
 import com.www.core.platform.entity.StarRating;
-import com.www.core.platform.repository.CommentsDislikeRepository;
-import com.www.core.platform.repository.CommentsLikeRepository;
-import com.www.core.platform.repository.CommentsRepository;
 import com.www.core.platform.repository.StarRatingRepository;
 import com.www.platform.dto.*;
 import lombok.AllArgsConstructor;
@@ -30,13 +24,13 @@ public class StarRatingService {
     private EpisodeRepository episodeRepository;
     private WebtoonRepository webtoonRepository;
 
-    public Response<StarRatingDto> getEpisodeRating(int epIdx) {
-        Response<StarRatingDto> result = new Response<StarRatingDto>();
+    public Response<StarRatingRequestDto> getEpisodeRating(int epIdx) {
+        Response<StarRatingRequestDto> result = new Response<StarRatingRequestDto>();
 
         // TODO : episode 존재유무 예외처리
 
-        StarRatingDto starRatingDto =
-                new StarRatingDto(starRatingRepository.getRatingAvgByEpIdx(epIdx));
+        StarRatingRequestDto starRatingDto =
+                new StarRatingRequestDto(starRatingRepository.getRatingAvgByEpIdx(epIdx));
         result.setCode(0);
         result.setMsg("complete : get episode star rating");
         result.setData(starRatingDto);
@@ -44,8 +38,8 @@ public class StarRatingService {
     }
 
     @Transactional
-    public Response<String> insertStarRating(int epIdx, int usersIdx, float rating) {
-        Response<String> result = new Response<String>();
+    public Response<EpisodeStarRatingResponseDto> insertStarRating(int epIdx, int usersIdx, float rating) {
+        Response<EpisodeStarRatingResponseDto> result = new Response<EpisodeStarRatingResponseDto>();
 
         if(starRatingRepository.existsByEpIdxAndUsersIdx(epIdx, usersIdx))
         {
@@ -66,11 +60,20 @@ public class StarRatingService {
                     .build();
             starRatingRepository.save(starRating);
 
-            episodeRepository.updateRatingAvg(epIdx);
+            episodeRepository.updateRatingAvgAndPersonTotal(epIdx);
             webtoonRepository.updateRatingAvg(episode.get().getWebtoon().getIdx());
+
+            episode = episodeRepository.findById(epIdx);
+
+            EpisodeStarRatingResponseDto episodeStarRatingResponseDto
+                    = EpisodeStarRatingResponseDto.builder()
+                    .rating(episode.get().getRating_avg())
+                    .person_total(episode.get().getRating_person_total())
+                    .build();
 
             result.setCode(0);
             result.setMsg("complete : insert star rating");
+            result.setData(episodeStarRatingResponseDto);
         }
 
         return result;

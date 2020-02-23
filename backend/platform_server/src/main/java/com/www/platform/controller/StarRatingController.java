@@ -16,14 +16,14 @@ public class StarRatingController {
 
     //TODO : return type EpisodeRatingAvgResponse로 교체, 없어도 될 것 같기도?
     @GetMapping("/episodes/{ep_idx}/rating")
-    public Response<StarRatingDto> getRatingAvg(@PathVariable("ep_idx") int epIdx) {
+    public Response<StarRatingRequestDto> getRatingAvg(@PathVariable("ep_idx") int epIdx) {
         return starRatingService.getEpisodeRating(epIdx);
     }
 
     @PostMapping("/episodes/{ep_idx}/rating")
-    public Response<String> insertStarRating(@RequestHeader("Authorization") String AccessToken,
-                                             @PathVariable("ep_idx")int epIdx, @RequestBody StarRatingDto dto) {
-        Response<String> result = new Response<String>();
+    public Response<EpisodeStarRatingResponseDto> insertStarRating(@RequestHeader("Authorization") String AccessToken,
+                                             @PathVariable("ep_idx")int epIdx, @RequestBody StarRatingRequestDto dto) {
+        Response<EpisodeStarRatingResponseDto> result = new Response<EpisodeStarRatingResponseDto>();
 
         switch(tokenChecker.validateToken(AccessToken)) {
             case 0: // 유효한 토큰
