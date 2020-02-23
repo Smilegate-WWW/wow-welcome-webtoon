@@ -3,8 +3,7 @@ package com.www.platform.controller;
 import com.www.core.auth.repository.UsersRepository;
 import com.www.core.common.Response;
 import com.www.core.platform.repository.CommentsRepository;
-import com.www.platform.domain.comments.*;
-import com.www.platform.domain.comments.likedislike.*;
+import com.www.platform.dto.*;
 import com.www.platform.service.CommentsLikeDislikeService;
 import com.www.platform.service.CommentsService;
 import lombok.AllArgsConstructor;
@@ -17,14 +16,12 @@ import java.util.List;
 @AllArgsConstructor
 public class CommentsController {
 
-    private UsersRepository usersRepository;
-    private CommentsRepository commentsRepository;
     private CommentsService commentsService;
     private CommentsLikeDislikeService commentsLikeDislikeService;
     //private Environment env;
 
-    @GetMapping("/comments/{epIdx}")
-    public Response<Page<CommentsMainResponseDto>> getComments(@PathVariable("epIdx") int epIdx,
+    @GetMapping("/comments/{ep_idx}")
+    public Response<Page<CommentsMainResponseDto>> getComments(@PathVariable("ep_idx") int epIdx,
                                                                @RequestParam("page") int page) {
         return commentsService.findCommentsByPageRequest(epIdx, page);
     }
@@ -39,8 +36,8 @@ public class CommentsController {
         return commentsService.delete(dto);
     }
 
-    @GetMapping("/comments/best/{epIdx}")
-    public Response<List<CommentsMainResponseDto>> getBestComments(@PathVariable("epIdx") int epIdx) {
+    @GetMapping("/comments/best/{ep_idx}")
+    public Response<List<CommentsMainResponseDto>> getBestComments(@PathVariable("ep_idx") int epIdx) {
         return commentsService.findBestComments(epIdx);
     }
 

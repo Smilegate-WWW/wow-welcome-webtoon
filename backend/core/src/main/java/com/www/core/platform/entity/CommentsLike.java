@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity(name = "comments_like")

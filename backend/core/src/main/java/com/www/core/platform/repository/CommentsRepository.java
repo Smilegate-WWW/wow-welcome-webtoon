@@ -28,11 +28,6 @@ public interface CommentsRepository extends JpaRepository<Comments, Integer> {
                     "LIMIT 5")
     Stream<Comments> findBestCommentsByEpIdx(@Param("ep_idx") int epIdx);
 
-    /**
-     * clearAutomatically = true�� �����ϸ� ���� ���� �� persistence context clear
-     * @author by.mo
-     */
-
     @Modifying(clearAutomatically = true)
     @Transactional
     @Query("UPDATE Comments c " +

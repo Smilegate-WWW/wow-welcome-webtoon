@@ -1,4 +1,4 @@
-package com.www.platform.domain.comments;
+package com.www.platform.dto;
 
 import com.www.core.platform.entity.Comments;
 import lombok.Getter;
