@@ -20,10 +20,11 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UserDto {
 	
-		private int idx;
+		//private int idx;
 		private String userid;
 		private String name;
 		private Date birth;
 		private int gender;
+		private String email;
 		
 }

@@ -17,7 +17,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UserRegisterDto extends UserDto{
 	
-	private String email;
 	private String pw;
 	
 	public Users toEntity(String e_pw) {
@@ -27,7 +26,7 @@ public class UserRegisterDto extends UserDto{
 				.e_pw(e_pw)
 				.birth(getBirth())
 				.gender(getGender())
-				.email(email)
+				.email(getEmail())
 				.build();
 	}
 	
