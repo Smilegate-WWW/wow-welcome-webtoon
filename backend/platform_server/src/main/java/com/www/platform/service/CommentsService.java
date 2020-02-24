@@ -45,9 +45,8 @@ public class  CommentsService {
         Optional<Episode> episode = episodeRepository.findById(epIdx);
 
         if(!episode.isPresent()){ // 에피소드가 존재하지 않을 때
-            result.setCode(2);
+            result.setCode(20);
             result.setMsg("fail : episode not exist");
-            result.setData(-1);
         }
         else{   // 댓글 DB 저장
             Comments comments = Comments.builder()
@@ -58,7 +57,7 @@ public class  CommentsService {
             int entityIdx = commentsRepository.save(comments).getIdx();
 
             result.setCode(0);
-            result.setMsg("save complete");
+            result.setMsg("request complete : save comment");
             result.setData(entityIdx);
         }
         return result;
@@ -72,20 +71,20 @@ public class  CommentsService {
 
         if(comments.isPresent()){ // 유저가 해당 댓글의 주인이 아닐 때
             if(usersIdx != comments.get().getUsers().getIdx()){
-                result.setCode(3);
+                result.setCode(22);
                 result.setMsg("fail : not comment owner");
                 result.setData(commentsIdx);
             }
             else{   // 댓글 삭제
                 commentsRepository.deleteById(commentsIdx);
                 result.setCode(0);
-                result.setMsg("delete complete");
+                result.setMsg("request complete : delete comment");
                 result.setData(commentsIdx);
             }
         }
         else    // 댓글이 이미 없을 때
         {
-            result.setCode(1);
+            result.setCode(21);
             result.setMsg("fail : comment not exist");
             result.setData(-1);
         }
@@ -110,7 +109,7 @@ public class  CommentsService {
         Response<Page<CommentsMainResponseDto>> result = new Response<Page<CommentsMainResponseDto>>();
 
         if(!episodeRepository.existsById(epIdx)) {    // 에피소드가 존재하지 않을 때
-            result.setCode(2);
+            result.setCode(20);
             result.setMsg("fail : episode not exist");
         }
         else{
@@ -128,12 +127,12 @@ public class  CommentsService {
             result.setData(commentsMainResponseDtoPage);
 
             if(page > commentsPage.getTotalPages()){
-                result.setCode(1);
+                result.setCode(23);
                 result.setMsg("fail : entered page exceeds the total pages");
             }
             else{
                 result.setCode(0);
-                result.setMsg("complete : find Comments By Page Request");
+                result.setMsg("request complete : find Comments By Page Request");
             }
         }
 
@@ -145,7 +144,7 @@ public class  CommentsService {
         Response<List<CommentsMainResponseDto>> result = new Response<List<CommentsMainResponseDto>>();
 
         if(!episodeRepository.existsById(epIdx)) {  // 에피소드가 존재하지 않을 때
-            result.setCode(1);
+            result.setCode(20);
             result.setMsg("fail : episode not exist");
         }
         else{
@@ -153,7 +152,7 @@ public class  CommentsService {
                     .map(CommentsMainResponseDto::new)
                     .collect(Collectors.toList()));
             result.setCode(0);
-            result.setMsg("complete : find Best Comments");
+            result.setMsg("requset complete : find Best Comments");
         }
 
         return result;

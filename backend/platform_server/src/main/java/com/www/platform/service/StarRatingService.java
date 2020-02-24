@@ -45,15 +45,19 @@ public class StarRatingService {
 
         if(starRatingRepository.existsByEpIdxAndUsersIdx(epIdx, usersIdx))
         {
-            result.setCode(1);
-            result.setMsg("fail : have already given rating");
+            result.setCode(26);
+            result.setMsg("fail : have already given star rating");
         }
         else
         {
             Optional<Users> user = usersRepository.findById(usersIdx);
             Optional<Episode> episode = episodeRepository.findById(epIdx);
 
-            // TODO : episode 존재유무 예외처리
+            if(!episode.isPresent()){ // 에피소드가 존재하지 않을 때
+                result.setCode(20);
+                result.setMsg("fail : episode not exist");
+                return result;
+            }
 
             StarRating starRating = StarRating.builder()
                     .users(user.get())
@@ -74,7 +78,7 @@ public class StarRatingService {
                     .build();
 
             result.setCode(0);
-            result.setMsg("complete : insert star rating");
+            result.setMsg("request complete : insert star rating");
             result.setData(episodeStarRatingResponseDto);
         }
 
