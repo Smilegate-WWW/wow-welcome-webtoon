@@ -58,7 +58,6 @@ public class  CommentsService {
 
             result.setCode(0);
             result.setMsg("request complete : save comment");
-            result.setData(entityIdx);
         }
         return result;
     }
@@ -73,20 +72,17 @@ public class  CommentsService {
             if(usersIdx != comments.get().getUsers().getIdx()){
                 result.setCode(22);
                 result.setMsg("fail : not comment owner");
-                result.setData(commentsIdx);
             }
             else{   // 댓글 삭제
                 commentsRepository.deleteById(commentsIdx);
                 result.setCode(0);
                 result.setMsg("request complete : delete comment");
-                result.setData(commentsIdx);
             }
         }
         else    // 댓글이 이미 없을 때
         {
             result.setCode(21);
             result.setMsg("fail : comment not exist");
-            result.setData(-1);
         }
 
         return result;
