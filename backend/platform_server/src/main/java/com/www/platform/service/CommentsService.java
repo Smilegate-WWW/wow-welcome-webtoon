@@ -32,24 +32,19 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
-public class CommentsService {
+public class  CommentsService {
     private CommentsRepository commentsRepository;
     private UsersRepository usersRepository;
     private EpisodeRepository episodeRepository;
 
     // 예외 발생시 모든 DB작업 초기화 해주는 어노테이션 ( 완료시에만 커밋해줌 )
     @Transactional
-    public Response<Integer> save(CommentsSaveRequestDto dto) {
+    public Response<Integer> save(int usersIdx, int epIdx, String content) {
         Response<Integer> result = new Response<Integer>();
-        Optional<Users> user = usersRepository.findById(dto.getUsers_idx());
-        Optional<Episode> episode = episodeRepository.findById(dto.getEp_idx());
+        Optional<Users> user = usersRepository.findById(usersIdx);
+        Optional<Episode> episode = episodeRepository.findById(epIdx);
 
-        if(!user.isPresent()){ // 유저가 존재하지 않을 때
-            result.setCode(1);
-            result.setMsg("fail : user not exist");
-            result.setData(-1);
-        }
-        else if(!episode.isPresent()){ // 에피소드가 존재하지 않을 때
+        if(!episode.isPresent()){ // 에피소드가 존재하지 않을 때
             result.setCode(2);
             result.setMsg("fail : episode not exist");
             result.setData(-1);
@@ -58,7 +53,7 @@ public class CommentsService {
             Comments comments = Comments.builder()
                     .users(user.get())
                     .ep(episode.get())
-                    .content(dto.getContent())
+                    .content(content)
                     .build();
             int entityIdx = commentsRepository.save(comments).getIdx();
 
@@ -70,28 +65,22 @@ public class CommentsService {
     }
 
     @Transactional
-    public Response<Integer> delete(CommentsDeleteRequestDto dto)
-    {
+    public Response<Integer> delete(int usersIdx, int epIdx, int commentsIdx) {
         Response<Integer> result = new Response<Integer>();
-        Optional<Users> users = usersRepository.findById(dto.getUsers_idx());
-        Optional<Comments> comments = commentsRepository.findById(dto.getIdx());
+        Optional<Users> users = usersRepository.findById(usersIdx);
+        Optional<Comments> comments = commentsRepository.findById(commentsIdx);
 
-        if(!users.isPresent()){ // 유저가 존재하지 않을 때
-            result.setCode(2);
-            result.setMsg("fail : user not exist");
-            result.setData(-1);
-        }
-        else if(comments.isPresent()){ // 유저가 해당 댓글의 주인이 아닐 때
-            if(dto.getUsers_idx() != comments.get().getUsers().getIdx()){
+        if(comments.isPresent()){ // 유저가 해당 댓글의 주인이 아닐 때
+            if(usersIdx != comments.get().getUsers().getIdx()){
                 result.setCode(3);
                 result.setMsg("fail : not comment owner");
-                result.setData(dto.getIdx());
+                result.setData(commentsIdx);
             }
             else{   // 댓글 삭제
-                commentsRepository.deleteById(dto.getIdx());
+                commentsRepository.deleteById(commentsIdx);
                 result.setCode(0);
                 result.setMsg("delete complete");
-                result.setData(dto.getIdx());
+                result.setData(commentsIdx);
             }
         }
         else    // 댓글이 이미 없을 때

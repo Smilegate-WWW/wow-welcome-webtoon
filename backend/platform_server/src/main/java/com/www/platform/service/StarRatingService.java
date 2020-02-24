@@ -24,6 +24,7 @@ public class StarRatingService {
     private EpisodeRepository episodeRepository;
     private WebtoonRepository webtoonRepository;
 
+    /*
     public Response<StarRatingRequestDto> getEpisodeRating(int epIdx) {
         Response<StarRatingRequestDto> result = new Response<StarRatingRequestDto>();
 
@@ -36,6 +37,7 @@ public class StarRatingService {
         result.setData(starRatingDto);
         return result;
     }
+     */
 
     @Transactional
     public Response<EpisodeStarRatingResponseDto> insertStarRating(int epIdx, int usersIdx, float rating) {

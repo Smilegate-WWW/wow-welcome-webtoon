@@ -9,9 +9,7 @@ import com.www.core.platform.entity.CommentsLike;
 import com.www.core.platform.repository.CommentsDislikeRepository;
 import com.www.core.platform.repository.CommentsLikeRepository;
 import com.www.core.platform.repository.CommentsRepository;
-import com.www.platform.dto.CommentsDislikeRequestDto;
 import com.www.platform.dto.CommentsLikeDislikeCntResponseDto;
-import com.www.platform.dto.CommentsLikeRequestDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,18 +25,14 @@ public class CommentsLikeDislikeService {
     private CommentsDislikeRepository commentsDislikeRepository;
 
     @Transactional
-    public Response<CommentsLikeDislikeCntResponseDto> requestLike(CommentsLikeRequestDto dto) {
+    public Response<CommentsLikeDislikeCntResponseDto> requestLike(int usersIdx, int commentsIdx) {
         Response<CommentsLikeDislikeCntResponseDto> result = new Response<CommentsLikeDislikeCntResponseDto>();
         // TODO : fail : login required
 
-        Optional<Users> users = usersRepository.findById(dto.getUsers_idx());
-        Optional<Comments> comments = commentsRepository.findById(dto.getComments_idx());
+        Optional<Users> users = usersRepository.findById(usersIdx);
+        Optional<Comments> comments = commentsRepository.findById(commentsIdx);
 
-        if(!users.isPresent()){
-            result.setCode(2);
-            result.setMsg("fail : user not exist");
-        }
-        else if(!comments.isPresent()){
+        if(!comments.isPresent()){
             result.setCode(3);
             result.setMsg("fail : comment not exist");
         }
@@ -50,11 +44,11 @@ public class CommentsLikeDislikeService {
             CommentsLike commentsLike;
 
             if(commentsLikeRepository.existsByComments_IdxAndUsers_Idx
-                    (dto.getComments_idx(), dto.getUsers_idx())){
+                    (commentsIdx, usersIdx)){
                 // complete : cancel request like
 
                 commentsLike = commentsLikeRepository.findByComments_IdxAndUsers_Idx
-                        (dto.getComments_idx(), dto.getUsers_idx());
+                        (commentsIdx, usersIdx);
                 commentsLikeRepository.deleteByIdx(commentsLike.getIdx());
                 commentsRepository.updateLikeCnt(comments.get().getIdx(), -1);
 
@@ -86,18 +80,14 @@ public class CommentsLikeDislikeService {
 
 
     @Transactional
-    public Response<CommentsLikeDislikeCntResponseDto> requestDislike(CommentsDislikeRequestDto dto) {
+    public Response<CommentsLikeDislikeCntResponseDto> requestDislike(int usersIdx, int commentsIdx) {
         Response<CommentsLikeDislikeCntResponseDto> result = new Response<CommentsLikeDislikeCntResponseDto>();
         // TODO : fail : login required
 
-        Optional<Users> users = usersRepository.findById(dto.getUsers_idx());
-        Optional<Comments> comments = commentsRepository.findById(dto.getComments_idx());
+        Optional<Users> users = usersRepository.findById(usersIdx);
+        Optional<Comments> comments = commentsRepository.findById(commentsIdx);
 
-        if(!users.isPresent()){
-            result.setCode(2);
-            result.setMsg("fail : user not exist");
-        }
-        else if(!comments.isPresent()){
+        if(!comments.isPresent()){
             result.setCode(3);
             result.setMsg("fail : comment not exist");
         }
@@ -109,11 +99,11 @@ public class CommentsLikeDislikeService {
             CommentsDislike commentsDislike;
 
             if(commentsDislikeRepository.existsByComments_IdxAndUsers_Idx
-                    (dto.getComments_idx(), dto.getUsers_idx())){
+                    (commentsIdx, usersIdx)){
                 // complete : cancel request like
 
                 commentsDislike = commentsDislikeRepository.findByComments_IdxAndUsers_Idx
-                        (dto.getComments_idx(), dto.getUsers_idx());
+                        (commentsIdx, usersIdx);
                 commentsDislikeRepository.deleteByIdx(commentsDislike.getIdx());
                 commentsRepository.updateDislikeCnt(comments.get().getIdx(), -1);
 

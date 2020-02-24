@@ -14,11 +14,13 @@ public class StarRatingController {
     private StarRatingService starRatingService;
     private TokenChecker tokenChecker;
 
+    /*
     //TODO : return type EpisodeRatingAvgResponse로 교체, 없어도 될 것 같기도?
     @GetMapping("/episodes/{ep_idx}/rating")
     public Response<StarRatingRequestDto> getRatingAvg(@PathVariable("ep_idx") int epIdx) {
         return starRatingService.getEpisodeRating(epIdx);
     }
+     */
 
     @PostMapping("/episodes/{ep_idx}/rating")
     public Response<EpisodeStarRatingResponseDto> insertStarRating(@RequestHeader("Authorization") String AccessToken,
