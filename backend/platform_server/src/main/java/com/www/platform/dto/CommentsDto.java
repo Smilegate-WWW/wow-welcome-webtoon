@@ -1,4 +1,4 @@
-package com.www.platform.domain.comments;
+package com.www.platform.dto;
 
 import com.www.core.platform.entity.Comments;
 import lombok.Getter;
@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @Getter
-public class CommentsMainResponseDto {
+public class CommentsDto {
     private Integer idx;
     private int ep_idx;
     private int users_idx;
@@ -17,7 +17,7 @@ public class CommentsMainResponseDto {
     private String content;
     private String created_date;
 
-    public CommentsMainResponseDto(Comments entity) {
+    public CommentsDto(Comments entity) {
         idx = entity.getIdx();
         ep_idx = entity.getEp().getIdx();
         users_idx = entity.getUsers().getIdx();

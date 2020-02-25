@@ -28,6 +28,7 @@ public class TokenChecker {
 			// access token bearer split
 			token = token.substring(7);
 			return (int) Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("user_idx");
+			//return Integer.parseInt(Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("user_idx").toString());
 		} catch (ExpiredJwtException e) { //만료된 token이라도 user idx 반환
 			return (int) e.getClaims().get("user_idx");
 		} catch (Exception e) {

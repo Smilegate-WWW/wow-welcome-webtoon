@@ -1,4 +1,4 @@
-package com.www.platform.domain.comments.likedislike;
+package com.www.platform.dto;
 
 import lombok.Getter;
 

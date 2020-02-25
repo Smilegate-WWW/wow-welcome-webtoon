@@ -111,13 +111,13 @@ public class AuthController {
 		switch(r){
 			case 41: //이미 로그아웃된 상태
 				result.setCode(41);
-				result.setMsg("logout");
+				result.setMsg("access denied: already logout");
 				break;
 			case 40: //refresh token 파기
 			case 43:
 				jwtTokenProvider.expireToken(useridx);
-				result.setCode(41);
-				result.setMsg("logout");
+				result.setCode(0);
+				result.setMsg("request complete:logout");
 				break;
 			case 42: //에러 존재
 				result.setCode(42);
@@ -153,8 +153,8 @@ public class AuthController {
 		case 40: //재발급 (code 0)
 			String newAT=jwtTokenProvider.createAccessToken(useridx, jwtTokenProvider.getUserName(AccessToken));
 			response.addHeader(HttpHeaders.AUTHORIZATION, "bearer " + newAT);
-			result.setCode(40);
-			result.setMsg("reissue tokens");
+			result.setCode(0);
+			result.setMsg("request complete : reissue tokens");
 			break;
 		case 41: //로그아웃된 상태(토큰 만료)
 			result.setCode(41);

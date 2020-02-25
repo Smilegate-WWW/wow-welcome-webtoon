@@ -76,6 +76,7 @@ public class UserService {
 		userDto.setGender(info.getGender());
 		userDto.setName(info.getName());
 		userDto.setUserid(user_id);
+		userDto.setEmail(info.getEmail());
 		return userDto;
 	}
 }
