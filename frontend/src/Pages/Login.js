@@ -30,31 +30,6 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-function success(result) {
-    console.log(result);
-    // 사용자 정보 저장
-    if (result.code == 0) {
-        localStorage.setItem("USERID", result.data.userid);
-        localStorage.setItem("NAME", result.data.name);
-        localStorage.setItem("BIRTH", result.data.birth);
-        localStorage.setItem("GENDER", result.data.gender);
-        localStorage.setItem("EMAIL", result.data.email);
-        localStorage.setItem("REFRESHTOKEN", result.data.token);
-
-        if (window.history.state == null) {
-            window.location.href = "/"
-        }
-        else {
-            const history = (window.history.state.state.from.pathname);
-            window.location.href = history;
-        }
-    }
-
-    else if (result.code == 2) {
-        alert("아이디, 비밀번호가 일치하지 않습니다!")
-    }
-}
-
 export default function Login() {
     const [userid, setUserid] = useState('');
     const [pw, setPw] = useState('');
@@ -81,16 +56,42 @@ export default function Login() {
 
             fetch("/users/token", requestOptions)
                 .then(response => {
-                    localStorage.setItem("AUTHORIZATION", response.headers.get('Authorization'))
-                    var temp = localStorage.getItem("AUTHORIZATION")
-                    var jwt_decode = require('jwt-decode')
-                    var decodeToken = jwt_decode(temp.replace("bearer ", ""))
-                    localStorage.setItem("USER_IDX", decodeToken.user_idx)
+                    console.log(response);
                     response.json().then(
-                        result => success(result)
+                        result => {
+                            console.log(result);
+                            if (result.code == 0) {
+                                localStorage.setItem("AUTHORIZATION", response.headers.get('Authorization'))
+                                var temp = localStorage.getItem("AUTHORIZATION")
+                                var jwt_decode = require('jwt-decode')
+                                var decodeToken = jwt_decode(temp.replace("bearer ", ""))
+                                localStorage.setItem("USER_IDX", decodeToken.user_idx)
+
+                                localStorage.setItem("USERID", result.data.userid);
+                                localStorage.setItem("NAME", result.data.name);
+                                localStorage.setItem("BIRTH", result.data.birth);
+                                localStorage.setItem("GENDER", result.data.gender);
+                                localStorage.setItem("EMAIL", result.data.email);
+                                localStorage.setItem("REFRESHTOKEN", result.data.token);
+                                
+                                if (window.history.state == null) {
+                                    window.location.href = "/"
+                                }
+                                else {
+                                    const history = (window.history.state.state.from.pathname);
+                                    window.location.href = history;
+                                }
+                                
+                            }
+
+                            else if (result.code == 2) {
+                                alert("아이디, 비밀번호가 일치하지 않습니다!")
+                            }
+                        }
                     )
                 })
                 .catch(error => console.log('error', error))
+
 
         }
     };

@@ -70,6 +70,7 @@ export default function EditInfo() {
     }
 
     const handleSubmit = () => {
+        console.log(pw,pwCheck,name,gender,birth);
         if ( pw === '' || pwCheck === '' || name === '' || gender === '' || birth === '') {
             alert("정보를 모두 입력해주세요!!");
             console.log(pw);console.log(pwCheck);console.log(name);console.log(gender);
@@ -102,9 +103,10 @@ export default function EditInfo() {
              .then(result =>{ 
                 console.log(result);
                 alert("재로그인 해주세요");
-                window.location.href("/login");
             })
              .catch(error => console.log('error', error));
+            
+            //window.location.href="/login";
         }
     }
 
@@ -159,6 +161,7 @@ export default function EditInfo() {
                     value={name}
                     onChange={handleNameChange}
                     variant="outlined"
+                    placeholder={localStorage.getItem("NAME")}
                     />
                 </form>
 
@@ -169,9 +172,9 @@ export default function EditInfo() {
                         labelId="gender_label"
                         id="gender"
                         value={gender}
-                        defaultValue={localStorage.getItem("GENDER")}
                         onChange={handleGenderChange}
                         labelWidth={labelWidth}
+                        placeholder={localStorage.getItem("GENDER")}
                     >
                         <MenuItem value={0}>남</MenuItem>
                         <MenuItem value={1}>여</MenuItem>
@@ -195,7 +198,7 @@ export default function EditInfo() {
                 disabled
                 id="email" 
                 label="이메일" 
-                defaultValue={localStorage.getItem("EMIAL")}
+                defaultValue={localStorage.getItem("EMAIL")}
                 variant="outlined" />
             </form>
 

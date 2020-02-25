@@ -82,10 +82,15 @@ const MyWebtoons = [
 ]
 
 function getWebtoon() {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", localStorage.getItem("AUTHORIZATION"));
+    myHeaders.append("Accept", "application/json");
 
-    var requestOptions = {
+    var requestOptions = { 
+        cache: "default",
+        headers:myHeaders,
         method: 'GET',
-        redirect: 'follow'
+        redirect: 'follow',
     };
 
     fetch("/myTitleList?page=1", requestOptions)
@@ -155,7 +160,7 @@ export default function MyPage() {
                 <Paper>
                     <GridList cellHeight={300} className={classes.gridList} spacing={15} cols={4}>
                         {MyWebtoons.map(myWebtoon => (
-                            <GridListTile key={myWebtoon} item>
+                            <GridListTile key={myWebtoon.title} item="true">
                                 <MyWebtoon title={myWebtoon.title} poster={myWebtoon.poster} artist={myWebtoon.artist} rating={myWebtoon.rating} register_date={myWebtoon.register_date} update_date={myWebtoon.update_date} />
                             </GridListTile>
                         ))}
