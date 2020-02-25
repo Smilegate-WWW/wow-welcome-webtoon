@@ -8,9 +8,8 @@ import com.www.core.file.entity.Episode;
 import com.www.core.file.repository.EpisodeRepository;
 import com.www.core.platform.entity.Comments;
 import com.www.core.platform.repository.CommentsRepository;
-import com.www.platform.dto.CommentsDeleteRequestDto;
-import com.www.platform.dto.CommentsMainResponseDto;
-import com.www.platform.dto.CommentsSaveRequestDto;
+import com.www.platform.dto.CommentsDto;
+import com.www.platform.dto.CommentsResponseDto;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -89,10 +88,10 @@ public class  CommentsService {
     }
 
     @Transactional(readOnly = true)
-    public Response<List<CommentsMainResponseDto>> findAllDesc() {
-        Response<List<CommentsMainResponseDto>> result = new Response<List<CommentsMainResponseDto>>();
+    public Response<List<CommentsDto>> findAllDesc() {
+        Response<List<CommentsDto>> result = new Response<List<CommentsDto>>();
         result.setData(commentsRepository.findAllDesc()
-                .map(CommentsMainResponseDto::new)
+                .map(CommentsDto::new)
                 .collect(Collectors.toList()));
         result.setCode(0);
         result.setMsg("findAllDesc complete");
@@ -101,8 +100,8 @@ public class  CommentsService {
     }
 
     @Transactional(readOnly = true)
-    public Response<Page<CommentsMainResponseDto>> findCommentsByPageRequest(int epIdx, int page) {
-        Response<Page<CommentsMainResponseDto>> result = new Response<Page<CommentsMainResponseDto>>();
+    public Response<CommentsResponseDto> findCommentsByPageRequest(int epIdx, int page) {
+        Response<CommentsResponseDto> result = new Response<CommentsResponseDto>();
 
         if(!episodeRepository.existsById(epIdx)) {    // 에피소드가 존재하지 않을 때
             result.setCode(20);
@@ -115,12 +114,12 @@ public class  CommentsService {
             Pageable pageable = PageRequest.of(page <= 0 ? 0 : page - 1, 15, Sort.Direction.DESC, "idx");
             Page<Comments> commentsPage = commentsRepository.findAllByEpIdx(pageable, epIdx);
             int totalElements = (int) commentsPage.getTotalElements();
-            Page<CommentsMainResponseDto> commentsMainResponseDtoPage
-                    = new PageImpl<CommentsMainResponseDto>(commentsPage
+
+            Page<CommentsDto> commentsDtoPage
+                    = new PageImpl<CommentsDto>(commentsPage
                     .stream()
-                    .map(comments -> new CommentsMainResponseDto(comments))
+                    .map(comments -> new CommentsDto(comments))
                     .collect(Collectors.toList()), pageable, totalElements);
-            result.setData(commentsMainResponseDtoPage);
 
             if(page > commentsPage.getTotalPages()){
                 result.setCode(23);
@@ -129,6 +128,12 @@ public class  CommentsService {
             else{
                 result.setCode(0);
                 result.setMsg("request complete : find Comments By Page Request");
+                CommentsResponseDto commentsResponseDto
+                        = CommentsResponseDto.builder()
+                        .comments(commentsDtoPage.getContent())
+                        .total_page(commentsDtoPage.getTotalPages())
+                        .build();
+                result.setData(commentsResponseDto);
             }
         }
 
@@ -136,8 +141,8 @@ public class  CommentsService {
     }
 
     @Transactional(readOnly = true)
-    public Response<List<CommentsMainResponseDto>> findBestComments(int epIdx) {
-        Response<List<CommentsMainResponseDto>> result = new Response<List<CommentsMainResponseDto>>();
+    public Response<List<CommentsDto>> findBestComments(int epIdx) {
+        Response<List<CommentsDto>> result = new Response<List<CommentsDto>>();
 
         if(!episodeRepository.existsById(epIdx)) {  // 에피소드가 존재하지 않을 때
             result.setCode(20);
@@ -145,7 +150,7 @@ public class  CommentsService {
         }
         else{
             result.setData(commentsRepository.findBestCommentsByEpIdx(epIdx)
-                    .map(CommentsMainResponseDto::new)
+                    .map(CommentsDto::new)
                     .collect(Collectors.toList()));
             result.setCode(0);
             result.setMsg("requset complete : find Best Comments");

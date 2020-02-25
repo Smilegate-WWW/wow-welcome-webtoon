@@ -1,9 +1,7 @@
 package com.www.platform.controller;
 
-import com.www.core.auth.repository.UsersRepository;
 import com.www.core.common.Response;
 import com.www.core.common.TokenChecker;
-import com.www.core.platform.repository.CommentsRepository;
 import com.www.platform.dto.*;
 import com.www.platform.service.CommentsLikeDislikeService;
 import com.www.platform.service.CommentsService;
@@ -11,7 +9,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 
 @RestController
@@ -25,8 +22,8 @@ public class CommentsController {
 
 
     @GetMapping("/episodes/{ep-idx}/comments")
-    public Response<Page<CommentsMainResponseDto>> getComments(@PathVariable("ep-idx") int epIdx,
-                                                               @RequestParam("page") int page) {
+    public Response<CommentsResponseDto> getComments(@PathVariable("ep-idx") int epIdx,
+                                                           @RequestParam("page") int page) {
         return commentsService.findCommentsByPageRequest(epIdx, page);
     }
 
@@ -89,7 +86,7 @@ public class CommentsController {
     }
 
     @GetMapping("/episodes/{ep_idx}/comments/best")
-    public Response<List<CommentsMainResponseDto>> getBestComments(@PathVariable("ep_idx") int epIdx) {
+    public Response<List<CommentsDto>> getBestComments(@PathVariable("ep_idx") int epIdx) {
         return commentsService.findBestComments(epIdx);
     }
 
