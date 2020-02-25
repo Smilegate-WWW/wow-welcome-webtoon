@@ -10,3 +10,4 @@ export {default as Upload} from './EpisodeUpload';
 export {default as EditInfo} from './EditInfo';
 export {default as EditRegister} from './EditRegister';
 export {default as EditEpisode} from './EditEpisode';
+export {default as EditUpload} from './EditEpisodeUpload';

@@ -98,8 +98,12 @@ export default function EditInfo() {
            };
 
            fetch("/users", requestOptions)
-             .then(response => response.text())
-             .then(result => console.log(result))
+             .then(response => response.json())
+             .then(result =>{ 
+                console.log(result);
+                alert("재로그인 해주세요");
+                window.location.href("/login");
+            })
              .catch(error => console.log('error', error));
         }
     }
@@ -191,7 +195,7 @@ export default function EditInfo() {
                 disabled
                 id="email" 
                 label="이메일" 
-                defaultValue="example.email.com" 
+                defaultValue={localStorage.getItem("EMIAL")}
                 variant="outlined" />
             </form>
 

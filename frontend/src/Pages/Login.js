@@ -38,6 +38,7 @@ function success(result) {
         localStorage.setItem("NAME", result.data.name);
         localStorage.setItem("BIRTH", result.data.birth);
         localStorage.setItem("GENDER", result.data.gender);
+        localStorage.setItem("EMAIL", result.data.email);
         localStorage.setItem("REFRESHTOKEN", result.data.token);
 
         if (window.history.state == null) {

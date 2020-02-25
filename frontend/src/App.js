@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { Home, Comment, Login, MyPage, Signup, Register, Webtoon,Episode,Upload,EditInfo,EditRegister,EditEpisode} from './Pages';
+import { Home, Comment, Login, MyPage, Signup, Register, Webtoon,Episode,Upload,EditInfo,EditRegister,EditEpisode,EditUpload} from './Pages';
 import AuthRoute from './AuthRoute';
 
 export default function App() {
@@ -39,6 +39,7 @@ export default function App() {
         <AuthRoute path="/mypage/editInfo" render={props => <EditInfo {...props}/>}/>
         <AuthRoute path="/mypage/editRegister" render={props => <EditRegister {...props}/>}/>
         <AuthRoute path="/mypage/editEpisode" render={props => <EditEpisode {...props}/>}/>
+        <AuthRoute path="/mypage/editUpload" render={props => <EditUpload {...props}/>}/>
       </Switch>
     </div>
   );

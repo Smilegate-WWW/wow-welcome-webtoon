@@ -68,28 +68,41 @@ const episodes = [
     },
 ];
 
+function showEpisode() {
+    var requestOptions = {
+        method: 'GET',
+        redirect: 'follow'
+    };
+
+    fetch("/myArticleList/", requestOptions)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+}
+
 export default function EditEpisode() {
+    showEpisode();
+
     const classes = useStyles();
 
-    const episodeDelete=()=>{
+    const episodeDelete = () => {
         var requestOptions = {
             method: 'DELETE',
             redirect: 'follow'
-          };
-          
-          fetch("/myArticleList/4/1", requestOptions)
+        };
+
+        fetch("/myArticleList/" + "/webtoonidx/idx", requestOptions)
             .then(response => response.json())
-            .then(result =>{ 
+            .then(result => {
                 console.log(result)
                 alert("회차가 삭제되었습니다!")
-                window.location.reload();
             })
             .catch(error => console.log('error', error));
     }
 
     return (
         <div>
-            <Header/>
+            <Header />
 
             <div className={classes.menu}>
                 <div className={classes.button}>
@@ -107,7 +120,10 @@ export default function EditEpisode() {
                     <img src="http://placeimg.com/128/128/any" alt="thumbnail" style={{ margin: 10, height: 120, }} />
                     <div>
                         <h2>웹툰 제목 (작가)</h2>
-                        <body1>줄거리저ㅜㄹ거리줄ㄹ거리줄럭리줄러길줄럭리줄러기</body1>
+                        <h5>줄거리저ㅜㄹ거리줄ㄹ거리줄럭리줄러길줄럭리줄러기</h5>
+                        <Button variant="contained" href="/mypage/upload" style={{marginLeft:5}}>
+                            <span style={{ color: "#212121", fontWeight: 520 }}>새 회차 등록</span>
+                        </Button>
                     </div>
                 </div>
                 <TableContainer component={Paper} align="center">
@@ -126,11 +142,11 @@ export default function EditEpisode() {
                             {episodes.map(episode => (
                                 <TableRow key={episode.title}>
                                     <TableCell align="center">
-                                        <img src={episode.thumbnail}/>
+                                        <img src={episode.thumbnail} />
                                     </TableCell>
                                     <TableCell align="left">
                                         <a href="/webtoon/episode" style={{}}>
-                                        {episode.title}
+                                            {episode.title}
                                         </a>
                                     </TableCell>
                                     <TableCell align="center">
@@ -140,12 +156,12 @@ export default function EditEpisode() {
                                     </TableCell>
                                     <TableCell align="center">{episode.updateDate}</TableCell>
                                     <TableCell align="center">
-                                        <Button variant="contained" href="/mypage">
+                                        <Button variant="contained" href="/mypage/editUpload">
                                             <span style={{ color: "#212121", fontWeight: 520 }}>수정</span>
                                         </Button>
                                     </TableCell>
                                     <TableCell align="center">
-                                        <Button variant="contained" href="/mypage" onClick={episodeDelete}>
+                                        <Button variant="contained" onClick={episodeDelete}>
                                             <span style={{ color: "#212121", fontWeight: 520 }}>삭제</span>
                                         </Button>
                                     </TableCell>

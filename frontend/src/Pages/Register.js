@@ -44,8 +44,8 @@ const useStyles = makeStyles(theme => ({
 
 export default function Register() {
     const classes = useStyles();
-    const [title, setTitle] = React.useState('');
-    const [type, setType] = React.useState('');
+    const [title, setTitle] = React.useState("");
+    const [type, setType] = React.useState("");
     const [genre, setGenre] = React.useState({
         daily: false,
         gag: false,
@@ -55,9 +55,9 @@ export default function Register() {
         pure: false,
         emotion: false,
     });
-    const [summary, setSummary] = React.useState('');
-    const [plot, setPlot] = React.useState('');
-    const [thumbnail,setThumbnail]=React.useState('');
+    const [summary, setSummary] = React.useState("");
+    const [plot, setPlot] = React.useState("");
+    const [thumbnail,setThumbnail]=React.useState("");
     const genreArray = [genre.daily, genre.gag, genre.fantasy, genre.action, genre.drama, genre.pure, genre.emotion];
 
     const handleTitleChange = (e) => {
@@ -81,6 +81,7 @@ export default function Register() {
         let reader = new FileReader();
         reader.onloadend = () => {
             console.log("load end");
+            console.log(file.size)
         };
         reader.readAsDataURL(file);
         if(file.length ===0){
@@ -108,7 +109,7 @@ export default function Register() {
             }
         }
 
-        if (title === '' || type === '' || summary === '' || plot === '') {
+        if (title === "" || type === "" || summary === "" || plot === "") {
             alert("정보를 모두 입력해주세요!!");
         }
         else if (genreNum > 2) {
@@ -144,23 +145,10 @@ export default function Register() {
             myHeaders.append("Authorization", localStorage.getItem("AUTHORIZATION"));
 
             var webtoonInfo = JSON.stringify({"title":title,"toon_type":type,"genre1":genre1,"genre2":genre2,"summary":summary,"plot":plot});
-            
-            const fs=require("fs");
-
-            fs.writeFile('./webtoon.json','webtoonInfo',function(err){ 
-                if (err === null) { console.log('success'); } 
-                else { console.log('fail'); } 
-            });
-
-            fs.readdir('./webtoon.json',function(err,filelist){ console.log(filelist); });
 
             var formdata = new FormData();
             formdata.append("thumbnail",thumbnail);
             formdata.append("webtoon", webtoonInfo);
-
-            console.log(thumbnail);
-            console.log(webtoonInfo);
-            
 
             var requestOptions = {
               method: 'POST',
@@ -176,6 +164,7 @@ export default function Register() {
 
         }
     }
+
     return (
         <div>
             <Header/>

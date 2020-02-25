@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
     },
     buttons: {
         marginTop: theme.spacing(1),
-        paddingLeft: theme.spacing(87),
+        paddingLeft: theme.spacing(82),
         '& > *': {
             margin: theme.spacing(1),
         },
@@ -80,18 +80,19 @@ export default function EditRegister() {
     }
     const handleThumbnailChange = (e) => {
         const file = e.target.files[0];
+        setThumbnail(file);
         let reader = new FileReader();
         reader.onloadend = () => {
             console.log("load end");
         };
         reader.readAsDataURL(file);
-        if(file.length ===0){
+        if (file.length === 0) {
             alert("파일이 선택되지 않았습니다.");
         }
-        else if(file.type != "image/jpeg"){
+        else if (file.type != "image/jpeg") {
             alert("jpg 타입의 파일을 선택해주세요!")
         }
-        else if(file.size > 1048576 ){
+        else if (file.size > 1048576) {
             alert("파일의 크기가 너무 큽니다");
         }
     }
@@ -137,8 +138,39 @@ export default function EditRegister() {
                 genre1 = genreTrue[0];
                 genre2 = genreTrue[1];
             }
+            var myHeaders = new Headers();
+            myHeaders.append("Content-Type","multipart/form-data");
+            myHeaders.append("Authorization", localStorage.getItem("AUTHORIZATION"));
 
+            var webtoonInfo = JSON.stringify({"title":title,"toon_type":type,"genre1":genre1,"genre2":genre2,"summary":summary,"plot":plot});
+
+            var formdata = new FormData();
+            formdata.append("thumbnail", thumbnail);
+            formdata.append("webtoon", webtoonInfo);
+
+            var requestOptions = {
+                method: 'PUT',
+                body: formdata,
+                redirect: 'follow'
+            };
+
+            fetch("/myTitleDetail/"+"//idx", requestOptions)
+                .then(response => response.text())
+                .then(result => console.log(result))
+                .catch(error => console.log('error', error));
         }
+    }
+    
+    const handleDelete=()=>{
+        var requestOptions = {
+            method: 'DELETE',
+            redirect: 'follow'
+          };
+          
+          fetch("/myArticleList/", requestOptions)
+            .then(response => response.text())
+            .then(result => console.log(result))
+            .catch(error => console.log('error', error));
     }
     return (
         <div>
@@ -279,7 +311,7 @@ export default function EditRegister() {
                         <TextField
                             id="summary"
                             variant="outlined"
-                             //defualtValue={MyWebtoon.summary}
+                            //defualtValue={MyWebtoon.summary}
                             value={summary}
                             onChange={handleSummaryChange}
                             size="small"
@@ -291,7 +323,7 @@ export default function EditRegister() {
                         <TextField
                             id="summary"
                             variant="outlined"
-                             //defualtValue={MyWebtoon.plot}
+                            //defualtValue={MyWebtoon.plot}
                             value={plot}
                             onChange={handlePlotChange}
                             size="small"
@@ -331,7 +363,10 @@ export default function EditRegister() {
                 <Button variant="contained" color="primary" onClick={handleSubmit}>
                     <span style={{ color: "#fafafa", fontWeight: 550 }}>수정</span>
                 </Button>
-                </div>
+                <Button variant="contained" color="primary" onClick={handleDelete}>
+                    <span style={{ color: "#fafafa", fontWeight: 550 }}>웹툰 삭제</span>
+                </Button>
+            </div>
         </div >
     )
 }

@@ -49,27 +49,22 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function Upload() {
-    const [title, setTitle] = React.useState("");
-    const [comment, setComment] = React.useState("");
-    const [thumbnail, setThumbnail] = React.useState("");
-    var images = new Array();
-    var imageNum = 0;
+export default function EditUpload() {
+    const [comment, setComment] = React.useState('');
+    const [thumbnail, setThumbnail] = React.useState('');
+    var images=new Array();
+    var imageNum=0;
 
     const classes = useStyles();
-
-    const handleTitleChange = (e) => {
-        setTitle(e.target.value)
-    }
 
     const handleCommentChange = (e) => {
         setComment(e.target.value);
     }
 
     const handleImageChange = (e) => {
-
+        
         const file = e.target.files[0];
-        images[imageNum] = file;
+        images[imageNum]=file;
 
         let reader = new FileReader();
         reader.onloadend = () => {
@@ -87,7 +82,7 @@ export default function Upload() {
         }
         else {
             imageNum++;
-            alert(file.name + "이(가) 선택되었습니다 \n\n 선택된 이미지: " + imageNum + "개");
+            alert(file.name + "이(가) 선택되었습니다 \n\n 선택된 이미지: "+imageNum+"개");
             console.log(images);
         }
     }
@@ -114,32 +109,6 @@ export default function Upload() {
         }
     }
 
-    const hadleSubmit = () => {
-        if (title === "" || comment === "" || images.length == 0) {
-            alert("필요한 모든 정보를 입력해주세요")
-        }
-        else {
-            var episodeInfo = JSON.stringify({ "ep_no": null, "title": title, "auth_comment": comment })
-
-            var formdata = new FormData();
-            formdata.append("thumbnail", thumbnail);
-            for (var i = 0; i < images.length; i++) {
-                formdata.append("manuscript", images[i]);
-            }
-            formdata.append("episode", episodeInfo);
-
-            var requestOptions = {
-                method: 'POST',
-                body: formdata,
-                redirect: 'follow'
-            };
-
-            fetch("/myArticleDetail/", requestOptions)
-                .then(response => response.text())
-                .then(result => console.log(result))
-                .catch(error => console.log('error', error));
-        }
-    }
 
     return (
         <div>
@@ -176,18 +145,6 @@ export default function Upload() {
                         <p className={classes.fontStyle}>
                             회차 No는 순차적으로 자동 지정되기 때문에 임의로 설정이 불가능합니다.
                         </p>
-                    </div>
-
-                    <div style={{ display: "flex" }}>
-                        <h5>회차 제목&emsp;&emsp;&emsp;</h5>
-                        <TextField
-                            id="title"
-                            variant="outlined"
-                            value={title}
-                            onChange={handleTitleChange}
-                            size="small"
-                            style={{ width: 800 }}
-                        />
                     </div>
 
                     <div style={{ display: "flex" }}>
@@ -251,7 +208,7 @@ export default function Upload() {
                 <Button variant="contained" href="/mypage">
                     <span style={{ fontWeight: 550 }}>취소</span>
                 </Button>
-                <Button variant="contained" color="primary" onClick={hadleSubmit} >
+                <Button variant="contained" color="primary" >
                     <span style={{ color: "#fafafa", fontWeight: 550 }}>등록</span>
                 </Button>
             </div>
