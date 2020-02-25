@@ -56,9 +56,8 @@ public class CommentsController {
         return result;
     }
 
-    @DeleteMapping("/episodes/{ep_idx}/comments/{cmt_idx}")
+    @DeleteMapping("comments/{cmt_idx}")
     public Response<Integer> deleteComments(@RequestHeader("Authorization") String AccessToken,
-                                            @PathVariable("ep_idx") int epIdx,
                                             @PathVariable("cmt_idx") int commentIdx){
         Response<Integer> result = new Response<Integer>();
 
@@ -70,7 +69,7 @@ public class CommentsController {
                     result.setMsg("access denied : maybe captured or faked token");
                     break;
                 }
-                result = commentsService.deleteComments(usersIdx, epIdx, commentIdx);
+                result = commentsService.deleteComments(usersIdx, commentIdx);
                 break;
             case 1: // 만료된 토큰
                 result.setCode(44);

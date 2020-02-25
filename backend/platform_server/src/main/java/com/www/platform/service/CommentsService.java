@@ -61,7 +61,7 @@ public class  CommentsService {
     }
 
     @Transactional
-    public Response<Integer> deleteComments(int usersIdx, int epIdx, int commentsIdx) {
+    public Response<Integer> deleteComments(int usersIdx, int commentsIdx) {
         Response<Integer> result = new Response<Integer>();
         Optional<Users> users = usersRepository.findById(usersIdx);
         Optional<Comments> comments = commentsRepository.findById(commentsIdx);
@@ -152,7 +152,7 @@ public class  CommentsService {
                     .map(CommentsDto::new)
                     .collect(Collectors.toList()));
             result.setCode(0);
-            result.setMsg("requset complete : get Best Comments");
+            result.setMsg("requset complete : get best comments");
         }
 
         return result;
