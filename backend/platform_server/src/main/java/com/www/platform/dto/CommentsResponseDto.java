@@ -12,11 +12,11 @@ import java.util.Optional;
 @Getter
 public class CommentsResponseDto {
     private List<CommentsDto> comments;
-    private int total_page;
+    private int total_pages;
 
     @Builder
-    public CommentsResponseDto(List<CommentsDto> comments, int total_page) {
+    public CommentsResponseDto(List<CommentsDto> comments, int total_pages) {
         this.comments = comments;
-        this.total_page = total_page;
+        this.total_pages = total_pages;
     }
 }

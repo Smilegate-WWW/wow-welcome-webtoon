@@ -55,7 +55,7 @@ public class StarRatingService {
 
             if(!episode.isPresent()){ // 에피소드가 존재하지 않을 때
                 result.setCode(20);
-                result.setMsg("fail : episode not exist");
+                result.setMsg("fail : episode don't exists");
                 return result;
             }
 
