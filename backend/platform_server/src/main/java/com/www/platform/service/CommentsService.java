@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
  * Spring 트랜잭션에 따라 다릅니다.
  */
 
-// TODO : response<T> code, msg 정리
 
 @AllArgsConstructor
 @Service
@@ -38,14 +37,14 @@ public class  CommentsService {
 
     // 예외 발생시 모든 DB작업 초기화 해주는 어노테이션 ( 완료시에만 커밋해줌 )
     @Transactional
-    public Response<Integer> save(int usersIdx, int epIdx, String content) {
+    public Response<Integer> insertComments(int usersIdx, int epIdx, String content) {
         Response<Integer> result = new Response<Integer>();
         Optional<Users> user = usersRepository.findById(usersIdx);
         Optional<Episode> episode = episodeRepository.findById(epIdx);
 
         if(!episode.isPresent()){ // 에피소드가 존재하지 않을 때
             result.setCode(20);
-            result.setMsg("fail : episode not exist");
+            result.setMsg("fail : episode don't exists");
         }
         else{   // 댓글 DB 저장
             Comments comments = Comments.builder()
@@ -56,13 +55,13 @@ public class  CommentsService {
             int entityIdx = commentsRepository.save(comments).getIdx();
 
             result.setCode(0);
-            result.setMsg("request complete : save comment");
+            result.setMsg("request complete : insert comment");
         }
         return result;
     }
 
     @Transactional
-    public Response<Integer> delete(int usersIdx, int epIdx, int commentsIdx) {
+    public Response<Integer> deleteComments(int usersIdx, int commentsIdx) {
         Response<Integer> result = new Response<Integer>();
         Optional<Users> users = usersRepository.findById(usersIdx);
         Optional<Comments> comments = commentsRepository.findById(commentsIdx);
@@ -70,7 +69,7 @@ public class  CommentsService {
         if(comments.isPresent()){ // 유저가 해당 댓글의 주인이 아닐 때
             if(usersIdx != comments.get().getUsers().getIdx()){
                 result.setCode(22);
-                result.setMsg("fail : not comment owner");
+                result.setMsg("fail : user isn't comment owner");
             }
             else{   // 댓글 삭제
                 commentsRepository.deleteById(commentsIdx);
@@ -81,7 +80,7 @@ public class  CommentsService {
         else    // 댓글이 이미 없을 때
         {
             result.setCode(21);
-            result.setMsg("fail : comment not exist");
+            result.setMsg("fail : comment don't exists");
         }
 
         return result;
@@ -100,12 +99,12 @@ public class  CommentsService {
     }
 
     @Transactional(readOnly = true)
-    public Response<CommentsResponseDto> findCommentsByPageRequest(int epIdx, int page) {
+    public Response<CommentsResponseDto> getCommentsByPageRequest(int epIdx, int page) {
         Response<CommentsResponseDto> result = new Response<CommentsResponseDto>();
 
         if(!episodeRepository.existsById(epIdx)) {    // 에피소드가 존재하지 않을 때
             result.setCode(20);
-            result.setMsg("fail : episode not exist");
+            result.setMsg("fail : episode don't exists");
         }
         else{
             // repository에서 Page<entity>로 받은 내용을 Page<dto>로 변환하는 법 아래 참고
@@ -127,11 +126,11 @@ public class  CommentsService {
             }
             else{
                 result.setCode(0);
-                result.setMsg("request complete : find Comments By Page Request");
+                result.setMsg("request complete : get comments by page request");
                 CommentsResponseDto commentsResponseDto
                         = CommentsResponseDto.builder()
                         .comments(commentsDtoPage.getContent())
-                        .total_page(commentsDtoPage.getTotalPages())
+                        .total_pages(commentsDtoPage.getTotalPages())
                         .build();
                 result.setData(commentsResponseDto);
             }
@@ -141,19 +140,19 @@ public class  CommentsService {
     }
 
     @Transactional(readOnly = true)
-    public Response<List<CommentsDto>> findBestComments(int epIdx) {
+    public Response<List<CommentsDto>> getBestComments(int epIdx) {
         Response<List<CommentsDto>> result = new Response<List<CommentsDto>>();
 
         if(!episodeRepository.existsById(epIdx)) {  // 에피소드가 존재하지 않을 때
             result.setCode(20);
-            result.setMsg("fail : episode not exist");
+            result.setMsg("fail : episode don't exists");
         }
         else{
             result.setData(commentsRepository.findBestCommentsByEpIdx(epIdx)
                     .map(CommentsDto::new)
                     .collect(Collectors.toList()));
             result.setCode(0);
-            result.setMsg("requset complete : find Best Comments");
+            result.setMsg("requset complete : get best comments");
         }
 
         return result;

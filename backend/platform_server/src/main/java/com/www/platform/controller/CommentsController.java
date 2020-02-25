@@ -21,15 +21,15 @@ public class CommentsController {
     //private Environment env;
 
 
-    @GetMapping("/episodes/{ep-idx}/comments")
-    public Response<CommentsResponseDto> getComments(@PathVariable("ep-idx") int epIdx,
+    @GetMapping("/episodes/{ep_idx}/comments")
+    public Response<CommentsResponseDto> getComments(@PathVariable("ep_idx") int epIdx,
                                                            @RequestParam("page") int page) {
-        return commentsService.findCommentsByPageRequest(epIdx, page);
+        return commentsService.getCommentsByPageRequest(epIdx, page);
     }
 
-    @PostMapping("/episodes/{ep-idx}/comments")
-    public Response<Integer> saveComments(@RequestHeader("Authorization") String AccessToken,
-                                          @PathVariable("ep-idx")int epIdx,
+    @PostMapping("/episodes/{ep_idx}/comments")
+    public Response<Integer> insertComments(@RequestHeader("Authorization") String AccessToken,
+                                          @PathVariable("ep_idx")int epIdx,
                                           @RequestBody CommentsSaveRequestDto dto) {
         Response<Integer> result = new Response<Integer>();
 
@@ -41,7 +41,7 @@ public class CommentsController {
                     result.setMsg("access denied : maybe captured or faked token");
                     break;
                 }
-                result = commentsService.save(usersIdx, epIdx, dto.getContent());
+                result = commentsService.insertComments(usersIdx, epIdx, dto.getContent());
                 break;
             case 1: // 만료된 토큰
                 result.setCode(44);
@@ -56,10 +56,9 @@ public class CommentsController {
         return result;
     }
 
-    @DeleteMapping("/episodes/{ep-idx}/comments/{cmt-idx}")
+    @DeleteMapping("comments/{cmt_idx}")
     public Response<Integer> deleteComments(@RequestHeader("Authorization") String AccessToken,
-                                            @PathVariable("ep-idx") int epIdx,
-                                            @PathVariable("cmt-idx") int commentIdx){
+                                            @PathVariable("cmt_idx") int commentIdx){
         Response<Integer> result = new Response<Integer>();
 
         switch(tokenChecker.validateToken(AccessToken)) {
@@ -70,7 +69,7 @@ public class CommentsController {
                     result.setMsg("access denied : maybe captured or faked token");
                     break;
                 }
-                result = commentsService.delete(usersIdx, epIdx, commentIdx);
+                result = commentsService.deleteComments(usersIdx, commentIdx);
                 break;
             case 1: // 만료된 토큰
                 result.setCode(44);
@@ -87,12 +86,12 @@ public class CommentsController {
 
     @GetMapping("/episodes/{ep_idx}/comments/best")
     public Response<List<CommentsDto>> getBestComments(@PathVariable("ep_idx") int epIdx) {
-        return commentsService.findBestComments(epIdx);
+        return commentsService.getBestComments(epIdx);
     }
 
-    @PostMapping("comments/{cmt-idx}/like")
+    @PostMapping("comments/{cmt_idx}/like")
     public Response<CommentsLikeDislikeCntResponseDto> requestCommentsLike(@RequestHeader("Authorization") String AccessToken,
-                                                                           @PathVariable("cmt-idx") int commentIdx){
+                                                                           @PathVariable("cmt_idx") int commentIdx){
         Response<CommentsLikeDislikeCntResponseDto> result = new Response<CommentsLikeDislikeCntResponseDto>();
 
         switch(tokenChecker.validateToken(AccessToken)) {
@@ -118,9 +117,9 @@ public class CommentsController {
         return result;
     }
 
-    @PostMapping("comments/{cmt-idx}/dislike")
+    @PostMapping("comments/{cmt_idx}/dislike")
     public Response<CommentsLikeDislikeCntResponseDto> requestCommentsDislike(@RequestHeader("Authorization") String AccessToken,
-                                                                              @PathVariable("cmt-idx") int commentIdx){
+                                                                              @PathVariable("cmt_idx") int commentIdx){
         Response<CommentsLikeDislikeCntResponseDto> result = new Response<CommentsLikeDislikeCntResponseDto>();
 
         switch(tokenChecker.validateToken(AccessToken)) {
