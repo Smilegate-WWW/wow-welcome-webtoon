@@ -31,13 +31,13 @@ public class EpisodeController {
 	private EpisodeService episodeService;
 	
 	private TokenChecker tokenchecker = new TokenChecker();
-
 	//회차 등록
 	@PostMapping("/myArticleDetail/{idx}")
 	public Response<EpisodeDto> addEpisode(@RequestHeader("Authorization") String AccessToken,
 			@PathVariable("idx") int idx, @RequestPart("thumbnail") MultipartFile thumbnail, 
-			@RequestPart("manuscript") MultipartFile[] manuscripts, @RequestPart("episode") EpisodeDto episodeDto) {
-
+			@RequestPart("manuscript") MultipartFile[] manuscripts, @RequestParam("title") String title, 
+			@RequestParam("author_comment") String author_comment) {
+		EpisodeDto episodeDto = new EpisodeDto(title, author_comment);
 		Response<EpisodeDto> res = new Response<EpisodeDto>();
 		int n = tokenchecker.validateToken(AccessToken);
 		
@@ -55,16 +55,16 @@ public class EpisodeController {
 		}
 		
 		return res;
+		
 	}
-	
 
 	//회차 정보 수정
 	@PutMapping("/myArticleDetail/{webtoon_idx}/{no}")
 	public Response<EpisodeDto> editEpisode(@RequestHeader("Authorization") String AccessToken,
 			@PathVariable("webtoon_idx") int webtoon_idx, @PathVariable("no") int idx, 
 			@RequestPart("thumbnail") MultipartFile thumbnail, @RequestPart("manuscript") MultipartFile[] manuscripts, 
-			@RequestPart("episode") EpisodeDto episodeDto) throws IOException{
-		
+			@RequestParam("title") String title, @RequestParam("author_comment") String author_comment) throws IOException{
+		EpisodeDto episodeDto = new EpisodeDto(title, author_comment);
 		Response<EpisodeDto> res = new Response<EpisodeDto>();
 		int n = tokenchecker.validateToken(AccessToken);
 		

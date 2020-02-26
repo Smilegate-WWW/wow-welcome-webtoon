@@ -78,6 +78,7 @@ public class EpisodeService {
 	    	List<Episode> episodeList = page.getContent();
 		    for(Episode episode : episodeList) {
 		    	EpisodeListDto episodeDto = EpisodeListDto.builder()
+		    			.idx(episode.getIdx())
 		    			.ep_no(episode.getEp_no())
 		    			.title(episode.getTitle())
 		    			.thumbnail(episode.getThumbnail())

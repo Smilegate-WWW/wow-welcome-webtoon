@@ -1,5 +1,6 @@
 package com.www.file.dto;
 
+import com.www.core.auth.entity.Users;
 import com.www.core.file.entity.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,7 +23,16 @@ public class WebtoonDto {
 	//private LocalDateTime created_date;
 	//private LocalDateTime updated_date;
 	//private List<Episode> episodes;
-	
+	private Users users;
+	public WebtoonDto(String title, int toon_type, int genre1, int genre2, String summary, String plot, int end_flag) {
+		this.title = title;
+		this.toon_type = toon_type;
+		this.genre1 = genre1;
+		this.genre2 = genre2;
+		this.summary = summary;
+		this.plot = plot;
+		this.end_flag = end_flag;
+	}
 	public Webtoon toEntity() {
 		Webtoon build = Webtoon.builder()
 				.title(title)

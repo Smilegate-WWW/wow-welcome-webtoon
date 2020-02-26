@@ -12,12 +12,14 @@ import lombok.Setter;
 @NoArgsConstructor
 public class WebtoonListDto {
 	private String title;
+	private String thumbnail;
 	private LocalDateTime created_date;
 	private LocalDateTime last_updated;
 	
 	@Builder
-	public WebtoonListDto(String title, LocalDateTime created_date, LocalDateTime last_updated) {
+	public WebtoonListDto(String title, String thumbnail, LocalDateTime created_date, LocalDateTime last_updated) {
 		this.title = title;
+		this.thumbnail = thumbnail;
 		this.created_date = created_date;
 		this.last_updated = last_updated;
 	}

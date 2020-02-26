@@ -12,13 +12,15 @@ import lombok.Setter;
 @NoArgsConstructor
 public class EpisodeListDto {
 	
+	private int idx;
 	private int ep_no;
 	private String title;
 	private String thumnail;
 	private LocalDateTime created_date;
 	
 	@Builder 
-	public EpisodeListDto(int ep_no, String title, String thumbnail, LocalDateTime created_date) {
+	public EpisodeListDto(int idx, int ep_no, String title, String thumbnail, LocalDateTime created_date) {
+		this.idx = idx;
 		this.ep_no = ep_no;
 		this.title = title;
 		this.thumnail = thumbnail;
