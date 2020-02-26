@@ -27,4 +27,5 @@ public interface WebtoonRepository extends JpaRepository<Webtoon, Integer>{
             "WHERE e.webtoon_idx = :webtoon_idx) " +
             "WHERE w.idx = :webtoon_idx", nativeQuery = true)
     void updateRatingAvg(@Param("webtoon_idx") int webtoonIdx);
+    
 }

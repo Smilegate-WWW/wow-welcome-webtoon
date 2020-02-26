@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.www.core.auth.repository.UsersRepository;
@@ -25,9 +26,11 @@ import com.www.file.dto.MainWebtoonPage;
 
 @Service
 public class MainService {
+	@Autowired
 	private WebtoonRepository webtoonRepository;
 	@Autowired
 	private UsersRepository usersRepository;
+	@Autowired
 	private EpisodeRepository episodeRepository;
 	
 	//한 블럭 내 최대 페이지 번호 수
@@ -42,9 +45,32 @@ public class MainService {
 	}
 	
 	@Transactional
-	public List<MainWebtoonDto> getWebtoonList(Integer pageNum, Response<MainWebtoonPage> res) {
+	public List<MainWebtoonDto> getWebtoonList(Integer pageNum, Response<MainWebtoonPage> res, int sort) {
 		
-		Page<Webtoon> page = webtoonRepository.findAll(PageRequest.of(pageNum-1, PAGE_WEBTOON_COUNT));	
+		
+		Page<Webtoon> page = null;
+		switch(sort) {
+		//기본정렬
+		case 0:
+			page = webtoonRepository.findAll(PageRequest.of(pageNum-1, PAGE_EPISODE_COUNT
+					/*,Sort.by(Sort.Direction.ASC,"createdDate")*/));
+			break;
+		//조회순 정렬
+		case 1:
+			page = webtoonRepository.findAll(PageRequest.of(pageNum-1, PAGE_EPISODE_COUNT, 
+					Sort.by(Sort.Direction.DESC,"hits")));
+			break;
+		//별점 정렬
+		case 2:
+			page = webtoonRepository.findAll(PageRequest.of(pageNum-1, PAGE_EPISODE_COUNT, 
+					Sort.by(Sort.Direction.DESC,"epRatingAvg")));
+			break;
+		default:
+			res.setCode(1);
+	    	res.setMsg("fail : sortNum is not valid");
+	    	break;
+		}
+		
 		List<Webtoon> webtoons = page.getContent();
 		List<MainWebtoonDto> webtoonListDto = new ArrayList<>();
 		int totalpages = page.getTotalPages();

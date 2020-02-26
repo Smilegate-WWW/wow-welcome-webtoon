@@ -19,7 +19,8 @@ public class MainWebtoonDto {
 	private String thumbnail;
 	private int genre1;
 	private int genre2;
-	//별점 ********
+	private int hits;
+	private float ep_rating_avg;
 	private Integer[] pagelist;
 	
 	@Builder
