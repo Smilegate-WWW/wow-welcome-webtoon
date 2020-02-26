@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.www.auth.dto.Tokens;
 import com.www.auth.dto.UserDto;
+import com.www.auth.dto.UserInfoModifiedDto;
 import com.www.auth.dto.UserLoginDto;
 import com.www.auth.dto.UserRegisterDto;
 import com.www.core.auth.entity.Users;
@@ -33,6 +34,10 @@ public class UserService {
 		// id 중복체크
 		if (userRepository.existsByUserid(user.getUserid())) {
 			return 1; //insert fail
+		}
+		// email 중복체크
+		if (userRepository.existsByEmail(user.getEmail())) {
+			return 3;
 		}
 		// pw encoding
 		String encodedpw = passwordEncoder.encode(user.getPw());
@@ -67,6 +72,31 @@ public class UserService {
             userRepository.updateLoginDate(now, info.getIdx());
 		} 
 		return tokens;
+	}
+	
+	/**
+	 * 회원정보 수정
+	 * @param info
+	 * @return
+	 */
+	public int modifyInfo(int user_idx,UserInfoModifiedDto info) {
+		//pw encoding
+		String encoded_pw = passwordEncoder.encode(info.getPw());
+		//update
+		int update_result = userRepository.updateUserInfo(encoded_pw, info.getGender(), info.getName(), info.getBirth(),user_idx);
+		LocalDateTime now = LocalDateTime.now();
+		if(update_result==1)
+			userRepository.updateUpdatedDate(now, user_idx);
+		return update_result;
+	}
+	
+	/**
+	 * 회원정보 삭제
+	 * @param user_idx
+	 * @return
+	 */
+	public void deleteInfo(int user_idx) {
+		userRepository.deleteById(user_idx);
 	}
 	
 	public UserDto getUserDto(String user_id) {

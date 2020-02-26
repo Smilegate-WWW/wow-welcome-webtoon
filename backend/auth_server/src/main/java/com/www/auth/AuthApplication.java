@@ -9,8 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @EntityScan(basePackages="com.www.core")
 @EnableJpaRepositories(basePackages="com.www.core") // JPA Auditing 
-@EnableJpaAuditing
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.www")
 public class AuthApplication {
     public static void main(String[] args) {
         SpringApplication.run(AuthApplication.class, args);
