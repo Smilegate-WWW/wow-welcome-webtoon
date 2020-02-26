@@ -23,9 +23,9 @@ public class WebConfig implements WebMvcConfigurer{
 		
 		registry.addResourceHandler("/static/**").addResourceLocations("classpath:static/");
 
-		List<String> imageFolders = Arrays.asList("thumbnail");
+		List<String> imageFolders = Arrays.asList("thumbnail","webtoon");
 		for(String imageFolder : imageFolders) {
-			registry.addResourceHandler("/static/img/"+imageFolder+"/**")
+			registry.addResourceHandler("/static/"+imageFolder+"/**")
 			.addResourceLocations("file:///"+uploadImagesPath+imageFolder + "/")
 			.setCachePeriod(3600)
 			.resourceChain(true)

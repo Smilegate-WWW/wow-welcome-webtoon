@@ -17,6 +17,7 @@ public class EpisodeListDto {
 	private String title;
 	private String thumnail;
 	private LocalDateTime created_date;
+	//****별점
 	
 	@Builder 
 	public EpisodeListDto(int idx, int ep_no, String title, String thumbnail, LocalDateTime created_date) {

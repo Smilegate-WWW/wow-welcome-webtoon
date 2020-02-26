@@ -36,7 +36,7 @@ public class EpisodeController {
 	public Response<EpisodeDto> addEpisode(@RequestHeader("Authorization") String AccessToken,
 			@PathVariable("idx") int idx, @RequestPart("thumbnail") MultipartFile thumbnail, 
 			@RequestPart("manuscript") MultipartFile[] manuscripts, @RequestParam("title") String title, 
-			@RequestParam("author_comment") String author_comment) {
+			@RequestParam("author_comment") String author_comment) throws IllegalStateException, IOException {
 		EpisodeDto episodeDto = new EpisodeDto(title, author_comment);
 		Response<EpisodeDto> res = new Response<EpisodeDto>();
 		int n = tokenchecker.validateToken(AccessToken);
@@ -88,15 +88,18 @@ public class EpisodeController {
 	public Response<EpisodePage> showEpisodeList(@RequestHeader("Authorization") String AccessToken,
 			@PathVariable("idx") int idx, @RequestParam(value="page", defaultValue = "1") Integer page){
 		Response<EpisodePage> res = new Response<EpisodePage>();
+		EpisodePage episodePage = new EpisodePage();
 		
 		int n = tokenchecker.validateToken(AccessToken);
 		
 		switch(n) {
 		case 0: //유효한 토큰
-			List<EpisodeListDto> episodeList = episodeService.getEpisodeList(idx,page,res);
+			List<EpisodeListDto> episodeList = episodeService.getEpisodeList(idx,page,res, episodePage);
 			Integer[] pageList = episodeService.getPageList(page,idx);
-			EpisodePage episodePage = new EpisodePage(episodeList, pageList);
-
+			//EpisodePage episodePage = new EpisodePage(episodeList, pageList);
+			episodePage.setEpisodelist(episodeList);
+			episodePage.setPagelist(pageList);
+			
 			switch (res.getCode()) {
 			case 0:
 				res.setData(episodePage);
