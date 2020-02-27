@@ -11,8 +11,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EntityScan(basePackages="com.www.core")
 @EnableJpaRepositories(basePackages="com.www.core") 
 @EnableConfigurationProperties
-@EnableJpaAuditing
-@SpringBootApplication
+//@EnableJpaAuditing
+@SpringBootApplication(scanBasePackages="com.www")
 public class FileServerApplication {
 
 	public static void main(String[] args) {
