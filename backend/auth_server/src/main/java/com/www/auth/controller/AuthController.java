@@ -46,12 +46,8 @@ public class AuthController {
 	}
 
 	/**
-<<<<<<< HEAD
-	 * POST(/users) �쉶�썝媛��엯
-=======
 	 * POST(/users) 회원가입
 	 * 
->>>>>>> b3b385de70d3a30dfd65ad12cfd07fb2f3e65182
 	 * @param user
 	 * @return
 	 */
@@ -61,14 +57,6 @@ public class AuthController {
 		Response<UserRegisterDto> result = new Response<UserRegisterDto>();
 		result.setCode(userService.register(user));
 		switch (result.getCode()) {
-<<<<<<< HEAD
-		case 0: //�쉶�썝媛��엯 �꽦怨�
-			result.setMsg("insert complete");
-			result.setData(user);
-			break;
-		case 1: //�쉶�썝媛��엯 �떎�뙣
-			result.setMsg("insert fail");
-=======
 		case 0: // 회원가입 성공
 			result.setMsg("insert complete");
 			result.setData(user);
@@ -78,7 +66,6 @@ public class AuthController {
 			break;
 		case 3: // 회원가입 실패
 			result.setMsg("insert fail : already used email");
->>>>>>> b3b385de70d3a30dfd65ad12cfd07fb2f3e65182
 			break;
 		}
 		return result;
@@ -94,22 +81,14 @@ public class AuthController {
 	public Response<UserInfoDto> Login(HttpServletResponse response, @RequestBody UserLoginDto userlogin) {
 		Response<UserInfoDto> result = new Response<UserInfoDto>();
 		Tokens tokens = userService.login(userlogin);
-<<<<<<< HEAD
-		if (tokens.getAccessToken() != null) { //濡쒓렇�씤 �꽦怨�
-=======
 		if (tokens.getAccessToken() != null) { // 로그인 성공
->>>>>>> b3b385de70d3a30dfd65ad12cfd07fb2f3e65182
 			result.setCode(0);
 			result.setMsg("login complete");
 			// json return
 			UserInfoDto info = new UserInfoDto(userService.getUserDto(userlogin.getUserid()), tokens.getRefreshToken());
 			result.setData(info);
 			response.addHeader(HttpHeaders.AUTHORIZATION, "bearer " + tokens.getAccessToken());
-<<<<<<< HEAD
-		} else { //濡쒓렇�씤 �떎�뙣
-=======
 		} else { // 로그인 실패
->>>>>>> b3b385de70d3a30dfd65ad12cfd07fb2f3e65182
 			result.setCode(2);
 			result.setMsg("auth fail: 'not exist id' or 'wrong pw'");
 		}
@@ -117,14 +96,9 @@ public class AuthController {
 	}
 
 	/**
-<<<<<<< HEAD
-	 * DELETE(/users/token) 濡쒓렇�븘�썐
-	 * @param AccessToken (auth header)
-=======
 	 * DELETE(/users/token) 로그아웃
 	 * 
 	 * @param AccessToken  (auth header)
->>>>>>> b3b385de70d3a30dfd65ad12cfd07fb2f3e65182
 	 * @param RefreshToken (request body)
 	 * @return expire tokens
 	 */
@@ -137,28 +111,6 @@ public class AuthController {
 		AccessToken = AccessToken.substring(7);
 		JSONObject body = new JSONObject(data);
 		String RefreshToken = body.getString("RefreshToken");
-<<<<<<< HEAD
-		System.out.println("====Idx:"+useridx+"=====");
-		System.out.println("AccessToken:"+AccessToken);
-		System.out.println("RefreshToken:"+RefreshToken);
-
-		int r=jwtTokenProvider.checkRefreshToken(AccessToken, RefreshToken,useridx);
-		switch(r){
-			case 41: //�씠誘� 濡쒓렇�븘�썐�맂 �긽�깭
-				result.setCode(41);
-				result.setMsg("access denied: already logout");
-				break;
-			case 40: //refresh token �뙆湲�
-			case 43:
-				jwtTokenProvider.expireToken(useridx);
-				result.setCode(0);
-				result.setMsg("request complete:logout");
-				break;
-			case 42: //�뿉�윭 議댁옱
-				result.setCode(42);
-				result.setMsg("access denied : maybe captured or faked token");
-				break;
-=======
 		System.out.println("====Idx:" + useridx + "=====");
 		System.out.println("AccessToken:" + AccessToken);
 		System.out.println("RefreshToken:" + RefreshToken);
@@ -179,19 +131,14 @@ public class AuthController {
 			result.setCode(42);
 			result.setMsg("access denied : maybe captured or faked token");
 			break;
->>>>>>> b3b385de70d3a30dfd65ad12cfd07fb2f3e65182
 		}
 
 		return result;
 	}
 
 	/**
-<<<<<<< HEAD
-	 * POST (/users/{user_idx}/token) access token �옱諛쒓툒
-=======
 	 * POST (/users/{user_idx}/token) access token 재발급
 	 * 
->>>>>>> b3b385de70d3a30dfd65ad12cfd07fb2f3e65182
 	 * @param AccessToken
 	 * @param data
 	 * @param useridx
@@ -206,16 +153,6 @@ public class AuthController {
 		AccessToken = AccessToken.substring(7);
 		JSONObject body = new JSONObject(data);
 		String RefreshToken = body.getString("RefreshToken");
-<<<<<<< HEAD
-		System.out.println("====Idx:"+useridx+"=====");
-		System.out.println("AccessToken:"+AccessToken);
-		System.out.println("RefreshToken:"+RefreshToken);
-		
-		int r=jwtTokenProvider.checkRefreshToken(AccessToken, RefreshToken, useridx);
-		switch(r) {
-		case 40: //�옱諛쒓툒 (code 0)
-			String newAT=jwtTokenProvider.createAccessToken(useridx, jwtTokenProvider.getUserName(AccessToken));
-=======
 		System.out.println("====Idx:" + useridx + "=====");
 		System.out.println("AccessToken:" + AccessToken);
 		System.out.println("RefreshToken:" + RefreshToken);
@@ -224,24 +161,15 @@ public class AuthController {
 		switch (r) {
 		case 40: // 재발급 (code 0)
 			String newAT = jwtTokenProvider.createAccessToken(useridx, jwtTokenProvider.getUserName(AccessToken));
->>>>>>> b3b385de70d3a30dfd65ad12cfd07fb2f3e65182
 			response.addHeader(HttpHeaders.AUTHORIZATION, "bearer " + newAT);
 			result.setCode(0);
 			result.setMsg("request complete : reissue tokens");
 			break;
-<<<<<<< HEAD
-		case 41: //濡쒓렇�븘�썐�맂 �긽�깭(�넗�겙 留뚮즺)
-			result.setCode(41);
-			result.setMsg("access denied: logout, you need to re-login");
-			break;
-		case 42: //�뿉�윭
-=======
 		case 41: // 로그아웃된 상태(토큰 만료)
 			result.setCode(41);
 			result.setMsg("access denied: logout, you need to re-login");
 			break;
 		case 42: // 에러
->>>>>>> b3b385de70d3a30dfd65ad12cfd07fb2f3e65182
 		case 43:
 			result.setCode(42);
 			result.setMsg("access denied: incorrect access");
