@@ -53,8 +53,8 @@ export default function Upload() {
     const [title, setTitle] = React.useState("");
     const [comment, setComment] = React.useState("");
     const [thumbnail, setThumbnail] = React.useState("");
-    var images = new Array();
-    var imageNum = 0;
+    const [script,setScript]=React.useState([]);
+    var images=[];
 
     const classes = useStyles();
 
@@ -67,9 +67,7 @@ export default function Upload() {
     }
 
     const handleImageChange = (e) => {
-
         const file = e.target.files[0];
-        images[imageNum] = file;
 
         let reader = new FileReader();
         reader.onloadend = () => {
@@ -86,9 +84,10 @@ export default function Upload() {
             alert("파일의 크기가 너무 큽니다");
         }
         else {
-            imageNum++;
-            alert(file.name + "이(가) 선택되었습니다 \n\n 선택된 이미지: " + imageNum + "개");
-            console.log(images);
+            images=script;
+            images.push(file);
+            setScript(images);
+            alert(file.name + "이(가) 선택되었습니다 \n\n 선택된 이미지: " + images.length + "개");
         }
     }
 
@@ -99,7 +98,9 @@ export default function Upload() {
         reader.onloadend = () => {
             console.log("load end");
         };
+        if(file!=null){
         reader.readAsDataURL(file);
+        }
         if (file.length === 0) {
             alert("파일이 선택되지 않았습니다.");
         }
@@ -115,7 +116,8 @@ export default function Upload() {
     }
 
     const hadleSubmit = () => {
-        if (title === "" || comment === "" || images.length == 0) {
+        console.log(title,comment,script)
+        if (title === "" || comment === "" || script.length == 0) {
             alert("필요한 모든 정보를 입력해주세요")
         }
         else {
@@ -123,8 +125,8 @@ export default function Upload() {
 
             var formdata = new FormData();
             formdata.append("thumbnail", thumbnail);
-            for (var i = 0; i < images.length; i++) {
-                formdata.append("manuscript", images[i]);
+            for (var i = 0; i < script.length; i++) {
+                formdata.append("manuimages", script[i]);
             }
             formdata.append("episode", episodeInfo);
 
@@ -135,12 +137,28 @@ export default function Upload() {
             };
 
             fetch("/myArticleDetail/", requestOptions)
-                .then(response => response.text())
+                .then(response => response.json())
                 .then(result => console.log(result))
                 .catch(error => console.log('error', error));
         }
     }
 
+    /*
+    const handlePreview =()=>{
+        if(script.length>=){
+            window.open
+        }
+        var reader = new FileReader();
+
+        for(var i=0 ; i < script.length ; i++){
+            reader.readAsDataURL(script[i]);
+            var tempImage = new Image();
+            tempImage.src = reader.result;
+
+        }
+    }
+    */
+   
     return (
         <div>
             <Header />
@@ -229,7 +247,7 @@ export default function Upload() {
                                 </Button>
                             </label>
 
-                            <Button variant="contained" style={{ height: 30, marginTop: 20 }}>
+                            <Button variant="contained" onClick={handlePreview} style={{ height: 30, marginTop: 20 }}>
                                 전체 보기
                             </Button>
                         </div>

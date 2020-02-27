@@ -53,40 +53,6 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-//내 작품 목록
-//let myWebtoons = [];
-
-/*
-function getWebtoon() {
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", localStorage.getItem("AUTHORIZATION"));
-    myHeaders.append("Accept", "application/json");
-
-    var requestOptions = {
-        cache: "default",
-        headers: myHeaders,
-        method: 'GET',
-        redirect: 'follow',
-    };
-
-    fetch("/myTitleList?page=1", requestOptions)
-        .then(response => response.json())
-        .then(result => {
-            console.log(result)
-            if (result.code == 0) {
-                myWebtoons=result.data.webtoonlist;
-                console.log(myWebtoons)
-                return myWebtoons;
-            }
-            else {
-                alert("세션이 만료되었습니다.");
-                window.location.href = "/login";
-            }
-        })
-        .catch(error => console.log('error', error));
-}
-*/
-
 export default function MyPage() {
     const classes = useStyles();
 
@@ -110,7 +76,6 @@ export default function MyPage() {
                 console.log(result)
                 if (result.code == 0) {
                     setMyWebtoons(result.data.webtoonlist);
-                    return myWebtoons;
                 }
                 else {
                     alert("세션이 만료되었습니다.");

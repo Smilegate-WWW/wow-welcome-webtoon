@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import Header from '../Components/Header';
-//라우터
-import { Route as Router } from 'react-router-dom';
 // 버튼 관련
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -63,27 +61,27 @@ const useStyles = makeStyles(theme => ({
 const webtoons = [
     {
         title: "유미의 세포들",
-        poster: "http://placeimg.com/128/128/any",
+        thumbnail: "http://placeimg.com/128/128/any",
         artist: "이동건",
-        rating: 4
+        ep_rating_avg: 4
     },
     {
         title: "복학왕",
-        poster: "http://placeimg.com/128/128/any",
+        thumbnail: "http://placeimg.com/128/128/any",
         artist: "기안84",
-        rating: 3
+        ep_rating_avg: 3
     },
     {
         title: "신의탑",
-        poster: "http://placeimg.com/128/128/any",
+        thumbnail: "http://placeimg.com/128/128/any",
         artist: "siu",
-        rating: 5
+        ep_rating_avg: 5
     },
     {
         title: "여신강림",
-        poster: "http://placeimg.com/128/128/any",
+        thumbnail: "http://placeimg.com/128/128/any",
         artist: "냥",
-        rating: 4
+        ep_rating_avg: 4
     }
 ]
 
@@ -136,7 +134,6 @@ function a11yProps(index) {
 
 
 export default function Home() {
-
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
 
@@ -144,9 +141,52 @@ export default function Home() {
         setValue(newValue);
     };
 
+    const [list, setList] = React.useState([]);
+    const [listByhits, setListByhits] = React.useState([]);
+    const [listByep_rating_avg, setListByep_rating_avg] = React.useState([]);
+
+    React.useEffect(() => {
+        var requestOptions = {
+            method: 'GET',
+            redirect: 'follow'
+        };
+
+        fetch("/webtoonlist?page=1&sortBy=0", requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                console.log(result)
+                if (result.code == 0) {
+                    setList(result.data.webtoonlist);
+                }
+            })
+            .catch(error => console.log('error', error));
+
+
+        fetch("/webtoonlist?page=1&sortBy=1", requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                console.log(result)
+                if (result.code == 0) {
+                    setListByhits(result.data.webtoonlist);
+                }
+            })
+            .catch(error => console.log('error', error));
+
+
+        fetch("/webtoonlist?page=1&sortBy=2", requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                console.log(result)
+                if (result.code == 0) {
+                    setListByep_rating_avg(result.data.webtoonlist);
+                }
+            })
+            .catch(error => console.log('error', error));
+    }, [])
+
     return (
         <div>
-            <Header/>
+            <Header />
 
             <div className={classes.menu}>
                 <div className={classes.button}>
@@ -168,7 +208,7 @@ export default function Home() {
                     <Grid container justify="center" direction="row" spacing={8}>
                         {webtoons.map(webtoon => (
                             <Grid key={webtoon} item>
-                                <Webtoon title={webtoon.title} poster={webtoon.poster} artist={webtoon.artist} rating={webtoon.rating} />
+                                <Webtoon title={webtoon.title} thumbnail={webtoon.thumbnail} artist={webtoon.artist} ep_rating_avg={webtoon.ep_rating_avg} />
                             </Grid>
                         ))}
                     </Grid>
@@ -188,19 +228,35 @@ export default function Home() {
                     <TabPanel value={value} index={0}>
                         <div className={classes.gridRoot}>
                             <GridList cellHeight={250} className={classes.gridList} spacing={15} cols={5}>
-                                {webtoons.map(webtoon => (
+                                {list.map(webtoon => (
                                     <GridListTile key={webtoon} item >
-                                        <Webtoon title={webtoon.title} poster={webtoon.poster} artist={webtoon.artist} rating={webtoon.rating} />
+                                        <Webtoon title={webtoon.title} thumbnail={webtoon.thumbnail} artist={webtoon.artist} ep_rating_avg={webtoon.ep_rating_avg} />
                                     </GridListTile>
                                 ))}
                             </GridList>
                         </div>
                     </TabPanel>
                     <TabPanel value={value} index={1}>
-                        조회순
+                        <div className={classes.gridRoot}>
+                            <GridList cellHeight={250} className={classes.gridList} spacing={15} cols={5}>
+                                {listByhits.map(webtoon => (
+                                    <GridListTile key={webtoon} item >
+                                        <Webtoon title={webtoon.title} thumbnail={webtoon.thumbnail} artist={webtoon.artist} ep_rating_avg={webtoon.ep_rating_avg} />
+                                    </GridListTile>
+                                ))}
+                            </GridList>
+                        </div>
                     </TabPanel>
                     <TabPanel value={value} index={2}>
-                        별점순
+                        <div className={classes.gridRoot}>
+                            <GridList cellHeight={250} className={classes.gridList} spacing={15} cols={5}>
+                                {listByep_rating_avg.map(webtoon => (
+                                    <GridListTile key={webtoon} item >
+                                        <Webtoon title={webtoon.title} thumbnail={webtoon.thumbnail} artist={webtoon.artist} ep_rating_avg={webtoon.ep_rating_avg} />
+                                    </GridListTile>
+                                ))}
+                            </GridList>
+                        </div>
                     </TabPanel>
                 </Paper>
             </div>

@@ -144,7 +144,7 @@ export default function Register() {
             myHeaders.append("Authorization", localStorage.getItem("AUTHORIZATION"));
 
             var formdata = new FormData();
-            formdata.append("thumbnail", thumbnail);
+            formdata.append("thumbnail", null);
             formdata.append("title", title);
             formdata.append("toon_type", type);
             formdata.append("genre1", genre1);
