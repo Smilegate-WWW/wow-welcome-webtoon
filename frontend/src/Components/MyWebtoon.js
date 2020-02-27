@@ -15,7 +15,7 @@ const styles = theme => ({
 class WebtoonPoster extends Component {
     render() {
         return (
-            <img src={this.props.poster} />
+            <img src={this.props.thumbnail} />
         )
     }
 }
@@ -28,12 +28,12 @@ class MyWebtoon extends Component {
                     <Card href="/webtoon" className={classes.card} variant="outlined">
                         <CardActionArea>
                             <CardContent>
-                                <WebtoonPoster container justify="center" poster={this.props.poster} />
+                                <WebtoonPoster container justify="center" thumbnail={this.props.thumbnail} />
                                 <Typography gutterBottom variant="body1" component="h4">
                                     {this.props.title}
                                 </Typography>
-                                <Typography>등록일&ensp;{this.props.register_date}</Typography>
-                                <Typography>업데이트일&ensp;{this.props.update_date}</Typography>
+                                <Typography>등록일&ensp;{this.props.created_date.slice(0,10)}</Typography>
+                                <Typography>업데이트일&ensp;{this.props.last_updated.slice(0,10)}</Typography>
                                 <div style={{ display: "flex", margin:3}}>
                                     <Button variant="contained" href="/mypage/editRegister" style={{marginRight:10}}>작품 정보 수정</Button>
                                     <Button variant="contained" href="/mypage/editEpisode">회차 관리</Button>

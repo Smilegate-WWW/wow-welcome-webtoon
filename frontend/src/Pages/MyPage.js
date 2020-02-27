@@ -54,59 +54,71 @@ const useStyles = makeStyles(theme => ({
 }));
 
 //내 작품 목록
-const MyWebtoons = [
-    {
-        title: "유미의 세포들",
-        poster: "http://placeimg.com/128/128/any",
-        artist: "이동건",
-        rating: 4,
-        register_date: "2020.01.10",
-        update_date: "2020.02.10",
-    },
-    {
-        title: "복학왕",
-        poster: "http://placeimg.com/128/128/any",
-        artist: "기안84",
-        rating: 3,
-        register_date: "2020.01.10",
-        update_date: "2020.02.10",
-    },
-    {
-        title: "여신강림",
-        poster: "http://placeimg.com/128/128/any",
-        artist: "냥",
-        rating: 4,
-        register_date: "2020.01.10",
-        update_date: "2020.02.10",
-    }
-]
+//let myWebtoons = [];
 
+/*
 function getWebtoon() {
     var myHeaders = new Headers();
     myHeaders.append("Authorization", localStorage.getItem("AUTHORIZATION"));
     myHeaders.append("Accept", "application/json");
 
-    var requestOptions = { 
+    var requestOptions = {
         cache: "default",
-        headers:myHeaders,
+        headers: myHeaders,
         method: 'GET',
         redirect: 'follow',
     };
 
     fetch("/myTitleList?page=1", requestOptions)
-        .then(response => {
-            response.json()
-            console.log(response);
+        .then(response => response.json())
+        .then(result => {
+            console.log(result)
+            if (result.code == 0) {
+                myWebtoons=result.data.webtoonlist;
+                console.log(myWebtoons)
+                return myWebtoons;
+            }
+            else {
+                alert("세션이 만료되었습니다.");
+                window.location.href = "/login";
+            }
         })
         .catch(error => console.log('error', error));
-
-
 }
+*/
 
 export default function MyPage() {
     const classes = useStyles();
 
-    getWebtoon();
+    const [myWebtoons,setMyWebtoons]=React.useState([]);
+
+    React.useEffect(() => {
+        var myHeaders = new Headers();
+        myHeaders.append("Authorization", localStorage.getItem("AUTHORIZATION"));
+        myHeaders.append("Accept", "application/json");
+
+        var requestOptions = {
+            cache: "default",
+            headers: myHeaders,
+            method: 'GET',
+            redirect: 'follow',
+        };
+
+        fetch("/myTitleList?page=1", requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                console.log(result)
+                if (result.code == 0) {
+                    setMyWebtoons(result.data.webtoonlist);
+                    return myWebtoons;
+                }
+                else {
+                    alert("세션이 만료되었습니다.");
+                    window.location.href = "/login";
+                }
+            })
+            .catch(error => console.log('error', error));
+    },[]);
 
     return (
         <div>
@@ -159,15 +171,16 @@ export default function MyPage() {
             <div className={classes.gridRoot}>
                 <Paper>
                     <GridList cellHeight={300} className={classes.gridList} spacing={15} cols={4}>
-                        {MyWebtoons.map(myWebtoon => (
+                        {myWebtoons.map(myWebtoon => (
                             <GridListTile key={myWebtoon.title} item="true">
-                                <MyWebtoon title={myWebtoon.title} poster={myWebtoon.poster} artist={myWebtoon.artist} rating={myWebtoon.rating} register_date={myWebtoon.register_date} update_date={myWebtoon.update_date} />
+                                <MyWebtoon title={myWebtoon.title} thumbnail={myWebtoon.thumbnail} created_date={myWebtoon.created_date} last_updated={myWebtoon.last_updated} />
                             </GridListTile>
                         ))}
                         <PlusWebtoon href="/mypage/register" />
                     </GridList>
                 </Paper>
             </div>
+
 
         </div>
     )

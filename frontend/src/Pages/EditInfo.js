@@ -29,22 +29,22 @@ const useStyles = makeStyles(theme => ({
     },
     loginButton: {
         '& > *': {
-            margin: theme.spacing(1, 1, 2, 1),
+            margin: theme.spacing(1, 1, 1, 1),
             width: 300,
             height: 40,
         },
     },
 }));
 
-function checkPw(pw){
+function checkPw(pw) {
     var pattern_spc = /[#$%^&*()_+|<>?:{}]/; //특수 문자
-    if(pattern_spc.test(pw)){
+    if (pattern_spc.test(pw)) {
         return true;
     }
 }
 
 
-export default function EditInfo() {    
+export default function EditInfo() {
     const classes = useStyles();
 
     const [pw, setPw] = useState("");
@@ -70,44 +70,82 @@ export default function EditInfo() {
     }
 
     const handleSubmit = () => {
-        console.log(pw,pwCheck,name,gender,birth);
-        if ( pw === '' || pwCheck === '' || name === '' || gender === '' || birth === '') {
+        console.log(pw, pwCheck, name, gender, birth);
+        if (pw === '' || pwCheck === '' || name === '' || gender === '' || birth === '') {
             alert("정보를 모두 입력해주세요!!");
-            console.log(pw);console.log(pwCheck);console.log(name);console.log(gender);
+            console.log(pw); console.log(pwCheck); console.log(name); console.log(gender);
         }
         else if (pw !== pwCheck) {
             alert("비밀번호가 일치하지 않습니다!!");
         }
-        else if(pw.length<8){
+        else if (pw.length < 8) {
             alert("비밀번호는 8자리 이상으로 설정해주세요!")
         }
-        else if(checkPw(pw)){
+        else if (checkPw(pw)) {
             alert("비밀번호에 가능한 특수문자는 ~!@ 입니다");
         }
         else {
-           var myHeaders = new Headers();
-           myHeaders.append("Content-Type", "application/json");
-           
+            var myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+            myHeaders.append("Authorization", localStorage.getItem("AUTHORIZATION"));
 
-           var raw = JSON.stringify({"pw":pw,"name":name,"birth":birth,"gender":gender});
-           
-           var requestOptions = {
-             method: 'POST',
-             headers: myHeaders,
-             body: raw,
-             redirect: 'follow'
-           };
+            var raw = JSON.stringify({ "pw": pw, "name": name, "birth": birth, "gender": gender });
 
-           fetch("/users", requestOptions)
-             .then(response => response.json())
-             .then(result =>{ 
-                console.log(result);
-                alert("재로그인 해주세요");
-            })
-             .catch(error => console.log('error', error));
-            
-            //window.location.href="/login";
+            var requestOptions = {
+                method: 'PUT',
+                headers: myHeaders,
+                body: raw,
+                redirect: 'follow'
+            };
+
+            var user_idx = localStorage.getItem("USER_IDX")
+
+            fetch("/users/" + user_idx, requestOptions)
+                .then(response => response.json())
+                .then(result => {
+                    console.log(result)
+                    if (result.code == 0) {
+                        alert("재로그인 해주세요")
+                        window.location.href = "/login";
+                    }
+                    else {
+                        alert("실패했습니다. 다시 로그인 후 이용해주세요.");
+                    }
+                })
+                .catch(error => console.log('error', error));
         }
+    }
+
+    const handleOut = () => {
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        myHeaders.append("Authorization", localStorage.getItem("AUTHORIZATION"));
+
+        var raw = "";
+
+        var requestOptions = {
+            method: 'DELETE',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+        };
+
+        var user_idx = localStorage.getItem("USER_IDX")
+        
+        fetch("/users/"+user_idx, requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                console.log(result)
+                if(result.code==0){
+                    alert("회원 탈퇴가 성공적으로 마무리되었습니다.")
+                    localStorage.clear();
+                    window.location.href="/";
+                }
+                else {
+                    alert("실패했습니다. 다시 로그인 후 이용해주세요.");
+                }
+            })
+            .catch(error => console.log('error', error));
     }
 
     const inputLabel = React.useRef(null);
@@ -118,22 +156,22 @@ export default function EditInfo() {
 
     return (
         <div className={classes.root}>
-            <div 
+            <div
                 style={{
-                color: "#ff7043",
-                fontSize: "64px",
-                fontWeight: 700,
-                cursor:"hand",
+                    color: "#ff7043",
+                    fontSize: "64px",
+                    fontWeight: 700,
+                    cursor: "hand",
                 }}
             >&emsp;WWW</div>
 
             <form className={classes.textField} noValidate autoComplete="off">
-                <TextField 
-                    disabled 
-                    id="userid" 
-                    label="아이디" 
-                    defaultValue={localStorage.getItem("USERID")} 
-                    variant="outlined" 
+                <TextField
+                    disabled
+                    id="userid"
+                    label="아이디"
+                    defaultValue={localStorage.getItem("USERID")}
+                    variant="outlined"
                 />
                 <TextField
                     id="pw"
@@ -155,13 +193,13 @@ export default function EditInfo() {
 
             <div className={classes.display}>
                 <form className={classes.smallTextField} noValidate autoComplete="off">
-                    <TextField 
-                    id="name"
-                    label="이름"
-                    value={name}
-                    onChange={handleNameChange}
-                    variant="outlined"
-                    placeholder={localStorage.getItem("NAME")}
+                    <TextField
+                        id="name"
+                        label="이름"
+                        value={name}
+                        onChange={handleNameChange}
+                        variant="outlined"
+                        placeholder={localStorage.getItem("NAME")}
                     />
                 </form>
 
@@ -194,17 +232,20 @@ export default function EditInfo() {
                         shrink: true,
                     }}
                 />
-                <TextField 
-                disabled
-                id="email" 
-                label="이메일" 
-                defaultValue={localStorage.getItem("EMAIL")}
-                variant="outlined" />
+                <TextField
+                    disabled
+                    id="email"
+                    label="이메일"
+                    defaultValue={localStorage.getItem("EMAIL")}
+                    variant="outlined" />
             </form>
 
             <div className={classes.loginButton}>
                 <Button variant="contained" color="primary" onClick={handleSubmit}>
                     <span style={{ color: "#fafafa", fontWeight: "bold" }}>회원정보수정</span>
+                </Button>
+                <Button variant="contained" onClick={handleOut}>
+                    <span style={{ fontWeight: "bold" }}>회원 탈퇴</span>
                 </Button>
             </div>
         </div>

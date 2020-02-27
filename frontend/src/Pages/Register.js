@@ -57,7 +57,7 @@ export default function Register() {
     });
     const [summary, setSummary] = React.useState("");
     const [plot, setPlot] = React.useState("");
-    const [thumbnail,setThumbnail]=React.useState("");
+    const [thumbnail, setThumbnail] = React.useState("");
     const genreArray = [genre.daily, genre.gag, genre.fantasy, genre.action, genre.drama, genre.pure, genre.emotion];
 
     const handleTitleChange = (e) => {
@@ -81,20 +81,19 @@ export default function Register() {
         let reader = new FileReader();
         reader.onloadend = () => {
             console.log("load end");
-            console.log(file.size)
         };
         reader.readAsDataURL(file);
-        if(file.length ===0){
+        if (file.length === 0) {
             alert("파일이 선택되지 않았습니다.");
         }
-        else if(file.type != "image/jpeg"){
+        else if (file.type != "image/jpeg") {
             alert("jpg 타입의 파일을 선택해주세요!")
         }
-        else if(file.size > 1048576 ){
+        else if (file.size > 1048576) {
             alert("파일의 크기가 너무 큽니다");
         }
-        else{
-            alert(file.name+"이(가) 선택되었습니다");
+        else {
+            alert(file.name + "이(가) 선택되었습니다");
         }
     }
 
@@ -118,8 +117,8 @@ export default function Register() {
         else {
             // 장르 2개 넘겨주기
             const genreTrue = [];
-            let genre1 = null;
-            let genre2 = null;
+            let genre1 = 0;
+            let genre2 = 0;
             var j = 0;
             for (var i = 0; i < genreArray.length; i++) {
                 if (genreArray[i] == true) {
@@ -128,12 +127,12 @@ export default function Register() {
                 }
             }
             if (j == 0) {
-                genre1 = null;
-                genre2 = null;
+                genre1 = 0;
+                genre2 = 0;
             }
             else if (j == 1) {
                 genre1 = genreTrue[0];
-                genre2 = null;
+                genre2 = 0;
             }
             else {
                 genre1 = genreTrue[0];
@@ -141,33 +140,37 @@ export default function Register() {
             }
 
             var myHeaders = new Headers();
-            myHeaders.append("Content-Type","multipart/form-data");
+            myHeaders.append("Content-Type", "multipart/form-data");
             myHeaders.append("Authorization", localStorage.getItem("AUTHORIZATION"));
 
-            var webtoonInfo = JSON.stringify({"title":title,"toon_type":type,"genre1":genre1,"genre2":genre2,"summary":summary,"plot":plot});
-
             var formdata = new FormData();
-            formdata.append("thumbnail",thumbnail);
-            formdata.append("webtoon", webtoonInfo);
+            formdata.append("thumbnail", thumbnail);
+            formdata.append("title", title);
+            formdata.append("toon_type", type);
+            formdata.append("genre1", genre1);
+            formdata.append("genre2", genre2);
+            formdata.append("summary", summary);
+            formdata.append("plot", plot);
+            formdata.append("end_flag", "0");
 
             var requestOptions = {
-              method: 'POST',
-              headers: myHeaders,
-              body: formdata,
-              redirect: 'follow'
+                method: 'POST',
+                headers: myHeaders,
+                body: formdata,
+                redirect: 'follow'
             };
-            
+
             fetch("/myTitleDetail", requestOptions)
-              .then(response => response.json())
-              .then(result => console.log(result))
-              .catch(error => console.log('error', error));
+                .then(response => response.json())
+                .then(result => console.log(result))
+                .catch(error => console.log('error', error));
 
         }
     }
 
     return (
         <div>
-            <Header/>
+            <Header />
 
             <div className={classes.menu}>
                 <div className={classes.button}>
@@ -225,7 +228,7 @@ export default function Register() {
                                 <Checkbox
                                     checked={genre.daily}
                                     onChange={handleGenreChange('daily')}
-                                    value="0"
+                                    value="1"
                                     color="primary"
                                 />
                             }
@@ -236,7 +239,7 @@ export default function Register() {
                                 <Checkbox
                                     checked={genre.gag}
                                     onChange={handleGenreChange('gag')}
-                                    value="1"
+                                    value="2"
                                     color="primary"
                                 />
                             }
@@ -247,7 +250,7 @@ export default function Register() {
                                 <Checkbox
                                     checked={genre.fantasy}
                                     onChange={handleGenreChange('fantasy')}
-                                    value="2"
+                                    value="3"
                                     color="primary"
                                 />
                             }
@@ -258,7 +261,7 @@ export default function Register() {
                                 <Checkbox
                                     checked={genre.action}
                                     onChange={handleGenreChange('action')}
-                                    value="3"
+                                    value="4"
                                     color="primary"
                                 />
                             }
@@ -269,7 +272,7 @@ export default function Register() {
                                 <Checkbox
                                     checked={genre.drama}
                                     onChange={handleGenreChange('drama')}
-                                    value="4"
+                                    value="5"
                                     color="primary"
                                 />
                             }
@@ -280,7 +283,7 @@ export default function Register() {
                                 <Checkbox
                                     checked={genre.pure}
                                     onChange={handleGenreChange('pure')}
-                                    value="5"
+                                    value="6"
                                     color="primary"
                                 />
                             }
@@ -291,7 +294,7 @@ export default function Register() {
                                 <Checkbox
                                     checked={genre.emotion}
                                     onChange={handleGenreChange('emotion')}
-                                    value="6"
+                                    value="7"
                                     color="primary"
                                 />
                             }
