@@ -55,7 +55,7 @@ public class WebtoonController {
 			res.setCode(40);
 			res.setMsg("reissue tokens");
 			break;
-		case 2: //에러,올바르지 않은 토큰
+		case 2: //�뿉�윭,�삱諛붾Ⅴ吏� �븡�� �넗�겙
 			res.setCode(42);
 			res.setMsg("access denied : maybe captured or faked token");
 			break;
@@ -88,11 +88,11 @@ public class WebtoonController {
 			}
 			return res;
 			
-		case 1: //만료된 토큰
+		case 1: //留뚮즺�맂 �넗�겙
 			res.setCode(40);
 			res.setMsg("reissue tokens");
 			break;
-		case 2: //에러,올바르지 않은 토큰
+		case 2: //�뿉�윭,�삱諛붾Ⅴ吏� �븡�� �넗�겙
 			res.setCode(42);
 			res.setMsg("access denied : maybe captured or faked token");
 			break;
@@ -113,13 +113,13 @@ public class WebtoonController {
 		int n = tokenChecker.validateToken(AccessToken);
 		
 		switch(n) {
-		case 0: //유효한 토큰
+		case 0: //�쑀�슚�븳 �넗�겙
 			return webtoonService.editWebtoon(idx, file, webtoonDto);
-		case 1: //만료된 토큰
+		case 1: //留뚮즺�맂 �넗�겙
 			res.setCode(40);
 			res.setMsg("reissue tokens");
 			break;
-		case 2: //에러,올바르지 않은 토큰
+		case 2: //�뿉�윭,�삱諛붾Ⅴ吏� �븡�� �넗�겙
 			res.setCode(42);
 			res.setMsg("access denied : maybe captured or faked token");
 			break;
@@ -137,13 +137,13 @@ public class WebtoonController {
 		int tk = tokenChecker.validateToken(AccessToken);
 		
 		switch(tk) {
-		case 0: //유효한 토큰
+		case 0: //�쑀�슚�븳 �넗�겙
 			return  webtoonService.deleteWebtoon(idx);
-		case 1: //만료된 토큰
+		case 1: //留뚮즺�맂 �넗�겙
 			res.setCode(40);
 			res.setMsg("reissue tokens");
 			break;
-		case 2: //에러,올바르지 않은 토큰
+		case 2: //�뿉�윭,�삱諛붾Ⅴ吏� �븡�� �넗�겙
 			res.setCode(42);
 			res.setMsg("access denied : maybe captured or faked token");
 			break;

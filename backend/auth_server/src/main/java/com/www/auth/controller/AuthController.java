@@ -143,7 +143,7 @@ public class AuthController {
 	 * @param data
 	 * @param useridx
 	 * @param response
-	 * @return response header로 access token 전송
+	 * @return response header濡� access token �쟾�넚
 	 */
 	@PostMapping("/{idx}/token")
 	public Response<String> ReissueToken(@RequestHeader("Authorization") String AccessToken, @RequestBody String data,
