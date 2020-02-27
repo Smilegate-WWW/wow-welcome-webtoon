@@ -1,5 +1,7 @@
 package com.www.file.service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -65,7 +67,8 @@ public class EpisodeService {
 	}
 	
 	@Transactional
-	public List<EpisodeListDto> getEpisodeList(int idx, Integer pageNum, Response<EpisodePage> res) {
+	public List<EpisodeListDto> getEpisodeList(int idx, Integer pageNum, Response<EpisodePage> res
+			,EpisodePage episodePage) {
 		
 		Pageable pageable = PageRequest.of(pageNum-1, PAGE_EPISODE_COUNT);
 		Page<Episode> page = episodeRepository.findAllByWebtoonIdx(pageable,idx);		
@@ -73,11 +76,30 @@ public class EpisodeService {
 	 
 	    int totalpages = page.getTotalPages();
 	    
+	    ///////////////////////////////////////
+	    if(!webtoonRepository.existsById(idx)) {
+	    	System.out.println("존재하지 않음");
+	    	
+	    	
+	    }
+	    else {
+	    	//웹툰 정보 기입
+		    Optional<Webtoon> WebtoonEntityWrapper = webtoonRepository.findById(idx);
+	        Webtoon webtoon = WebtoonEntityWrapper.get();
+	        episodePage.setTitle(webtoon.getTitle());
+	        episodePage.setPlot(webtoon.getPlot());
+	        episodePage.setId(webtoon.getUsers().getUserid());
+	        episodePage.setWriter(webtoon.getUsers().getName());
+	        episodePage.setWebtoon_thumbnail(webtoon.getThumbnail());
+	        System.out.println("5");
+	    }
+	    /////////////////////////////////////////////
 	    //요청한 페이지 번호가 유효한 범위인지 체크
 	    if(pageNum>0 && pageNum<=totalpages) {
 	    	List<Episode> episodeList = page.getContent();
 		    for(Episode episode : episodeList) {
 		    	EpisodeListDto episodeDto = EpisodeListDto.builder()
+		    			.idx(episode.getIdx())
 		    			.ep_no(episode.getEp_no())
 		    			.title(episode.getTitle())
 		    			.thumbnail(episode.getThumbnail())
@@ -133,7 +155,7 @@ public class EpisodeService {
 
 	
 	@Transactional
-	public Response<EpisodeDto> addEpisode(int webtoon_idx, MultipartFile thumbnail, MultipartFile[] manuscripts, EpisodeDto episodeDto) {
+	public Response<EpisodeDto> addEpisode(int webtoon_idx, MultipartFile thumbnail, MultipartFile[] manuscripts, EpisodeDto episodeDto) throws IllegalStateException, IOException {
 		
 		Response<EpisodeDto> res = new Response<EpisodeDto>();
 		
@@ -181,7 +203,13 @@ public class EpisodeService {
         }
         
         episodeDto.setContents(manuscriptsName);
-        
+
+		//file 외부 폴더로 이동
+		for(int i=0;i<manuscripts.length;i++) {
+			File destinationFile = new File(filePath+"/webtoon/"+manuscripts[i].getOriginalFilename());
+			destinationFile.getParentFile().mkdir();
+        	manuscripts[i].transferTo(destinationFile);
+        }
         
         EpisodeRegistDto ep = new EpisodeRegistDto(episodeDto,webtoon);
       

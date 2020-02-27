@@ -25,7 +25,6 @@ class MyWebtoon extends Component {
         const { classes } = this.props;
         return (
             <div>
-                <a href="/webtoon" style={{ textDecoration: "none" }}>
                     <Card href="/webtoon" className={classes.card} variant="outlined">
                         <CardActionArea>
                             <CardContent>
@@ -42,7 +41,7 @@ class MyWebtoon extends Component {
                             </CardContent>
                         </CardActionArea>
                     </Card>
-                </a>
+                
             </div>
         );
     }

@@ -60,14 +60,6 @@ function checkEmail(email) {
     return false;
 }
 
-let pageMov=false;
-
-function success(json) {
-    console.log(json);
-    alert("회원가입 성공");
-    window.location.href="/login";
-}
-
 export default function Signup() {
 
     const classes = useStyles();
@@ -137,7 +129,15 @@ export default function Signup() {
 
             fetch("/users", requestOptions)
                 .then(response => response.json())
-                .then(json => success(json))
+                .then(result => {
+                    console.log(result);
+                    if(result.code==0){
+                    alert("회원가입 성공");
+                    window.location.href = "/login";}
+                    else if(result.code==1){
+                        alert("이미 존재하는 아이디입니다.")
+                    }
+                })
                 .catch(error => console.log('error', error));
 
         }

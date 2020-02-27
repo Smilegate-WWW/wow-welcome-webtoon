@@ -9,26 +9,31 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.www.core.file.entity.*;
 import com.www.core.file.repository.*;
-
+import com.www.core.auth.entity.Users;
+import com.www.core.auth.repository.UsersRepository;
 import com.www.core.common.Response;
+import com.www.file.dto.EpisodeListDto;
 import com.www.file.dto.WebtoonDto;
 import com.www.file.dto.WebtoonListDto;
 import com.www.file.dto.WebtoonPage;
 
 
-//@AllArgsConstructor
 @Service
 public class WebtoonService {
 	
 	private WebtoonRepository webtoonRepository;
+	@Autowired
+	private UsersRepository usersRepository;
 	
 	//한 블럭 내 최대 페이지 번호 수
 	private static final int BLOCK_PAGE_NUM_COUNT = 5;
@@ -71,8 +76,13 @@ public class WebtoonService {
 	}
 	
 	@Transactional
-	public Response<WebtoonDto> createWebtoon(MultipartFile file, WebtoonDto webtoonDto) throws IOException {
+	public Response<WebtoonDto> createWebtoon(MultipartFile file, WebtoonDto webtoonDto, int user_idx) throws IOException {
 		Response<WebtoonDto> res = new Response<WebtoonDto>();
+		System.out.println(user_idx);
+		//Users user = usersRepository.findByIdx(user_idx);
+		
+		Optional<Users> users = usersRepository.findById(user_idx);
+		Users user = users.get();
 		//필수 조건 체크
 		checkCondition(file,webtoonDto,res);
 		if(res.getCode()!=0)
@@ -87,8 +97,23 @@ public class WebtoonService {
 			File destinationFile = new File(filePath+"/thumbnail/"+fileName);
 			destinationFile.getParentFile().mkdir();
 			file.transferTo(destinationFile);
-	
-			webtoonRepository.save(webtoonDto.toEntity());
+			//webtoonDto.toEntity().setUsers(user);
+			//webtoonRepository.save(webtoonDto.toEntity());
+			//WebtoonRegisterDto webtoonRegister = new WebtoonRegisterDto(webtoonDto,user);
+			//webtoonRepository.save(webtoonRegister.toEntity());
+			Webtoon webtoon = Webtoon.builder()
+					.title(webtoonDto.getTitle())
+					.toon_type(webtoonDto.getToon_type())
+					.genre1(webtoonDto.getGenre1())
+					.genre2(webtoonDto.getGenre2())
+					.summary(webtoonDto.getSummary())
+					.plot(webtoonDto.getPlot())
+					.end_flag(webtoonDto.getEnd_flag())
+					.users(user)
+					.thumbnail(fileName)
+					.build();
+			webtoonRepository.save(webtoon);
+					
 			res.setData(webtoonDto);
 			return res;
 		}
@@ -96,18 +121,20 @@ public class WebtoonService {
 	}
 	
 	@Transactional
-	public List<WebtoonListDto> getWebtoonList(Integer pageNum, Response<WebtoonPage> res) {
-		Page<Webtoon> page = webtoonRepository.findAll(PageRequest.of(pageNum-1, PAGE_WEBTOON_COUNT));
+	public List<WebtoonListDto> getWebtoonList(Integer pageNum, Response<WebtoonPage> res, int user_idx) {
+		Pageable pageable = PageRequest.of(pageNum-1, PAGE_WEBTOON_COUNT);
+		Page<Webtoon> page = webtoonRepository.findAllByUsersIdx(pageable, user_idx);	
+	    List<WebtoonListDto> webtoonListDto = new ArrayList<>();
 		
-		List<Webtoon> webtoons = page.getContent();
-		List<WebtoonListDto> webtoonListDto = new ArrayList<>();
 		int totalpages = page.getTotalPages();
 		    
 		//요청한 페이지 번호가 유효한 범위인지 체크
 		if(pageNum>0 && pageNum<=totalpages) {
+			List<Webtoon> webtoons = page.getContent();
 			for(Webtoon webtoon : webtoons) {
 				WebtoonListDto webtoonDto = WebtoonListDto.builder()
 						.title(webtoon.getTitle())
+						.thumbnail(webtoon.getThumbnail())
 						.created_date(webtoon.getCreated_date())
 						.build();
 				

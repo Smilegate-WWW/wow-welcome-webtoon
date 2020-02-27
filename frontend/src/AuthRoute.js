@@ -31,14 +31,18 @@ function postToken() {
 }
 
 function AuthRoute({ component: Component, render, ...rest }) {
-  if (localStorage.getItem("AUTHORIZATION")!=null) {
+  if (localStorage.getItem("AUTHORIZATION")) {
     var temp = localStorage.getItem("AUTHORIZATION")
     var jwt_decode = require('jwt-decode')
-    var decodeToken = jwt_decode(temp.replace("bearer ", ""))
-    // token 유효시간 체크
-    if (((decodeToken.exp*1000) - Date.now()) < 1000 * 30) {
-      postToken();
+    var decodeToken;
+    if (temp == null) {
+      decodeToken = jwt_decode(temp.replace("bearer ", ""))
+      // token 유효시간 체크
+      if (((decodeToken.exp * 1000) - Date.now()) < 1000 * 30) {
+        postToken();
+      }
     }
+
   }
 
   return (

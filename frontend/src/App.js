@@ -18,13 +18,14 @@ export default function App() {
         <AuthRoute
           exact path="/mypage"
           render={props => <MyPage {...props}/>}
-        />
+        />        
         <Route
           exact path="/login"
           render={props => (
             <Login/>
           )}
         />
+
         <AuthRoute 
           path="/mypage/comment" 
           render={props => (

@@ -7,12 +7,15 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-
-@EntityScan(basePackages="com.www.core")
-@EnableJpaRepositories(basePackages="com.www.core") 
+@SpringBootApplication(scanBasePackages = "com.www")
+@EntityScan(basePackages = "com.www.core")
+@EnableJpaRepositories(basePackages = "com.www.core")
 @EnableConfigurationProperties
 //@EnableJpaAuditing
+<<<<<<< HEAD
 @SpringBootApplication(scanBasePackages="com.www")
+=======
+>>>>>>> b3b385de70d3a30dfd65ad12cfd07fb2f3e65182
 public class FileServerApplication {
 
 	public static void main(String[] args) {

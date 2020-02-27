@@ -67,34 +67,34 @@ const episode = {
 }
 
 //댓글 정보
-const comments=[
+const comments = [
     {
-        nickname:"감자돌이",
-        comment:"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
-        date:"2020.02.05",
-        goodNum:125,
-        badNum:5,
+        nickname: "감자돌이",
+        comment: "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+        date: "2020.02.05",
+        goodNum: 125,
+        badNum: 5,
     },
     {
-        nickname:"감자돌이",
-        comment:"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
-        date:"2020.02.05",
-        goodNum:125,
-        badNum:5,
+        nickname: "감자돌이",
+        comment: "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+        date: "2020.02.05",
+        goodNum: 125,
+        badNum: 5,
     },
     {
-        nickname:"감자돌이",
-        comment:"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
-        date:"2020.02.05",
-        goodNum:125,
-        badNum:5,
+        nickname: "감자돌이",
+        comment: "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+        date: "2020.02.05",
+        goodNum: 125,
+        badNum: 5,
     },
     {
-        nickname:"감자돌이",
-        comment:"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
-        date:"2020.02.05",
-        goodNum:125,
-        badNum:5,
+        nickname: "감자돌이",
+        comment: "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+        date: "2020.02.05",
+        goodNum: 125,
+        badNum: 5,
     },
 ]
 
@@ -129,25 +129,93 @@ function a11yProps(index) {
     };
 }
 
+function commentLoading() {
+    var requestOptions = {
+        method: 'GET',
+        redirect: 'follow'
+    };
+
+    //url 수정
+    fetch("/episodes/1/comments?page=", requestOptions)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+}
+
+function bestCommentLoading() {
+    var requestOptions = {
+        method: 'GET',
+        redirect: 'follow'
+    };
+
+    fetch("/episodes/1/comments/best", requestOptions)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+}
+
 export default function Episode() {
+    commentLoading();
+    bestCommentLoading();
+
     const classes = useStyles();
-    const [state, setState] = React.useState({
-        score: '',
-    });
-    const [value, setValue] = React.useState(0);    
-    
-    const handleChange = name => event => {
-        setState({
-            ...state,
-            [name]: event.target.value,
-        });
+    const [comment, setComment] = React.useState("");
+    const [score, setScore] = React.useState("5");
+    const [value, setValue] = React.useState(0);
+
+    const handleCommentChange = (e) => {
+        setComment(e.target.value);
+    }
+    const handleScoreChange = (event) => {
+        setScore(event.target.value);
     };
     const tabChange = (event, newValue) => {
         setValue(newValue);
     };
+    const submitComment = () => {
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        myHeaders.append("AUTHORIZATION", localStorage.getItem("AUTHORIZATION"));
+
+        var raw = JSON.stringify({ "content": "댓글 내용" });
+
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+        };
+
+        fetch("/episodes/1/comments/", requestOptions)
+            .then(response => response.text())
+            .then(result => console.log(result))
+            .catch(error => console.log('error', error));
+    }
+
+    const handleRating = () => {
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        myHeaders.append("AUTHORIZATION",  localStorage.getItem("AUTHORIZATION"));
+
+        var raw = JSON.stringify({ "rating": score});
+        console.log(score);
+
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+        };
+
+        fetch("/episodes/5/rating", requestOptions)
+            .then(response => response.text())
+            .then(result => console.log(result))
+            .catch(error => console.log('error', error));
+    }
+
     return (
         <div>
-            <Header/>
+            <Header />
 
             <div className={classes.menu}>
                 <div className={classes.button}>
@@ -160,7 +228,7 @@ export default function Episode() {
                 </div>
             </div>
 
-            <div style={{ borderTop: '1px solid grey', minHeight: 600, marginBottom:30}}>
+            <div style={{ borderTop: '1px solid grey', minHeight: 600, marginBottom: 30 }}>
                 <div className={classes.title} style={{ display: "flex" }}>
                     <img src="http://placeimg.com/128/128/any" alt="thumbnail" style={{ margin: 10, height: 120, }} />
                     <div>
@@ -179,18 +247,16 @@ export default function Episode() {
                                 <InputLabel htmlFor="star-score">별점</InputLabel>
                                 <Select
                                     native
-                                    value={state.score}
-                                    onChange={handleChange('score')}
-
-                                >
-                                    <option value={1}>1</option>
-                                    <option value={2}>2</option>
-                                    <option value={3}>3</option>
-                                    <option value={4}>4</option>
+                                    value={score}
+                                    onChange={handleScoreChange}>
                                     <option value={5}>5</option>
+                                    <option value={4}>4</option>
+                                    <option value={3}>3</option>
+                                    <option value={2}>2</option>
+                                    <option value={1}>1</option>
                                 </Select>
                             </FormControl>
-                            <Button color="primary" variant="contained" style={{ height: 30, marginTop: 20 }}>
+                            <Button color="primary" variant="contained" onClick={handleRating} style={{ height: 30, marginTop: 20 }}>
                                 <span style={{ color: "#fafafa", fontWeight: 400 }}>제출</span>
                             </Button>
                         </Box>
@@ -214,12 +280,14 @@ export default function Episode() {
                                 multiline
                                 rows="4"
                                 placeholder="의견을 작성해주세요"
+                                value={comment}
+                                onChange={handleCommentChange}
                                 variant="outlined"
                                 style={{ width: 800 }}
                             />
-                            <Button color="primary" variant="contained" style={{ height: 40, marginLeft: 10, marginTop: 70 }}>등록</Button>
+                            <Button color="primary" variant="contained" onClick={submitComment} style={{ height: 40, marginLeft: 10, marginTop: 70 }}>등록</Button>
                         </div>
-                        <Paper elevation={3} style={{marginTop:30}}>
+                        <Paper elevation={3} style={{ marginTop: 30 }}>
                             <AppBar position="static" color="inherit">
                                 <Tabs value={value} onChange={tabChange} aria-label="commentTabLabel">
                                     <Tab label="베스트 댓글"  {...a11yProps(0)} />
@@ -228,8 +296,8 @@ export default function Episode() {
                             </AppBar>
 
                             <TabPanel value={value} index={0}>
-                                {comments.map(comment=>(
-                                    <Comment nickname={comment.nickname} comment={comment.comment} date={comment.date} goodNum={comment.goodNum} badNum={comment.badNum}/>
+                                {comments.map(comment => (
+                                    <Comment nickname={comment.nickname} comment={comment.comment} date={comment.date} goodNum={comment.goodNum} badNum={comment.badNum} />
                                 ))}
                             </TabPanel>
                             <TabPanel value={value} index={1}>

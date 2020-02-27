@@ -26,7 +26,10 @@ public class EpisodeDto {
 	private String contents;
 	//private int ep_hits;
 	//private Webtoon webtoon;
-	
+	public EpisodeDto(String title, String author_comment) {
+		this.title = title;
+		this.author_comment = author_comment;
+	}
 	public Episode toEntity() {
 		Episode build = Episode.builder()
 				.ep_no(ep_no)
