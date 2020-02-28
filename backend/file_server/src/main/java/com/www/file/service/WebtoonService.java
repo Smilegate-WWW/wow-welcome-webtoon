@@ -97,6 +97,7 @@ public class WebtoonService {
 			File destinationFile = new File(filePath+"/thumbnail/"+fileName);
 			destinationFile.getParentFile().mkdir();
 			file.transferTo(destinationFile);
+			
 			//webtoonDto.toEntity().setUsers(user);
 			//webtoonRepository.save(webtoonDto.toEntity());
 			//WebtoonRegisterDto webtoonRegister = new WebtoonRegisterDto(webtoonDto,user);
@@ -127,14 +128,16 @@ public class WebtoonService {
 	    List<WebtoonListDto> webtoonListDto = new ArrayList<>();
 		
 		int totalpages = page.getTotalPages();
-		    
+		if(totalpages == 0 ) {
+			//데이터가 null일 경우 
+		}
 		//요청한 페이지 번호가 유효한 범위인지 체크
 		if(pageNum>0 && pageNum<=totalpages) {
 			List<Webtoon> webtoons = page.getContent();
 			for(Webtoon webtoon : webtoons) {
 				WebtoonListDto webtoonDto = WebtoonListDto.builder()
 						.title(webtoon.getTitle())
-						.thumbnail(webtoon.getThumbnail())
+						.thumbnail("http://localhost:8081/static/thumbnail/"+webtoon.getThumbnail())
 						.created_date(webtoon.getCreated_date())
 						.build();
 				
