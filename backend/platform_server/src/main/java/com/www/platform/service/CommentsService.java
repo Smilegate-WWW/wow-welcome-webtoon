@@ -10,13 +10,14 @@ import com.www.core.platform.entity.Comments;
 import com.www.core.platform.repository.CommentsRepository;
 import com.www.platform.dto.CommentsDto;
 import com.www.platform.dto.CommentsResponseDto;
+import com.www.platform.dto.MyPageCommentsDto;
+import com.www.platform.dto.MyPageCommentsResponseDto;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -37,9 +38,9 @@ public class  CommentsService {
 
     // 예외 발생시 모든 DB작업 초기화 해주는 어노테이션 ( 완료시에만 커밋해줌 )
     @Transactional
-    public Response<Integer> insertComments(int usersIdx, int epIdx, String content) {
+    public Response<Integer> insertComments(int userIdx, int epIdx, String content) {
         Response<Integer> result = new Response<Integer>();
-        Optional<Users> user = usersRepository.findById(usersIdx);
+        Optional<Users> user = usersRepository.findById(userIdx);
         Optional<Episode> episode = episodeRepository.findById(epIdx);
 
         if(!episode.isPresent()){ // 에피소드가 존재하지 않을 때
@@ -61,13 +62,13 @@ public class  CommentsService {
     }
 
     @Transactional
-    public Response<Integer> deleteComments(int usersIdx, int commentsIdx) {
+    public Response<Integer> deleteComments(int userIdx, int commentsIdx) {
         Response<Integer> result = new Response<Integer>();
-        Optional<Users> users = usersRepository.findById(usersIdx);
+        Optional<Users> users = usersRepository.findById(userIdx);
         Optional<Comments> comments = commentsRepository.findById(commentsIdx);
 
         if(comments.isPresent()){ // 유저가 해당 댓글의 주인이 아닐 때
-            if(usersIdx != comments.get().getUsers().getIdx()){
+            if(userIdx != comments.get().getUsers().getIdx()){
                 result.setCode(22);
                 result.setMsg("fail : user isn't comment owner");
             }
@@ -155,6 +156,42 @@ public class  CommentsService {
             result.setMsg("requset complete : get best comments");
         }
 
+        return result;
+    }
+
+    @Transactional(readOnly = true)
+    public Response<MyPageCommentsResponseDto> getMyPageComments(int userIdx, int page){
+        Response<MyPageCommentsResponseDto> result = new Response<MyPageCommentsResponseDto>();
+        
+        Pageable pageable = PageRequest.of(page <= 0 ? 0 : page - 1, 10, Sort.Direction.DESC, "idx");
+        Page<Comments> commentsPage = commentsRepository.findAllByUsersIdx(pageable, userIdx);
+        int totalElements = (int) commentsPage.getTotalElements();
+
+        if(page > commentsPage.getTotalPages()){
+            result.setCode(23);
+            result.setMsg("fail : entered page exceeds the total pages");
+        }
+        else{
+            List<MyPageCommentsDto> myPageCommentsDtosList = new ArrayList<>(totalElements);
+            Comments comments;
+            for(int i = 0 ; i < totalElements; i++){
+                comments = commentsPage.getContent().get(i);
+                MyPageCommentsDto myPageCommentsDto = MyPageCommentsDto.builder()
+                        .webtoon_title(comments.getEp().getWebtoon().getTitle())
+                        .webtoon_thumbnail(comments.getEp().getWebtoon().getThumbnail())
+                        .ep_no(comments.getEp().getEp_no())
+                        .content(comments.getContent())
+                        .build();
+                myPageCommentsDtosList.add(myPageCommentsDto);
+            }
+
+            result.setCode(0);
+            result.setMsg("request complete : get comments by page request");
+            result.setData(MyPageCommentsResponseDto.builder()
+                    .comments(myPageCommentsDtosList)
+                    .total_pages(commentsPage.getTotalPages())
+                    .build());
+        }
         return result;
     }
 }

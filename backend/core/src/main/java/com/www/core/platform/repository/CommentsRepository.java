@@ -20,6 +20,8 @@ public interface CommentsRepository extends JpaRepository<Comments, Integer> {
 
     Page<Comments> findAllByEpIdx(Pageable pageable, @Param("ep_idx") int epIdx);
 
+    Page<Comments> findAllByUsersIdx(Pageable pageable, @Param("users_idx") int userIdx);
+
     @Query(nativeQuery = true,
             value = "SELECT * " +
                     "FROM Comments c " +
