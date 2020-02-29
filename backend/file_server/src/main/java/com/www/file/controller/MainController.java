@@ -89,7 +89,7 @@ public class MainController {
 	
 	//회차 출력
 	@GetMapping("/detail/{webtoon_idx}/{no}")
-	public Response<EpisodeContents> getOriginalEpisode(@PathVariable("webtoon_idx") int webtoon_idx,
+	public Response<EpisodeContents> showEpisode(@PathVariable("webtoon_idx") int webtoon_idx,
 			@PathVariable("no") int no) throws IOException{
 		
 		return mainService.showEpisode(webtoon_idx, no);
