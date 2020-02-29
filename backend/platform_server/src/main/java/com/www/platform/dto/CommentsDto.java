@@ -10,8 +10,7 @@ import java.util.Optional;
 @Getter
 public class CommentsDto {
     private Integer idx;
-    private int ep_idx;
-    private int users_idx;
+    private String user_id;
     private int like_cnt;
     private int dislike_cnt;
     private String content;
@@ -19,8 +18,7 @@ public class CommentsDto {
 
     public CommentsDto(Comments entity) {
         idx = entity.getIdx();
-        ep_idx = entity.getEp().getIdx();
-        users_idx = entity.getUsers().getIdx();
+        user_id = entity.getUsers().getUserid();
         like_cnt = entity.getLike_cnt();
         dislike_cnt = entity.getDislike_cnt();
         content = entity.getContent();

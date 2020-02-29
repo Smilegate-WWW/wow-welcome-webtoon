@@ -115,12 +115,6 @@ public class  CommentsService {
             Page<Comments> commentsPage = commentsRepository.findAllByEpIdx(pageable, epIdx);
             int totalElements = (int) commentsPage.getTotalElements();
 
-            Page<CommentsDto> commentsDtoPage
-                    = new PageImpl<CommentsDto>(commentsPage
-                    .stream()
-                    .map(comments -> new CommentsDto(comments))
-                    .collect(Collectors.toList()), pageable, totalElements);
-
             if(page > commentsPage.getTotalPages()){
                 result.setCode(23);
                 result.setMsg("fail : entered page exceeds the total pages");
@@ -130,8 +124,11 @@ public class  CommentsService {
                 result.setMsg("request complete : get comments by page request");
                 CommentsResponseDto commentsResponseDto
                         = CommentsResponseDto.builder()
-                        .comments(commentsDtoPage.getContent())
-                        .total_pages(commentsDtoPage.getTotalPages())
+                        .comments(commentsPage
+                                .stream()
+                                .map(CommentsDto::new)
+                                .collect(Collectors.toList()))
+                        .total_pages(commentsPage.getTotalPages())
                         .build();
                 result.setData(commentsResponseDto);
             }
@@ -162,7 +159,7 @@ public class  CommentsService {
     @Transactional(readOnly = true)
     public Response<MyPageCommentsResponseDto> getMyPageComments(int userIdx, int page){
         Response<MyPageCommentsResponseDto> result = new Response<MyPageCommentsResponseDto>();
-        
+
         Pageable pageable = PageRequest.of(page <= 0 ? 0 : page - 1, 10, Sort.Direction.DESC, "idx");
         Page<Comments> commentsPage = commentsRepository.findAllByUsersIdx(pageable, userIdx);
         int totalElements = (int) commentsPage.getTotalElements();
@@ -186,7 +183,7 @@ public class  CommentsService {
             }
 
             result.setCode(0);
-            result.setMsg("request complete : get comments by page request");
+            result.setMsg("request complete : get my page comments");
             result.setData(MyPageCommentsResponseDto.builder()
                     .comments(myPageCommentsDtosList)
                     .total_pages(commentsPage.getTotalPages())
