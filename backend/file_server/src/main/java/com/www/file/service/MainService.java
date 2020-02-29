@@ -19,6 +19,7 @@ import com.www.core.file.entity.Episode;
 import com.www.core.file.entity.Webtoon;
 import com.www.core.file.repository.EpisodeRepository;
 import com.www.core.file.repository.WebtoonRepository;
+import com.www.file.dto.EpisodeContents;
 import com.www.file.dto.EpisodeListDto;
 import com.www.file.dto.EpisodePage;
 import com.www.file.dto.MainWebtoonDto;
@@ -52,8 +53,7 @@ public class MainService {
 		switch(sort) {
 		//기본정렬
 		case 0:
-			page = webtoonRepository.findAll(PageRequest.of(pageNum-1, PAGE_EPISODE_COUNT
-					/*,Sort.by(Sort.Direction.ASC,"createdDate")*/));
+			page = webtoonRepository.findAll(PageRequest.of(pageNum-1, PAGE_EPISODE_COUNT));
 			break;
 		//조회순 정렬
 		case 1:
@@ -74,13 +74,17 @@ public class MainService {
 		List<Webtoon> webtoons = page.getContent();
 		List<MainWebtoonDto> webtoonListDto = new ArrayList<>();
 		int totalpages = page.getTotalPages();
-
+		
+		//등록된 웹툰이 없을 경우
+		if(totalpages == 0 ) totalpages =1;
+		
 		//요청한 페이지 번호가 유효한 범위인지 체크
 		if(pageNum>0 && pageNum<=totalpages) {
 			for(Webtoon webtoon : webtoons) {
 				MainWebtoonDto webtoonDto = MainWebtoonDto.builder()
+						.idx(webtoon.getIdx())
 						.title(webtoon.getTitle())
-						.thumbnail(webtoon.getThumbnail())
+						.thumbnail("http://localhost:8081/static/web_thumbnail/"+webtoon.getThumbnail())
 						.genre1(webtoon.getGenre1())
 						.genre2(webtoon.getGenre2())
 						.build();
@@ -122,6 +126,45 @@ public class MainService {
 			pageList[idx] = val;
 		}
 		return pageList;
+	}
+	
+	public Response<EpisodeContents> showEpisode(int webtoon_idx, int no){
+		
+		Response<EpisodeContents> res = new Response<EpisodeContents>();
+		Optional<Webtoon> webtoonWrapper = webtoonRepository.findById(webtoon_idx);
+		Webtoon webtoon = webtoonWrapper.get();
+		List<Episode> epList = webtoon.getEpisodes();
+		Episode episode = new Episode();
+		
+		for(Episode ep : epList) {
+			if(no == ep.getEp_no()) {
+				episode = ep;
+				break;
+			}
+		}
+		
+		EpisodeContents episodeContents = EpisodeContents.builder()
+				.title(webtoon.getTitle())
+				.author(webtoon.getUsers().getName())
+				.summary(webtoon.getSummary())
+				.thumbnail("http://localhost:8081/static/web_thumbnail/"+webtoon.getThumbnail())
+				.rating_avg(episode.getRating_avg())
+				.ep_hits(episode.getEp_hits()+1)
+				.build();
+		
+		String content = episode.getContents();
+		String[] contents = content.split(";");
+		for(int i=0;i<contents.length;i++) {
+			contents[i] = "http://localhost:8081/static/webtoon/"+contents[i];
+			System.out.println(contents[i]);
+		}
+		episodeContents.setContents(contents);
+		
+		res.setData(episodeContents);
+		res.setCode(0);
+		res.setMsg("show complete");
+		return res;
+		
 	}
 	
 	
