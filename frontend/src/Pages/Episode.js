@@ -51,6 +51,7 @@ const useStyles = makeStyles(theme => ({
 
 //에피소드 정보
 const episode = {
+    ep_idx: 1,
     no: 11,
     title: "은성이의 사랑",
     starRating: 4.5,
@@ -67,6 +68,10 @@ const episode = {
 }
 
 //댓글 정보
+const comments = []
+const best_comments = []
+const comment_page=1
+/*
 const comments = [
     {
         nickname: "감자돌이",
@@ -97,6 +102,7 @@ const comments = [
         badNum: 5,
     },
 ]
+*/
 
 //탭 관련
 function TabPanel(props) {
@@ -130,31 +136,74 @@ function a11yProps(index) {
 }
 
 function commentLoading() {
+    //const [comments,setComments] = React.useState([]);
+    //const [comment_page,setCommentPage] = React.useState(1);
+
     var requestOptions = {
         method: 'GET',
         redirect: 'follow'
     };
 
     //url 수정
-    fetch("/episodes/1/comments?page=", requestOptions)
+    fetch("/episodes/"+episode.ep_idx+"/comments?page=1", requestOptions)
         .then(response => response.text())
-        .then(result => console.log(result))
+        .then(result => {
+            console.log("에피소드 인덱스:"+episode.ep_idx)
+            console.log(result)
+            if(result.code==0){
+                //setComments(result.date.comments);
+                //setCommentPage(result.data.total_pages);
+                comments = result.data.comments;
+                comment_page = result.data.total_pages;
+            }
+            else if (result.code==20){
+                alert("[ERROR 20] 잘못된 접근입니다, 관리자에게 문의하세요.");
+            }
+            else if (result.code ==23){
+                alert("[ERROR 23] 잘못된 접근입니다, 관리자에게 문의하세요.");
+            }
+            /*
+            else if(result.code ==44){
+                //access token 재발급 api 접근
+                //재발급 성공시 페이지 재 로딩
+                //재발급 실패시 로그인 만료 -> direct "/login"
+            }
+            */
+            else{
+                alert("잘못된 접근입니다, 관리자에게 문의하세요.");
+            }
+        })
         .catch(error => console.log('error', error));
 }
 
 function bestCommentLoading() {
+    //const [best_comments,setBestComments] = React.useState([]);
+
     var requestOptions = {
         method: 'GET',
         redirect: 'follow'
     };
 
-    fetch("/episodes/1/comments/best", requestOptions)
+    fetch("/episodes/"+episode.ep_idx+"/comments/best", requestOptions)
         .then(response => response.text())
-        .then(result => console.log(result))
+        .then(result => {
+            console.log(result)
+            if(result.code==0){
+                //setBestComments(result.data);
+                best_comments = result.data;
+            }
+            else if (result.code==20){
+                alert("[ERROR 20] 잘못된 접근입니다, 관리자에게 문의하세요.");
+            }
+        })
         .catch(error => console.log('error', error));
 }
 
 export default function Episode() {
+    //const [comments,setComments] = React.useState([]);
+    //const [best_comments,setBestComments] = React.useState([]);
+    //const [comment_page,setCommentPage] = React.useState(1);
+
     commentLoading();
     bestCommentLoading();
 
@@ -186,7 +235,7 @@ export default function Episode() {
             redirect: 'follow'
         };
 
-        fetch("/episodes/1/comments/", requestOptions)
+        fetch("/episodes/"+episode.ep_idx+"/comments", requestOptions)
             .then(response => response.text())
             .then(result => console.log(result))
             .catch(error => console.log('error', error));
@@ -207,7 +256,7 @@ export default function Episode() {
             redirect: 'follow'
         };
 
-        fetch("/episodes/5/rating", requestOptions)
+        fetch("/episodes/"+episode.ep_idx+"/rating", requestOptions)
             .then(response => response.text())
             .then(result => console.log(result))
             .catch(error => console.log('error', error));
@@ -296,12 +345,14 @@ export default function Episode() {
                             </AppBar>
 
                             <TabPanel value={value} index={0}>
-                                {comments.map(comment => (
+                                {best_comments.map(comment => (
                                     <Comment nickname={comment.nickname} comment={comment.comment} date={comment.date} goodNum={comment.goodNum} badNum={comment.badNum} />
                                 ))}
                             </TabPanel>
                             <TabPanel value={value} index={1}>
-                                전체댓글
+                                {comments.map(comment => (
+                                    <Comment nickname={comment.nickname} comment={comment.comment} date={comment.date} goodNum={comment.goodNum} badNum={comment.badNum} />
+                                ))}
                             </TabPanel>
                         </Paper>
                     </div>

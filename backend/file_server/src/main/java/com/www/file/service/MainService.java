@@ -87,6 +87,8 @@ public class MainService {
 						.thumbnail("http://localhost:8081/static/web_thumbnail/"+webtoon.getThumbnail())
 						.genre1(webtoon.getGenre1())
 						.genre2(webtoon.getGenre2())
+						.hits(webtoon.getHits())
+						.epRatingAvg(webtoon.getEpRatingAvg())
 						.build();
 				webtoonListDto.add(webtoonDto);
 			}
@@ -135,6 +137,8 @@ public class MainService {
 		Webtoon webtoon = webtoonWrapper.get();
 		List<Episode> epList = webtoon.getEpisodes();
 		Episode episode = new Episode();
+		webtoon.setHits(webtoon.getHits()+1);
+		webtoonRepository.save(webtoon);
 		
 		for(Episode ep : epList) {
 			if(no == ep.getEp_no()) {
@@ -142,6 +146,8 @@ public class MainService {
 				break;
 			}
 		}
+		episode.setEp_hits(episode.getEp_hits()+1);
+		episodeRepository.save(episode);
 		
 		EpisodeContents episodeContents = EpisodeContents.builder()
 				.title(webtoon.getTitle())
@@ -149,7 +155,7 @@ public class MainService {
 				.summary(webtoon.getSummary())
 				.thumbnail("http://localhost:8081/static/web_thumbnail/"+webtoon.getThumbnail())
 				.rating_avg(episode.getRating_avg())
-				.ep_hits(episode.getEp_hits()+1)
+				.ep_hits(episode.getEp_hits())
 				.build();
 		
 		String content = episode.getContents();
