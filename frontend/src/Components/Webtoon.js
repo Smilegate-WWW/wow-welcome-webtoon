@@ -26,8 +26,8 @@ class Webtoon extends Component {
         const { classes } = this.props;
         return (
             <div>
-                <a href="/webtoon" style={{ textDecoration: "none" }}>
-                    <Card href="/webtoon" className={classes.card} variant="outlined">
+                <a href={"/webtoon?idx="+this.props.idx} style={{ textDecoration: "none" }}>
+                    <Card href={"/webtoon?idx="+this.props.idx} className={classes.card} variant="outlined">
                         <CardActionArea>
                             <CardContent>
                                 <Webtoonthumbnail container justify="center" thumbnail={this.props.thumbnail} />
