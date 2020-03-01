@@ -51,8 +51,8 @@ const useStyles = makeStyles(theme => ({
 
 //에피소드 정보
 const episode = {
-    ep_idx: 1,
-    no: 11,
+    ep_idx: 3,
+    no: 1,
     title: "은성이의 사랑",
     starRating: 4.5,
     cuts: [
@@ -68,41 +68,17 @@ const episode = {
 }
 
 //댓글 정보
-const comments = []
-const best_comments = []
-const comment_page=1
-/*
-const comments = [
+let comments = [
     {
         nickname: "감자돌이",
         comment: "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
         date: "2020.02.05",
         goodNum: 125,
         badNum: 5,
-    },
-    {
-        nickname: "감자돌이",
-        comment: "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
-        date: "2020.02.05",
-        goodNum: 125,
-        badNum: 5,
-    },
-    {
-        nickname: "감자돌이",
-        comment: "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
-        date: "2020.02.05",
-        goodNum: 125,
-        badNum: 5,
-    },
-    {
-        nickname: "감자돌이",
-        comment: "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
-        date: "2020.02.05",
-        goodNum: 125,
-        badNum: 5,
-    },
+    }
 ]
-*/
+let best_comments =[]
+let comment_page=1;
 
 //탭 관련
 function TabPanel(props) {
@@ -136,9 +112,6 @@ function a11yProps(index) {
 }
 
 function commentLoading() {
-    //const [comments,setComments] = React.useState([]);
-    //const [comment_page,setCommentPage] = React.useState(1);
-
     var requestOptions = {
         method: 'GET',
         redirect: 'follow'
@@ -146,14 +119,12 @@ function commentLoading() {
 
     //url 수정
     fetch("/episodes/"+episode.ep_idx+"/comments?page=1", requestOptions)
-        .then(response => response.text())
+        .then(response => response.json())
         .then(result => {
-            console.log("에피소드 인덱스:"+episode.ep_idx)
             console.log(result)
             if(result.code==0){
-                //setComments(result.date.comments);
-                //setCommentPage(result.data.total_pages);
-                comments = result.data.comments;
+                comments=result.data.comments;
+                console.log(comments);
                 comment_page = result.data.total_pages;
             }
             else if (result.code==20){
@@ -177,20 +148,18 @@ function commentLoading() {
 }
 
 function bestCommentLoading() {
-    //const [best_comments,setBestComments] = React.useState([]);
-
     var requestOptions = {
         method: 'GET',
         redirect: 'follow'
     };
 
     fetch("/episodes/"+episode.ep_idx+"/comments/best", requestOptions)
-        .then(response => response.text())
+        .then(response => response.json())
         .then(result => {
             console.log(result)
             if(result.code==0){
-                //setBestComments(result.data);
-                best_comments = result.data;
+                best_comments=result.data;
+                console.log(best_comments);
             }
             else if (result.code==20){
                 alert("[ERROR 20] 잘못된 접근입니다, 관리자에게 문의하세요.");
@@ -200,12 +169,11 @@ function bestCommentLoading() {
 }
 
 export default function Episode() {
-    //const [comments,setComments] = React.useState([]);
-    //const [best_comments,setBestComments] = React.useState([]);
-    //const [comment_page,setCommentPage] = React.useState(1);
 
-    commentLoading();
-    bestCommentLoading();
+    React.useEffect(()=> {
+        commentLoading();
+        bestCommentLoading();
+    },[]);
 
     const classes = useStyles();
     const [comment, setComment] = React.useState("");
@@ -346,12 +314,12 @@ export default function Episode() {
 
                             <TabPanel value={value} index={0}>
                                 {best_comments.map(comment => (
-                                    <Comment nickname={comment.nickname} comment={comment.comment} date={comment.date} goodNum={comment.goodNum} badNum={comment.badNum} />
+                                    <Comment cmt_idx={comment.idx} nickname={comment.user_id} comment={comment.content} date={comment.created_date} goodNum={comment.like_cnt} badNum={comment.dislike_cnt} />
                                 ))}
                             </TabPanel>
                             <TabPanel value={value} index={1}>
                                 {comments.map(comment => (
-                                    <Comment nickname={comment.nickname} comment={comment.comment} date={comment.date} goodNum={comment.goodNum} badNum={comment.badNum} />
+                                    <Comment cmt_idx={comment.idx} nickname={comment.user_id} comment={comment.content} date={comment.created_date} goodNum={comment.like_cnt} badNum={comment.dislike_cnt} />
                                 ))}
                             </TabPanel>
                         </Paper>
