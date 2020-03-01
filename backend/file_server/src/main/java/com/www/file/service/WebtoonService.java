@@ -239,6 +239,7 @@ public class WebtoonService {
 	public Response<Integer> deleteWebtoon(int idx, int user_idx) {
 		Response<Integer> res = new Response<Integer>();
         //해당 웹툰 idx가 유효한지 체크
+		System.out.println("*****웹툰 삭제 idx 체크 : " + idx);
         if(!webtoonRepository.existsById(idx)) {
         	res.setCode(1);
 			res.setMsg("delete fail: Webtoon do not exists");

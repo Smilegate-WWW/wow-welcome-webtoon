@@ -76,6 +76,7 @@ public class EpisodeService {
 	 
 	    int totalpages = page.getTotalPages();
 	    if(totalpages==0) totalpages=1;
+	    System.out.println("*****회차 목록 출력 idx 체크 : "+ idx);
 	    ///////////////////////////////////////
 	    if(!webtoonRepository.existsById(idx)) {
 	    	System.out.println("존재하지 않음");
