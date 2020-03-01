@@ -157,10 +157,10 @@ public class WebtoonController {
 		
 		Response<Integer> res = new Response<Integer>();
 		int tk = tokenChecker.validateToken(AccessToken);
-		
+		int user_idx = tokenChecker.getUserIdx(AccessToken);
 		switch(tk) {
 		case 0: 
-			return  webtoonService.deleteWebtoon(idx);
+			return  webtoonService.deleteWebtoon(idx, user_idx);
 		case 1:
 			res.setCode(40);
 			res.setMsg("reissue tokens");

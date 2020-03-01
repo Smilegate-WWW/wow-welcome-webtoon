@@ -267,10 +267,15 @@ public class EpisodeService {
         return res;
 	}
 	
-	public Response<Integer> deleteEpisode(int webtoon_idx, int ep_no) {
+	public Response<Integer> deleteEpisode(int webtoon_idx, int ep_no, int user_idx) {
 		Response<Integer> res = new Response<Integer>();
 		Optional<Webtoon> webtoonWrapper = webtoonRepository.findById(webtoon_idx);
 		Webtoon webtoon = webtoonWrapper.get();
+		if(webtoon.getUsers().getIdx() != user_idx) {
+			res.setCode(1);
+			res.setMsg("delete fail: user do not have authority");
+			return res;
+		}
 		List<Episode> epList = webtoon.getEpisodes();
 		Episode episode = new Episode();
 		

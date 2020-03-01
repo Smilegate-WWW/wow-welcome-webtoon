@@ -135,10 +135,11 @@ public class EpisodeController {
 		
 		Response<Integer> res = new Response<Integer>();
 		int tk = tokenchecker.validateToken(AccessToken);
+		int user_idx = tokenchecker.getUserIdx(AccessToken);
 		
 		switch(tk) {
 		case 0: //유효한 토큰
-			return episodeService.deleteEpisode(webtoon_idx, ep_no);
+			return episodeService.deleteEpisode(webtoon_idx, ep_no, user_idx);
 		case 1: //만료된 토큰
 			res.setCode(40);
 			res.setMsg("reissue tokens");

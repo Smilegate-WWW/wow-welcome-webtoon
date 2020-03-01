@@ -236,19 +236,25 @@ public class WebtoonService {
 		}
 	}
 	
-	public Response<Integer> deleteWebtoon(int idx) {
+	public Response<Integer> deleteWebtoon(int idx, int user_idx) {
 		Response<Integer> res = new Response<Integer>();
         //해당 웹툰 idx가 유효한지 체크
         if(!webtoonRepository.existsById(idx)) {
         	res.setCode(1);
-			res.setMsg("delete fail. Webtoon do not exists");
+			res.setMsg("delete fail: Webtoon do not exists");
         }
         else {
         	Optional<Webtoon> WebtoonEntityWrapper = webtoonRepository.findById(idx);
             Webtoon webtoon = WebtoonEntityWrapper.get();
-        	webtoonRepository.delete(webtoon);
-        	res.setMsg("delete complete");
-            res.setCode(0);
+            if(webtoon.getUsers().getIdx() != user_idx) {
+            	res.setMsg("delete fail: user do not have authority");
+            	res.setCode(1);
+            }
+            else {
+            	webtoonRepository.delete(webtoon);
+            	res.setMsg("delete complete");
+                res.setCode(0);
+            }
         }
         return res;
         
