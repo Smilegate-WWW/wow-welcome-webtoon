@@ -55,7 +55,7 @@ public class WebtoonController {
 			res.setCode(40);
 			res.setMsg("reissue tokens");
 			break;
-		case 2: //�뿉�윭,�삱諛붾Ⅴ吏� �븡�� �넗�겙
+		case 2: //유효하지 않은 토큰
 			res.setCode(42);
 			res.setMsg("access denied : maybe captured or faked token");
 			break;
@@ -88,11 +88,11 @@ public class WebtoonController {
 			}
 			return res;
 			
-		case 1: //留뚮즺�맂 �넗�겙
+		case 1: 
 			res.setCode(40);
 			res.setMsg("reissue tokens");
 			break;
-		case 2: //�뿉�윭,�삱諛붾Ⅴ吏� �븡�� �넗�겙
+		case 2: 
 			res.setCode(42);
 			res.setMsg("access denied : maybe captured or faked token");
 			break;
@@ -113,13 +113,13 @@ public class WebtoonController {
 		int n = tokenChecker.validateToken(AccessToken);
 		
 		switch(n) {
-		case 0: //�쑀�슚�븳 �넗�겙
+		case 0: 
 			return webtoonService.editWebtoon(idx, file, webtoonDto);
-		case 1: //留뚮즺�맂 �넗�겙
+		case 1: 
 			res.setCode(40);
 			res.setMsg("reissue tokens");
 			break;
-		case 2: //�뿉�윭,�삱諛붾Ⅴ吏� �븡�� �넗�겙
+		case 2: 
 			res.setCode(42);
 			res.setMsg("access denied : maybe captured or faked token");
 			break;
@@ -128,6 +128,28 @@ public class WebtoonController {
 		return res;
 	}
 	
+	//기존 웹툰 정보 가져오기 
+	@GetMapping("/myTitleDetail/{idx}")
+	public Response<WebtoonDto> GetOriginalWebtoon(@RequestHeader("Authorization") String AccessToken, @PathVariable("idx") int idx) throws IOException {
+		
+		Response<WebtoonDto> res = new Response<WebtoonDto>();
+		int n = tokenChecker.validateToken(AccessToken);
+		
+		switch(n) {
+		case 0: 
+			return webtoonService.getWebtoonInfo(idx);
+		case 1: 
+			res.setCode(40);
+			res.setMsg("reissue tokens");
+			break;
+		case 2: 
+			res.setCode(42);
+			res.setMsg("access denied : maybe captured or faked token");
+			break;
+		}
+		
+		return res;
+	}
 	//내 웹툰 삭제 
 	@DeleteMapping("/myArticleList/{idx}")
 	public Response<Integer> deleteWebtoon(@RequestHeader("Authorization") String AccessToken,
@@ -137,13 +159,13 @@ public class WebtoonController {
 		int tk = tokenChecker.validateToken(AccessToken);
 		
 		switch(tk) {
-		case 0: //�쑀�슚�븳 �넗�겙
+		case 0: 
 			return  webtoonService.deleteWebtoon(idx);
-		case 1: //留뚮즺�맂 �넗�겙
+		case 1:
 			res.setCode(40);
 			res.setMsg("reissue tokens");
 			break;
-		case 2: //�뿉�윭,�삱諛붾Ⅴ吏� �븡�� �넗�겙
+		case 2: 
 			res.setCode(42);
 			res.setMsg("access denied : maybe captured or faked token");
 			break;

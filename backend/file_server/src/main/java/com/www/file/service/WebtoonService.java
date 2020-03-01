@@ -94,7 +94,7 @@ public class WebtoonService {
 			webtoonDto.setThumbnail(fileName);
 			
 			//file 외부 폴더로 이동
-			File destinationFile = new File(filePath+"/thumbnail/"+fileName);
+			File destinationFile = new File(filePath+"/web_thumbnail/"+fileName);
 			destinationFile.getParentFile().mkdir();
 			file.transferTo(destinationFile);
 			
@@ -128,16 +128,15 @@ public class WebtoonService {
 	    List<WebtoonListDto> webtoonListDto = new ArrayList<>();
 		
 		int totalpages = page.getTotalPages();
-		if(totalpages == 0 ) {
-			//데이터가 null일 경우 
-		}
+		if(totalpages == 0 ) totalpages =1;
 		//요청한 페이지 번호가 유효한 범위인지 체크
 		if(pageNum>0 && pageNum<=totalpages) {
 			List<Webtoon> webtoons = page.getContent();
 			for(Webtoon webtoon : webtoons) {
 				WebtoonListDto webtoonDto = WebtoonListDto.builder()
+						.idx(webtoon.getIdx())
 						.title(webtoon.getTitle())
-						.thumbnail("http://localhost:8081/static/thumbnail/"+webtoon.getThumbnail())
+						.thumbnail("http://localhost:8081/static/web_thumbnail/"+webtoon.getThumbnail())
 						.created_date(webtoon.getCreated_date())
 						.build();
 				
@@ -213,7 +212,6 @@ public class WebtoonService {
 		else {
 			Optional<Webtoon> WebtoonEntityWrapper = webtoonRepository.findById(idx);
 	        Webtoon webtoon = WebtoonEntityWrapper.get();
-	        
 	        webtoon.setEnd_flag(webtoonDto.getEnd_flag());
 	        webtoon.setGenre1(webtoonDto.getGenre1());
 	        webtoon.setGenre2(webtoonDto.getGenre2());
@@ -227,7 +225,7 @@ public class WebtoonService {
 				System.out.println(fileName);
 				webtoonDto.setThumbnail(fileName);
 				//file 외부 폴더로 이동
-				File destinationFile = new File("D:/image/"+fileName);
+				File destinationFile = new File(filePath+"/web_thumbnail/"+fileName);
 				destinationFile.getParentFile().mkdir();
 				file.transferTo(destinationFile);
 			}
@@ -254,6 +252,35 @@ public class WebtoonService {
         }
         return res;
         
+	}
+	
+	public Response<WebtoonDto> getWebtoonInfo(int idx){
+		Response<WebtoonDto> res = new Response<WebtoonDto>();
+		
+		if(!webtoonRepository.existsById(idx)) {
+			res.setCode(1);
+			res.setMsg("Webtoon do not exist");
+			return res;
+		}
+		Optional<Webtoon> WebtoonEntityWrapper = webtoonRepository.findById(idx);
+        Webtoon webtoon = WebtoonEntityWrapper.get();
+        
+		WebtoonDto webtoonDto = WebtoonDto.builder()
+				.title(webtoon.getTitle())
+				.toon_type(webtoon.getToon_type())
+				.genre1(webtoon.getGenre1())
+				.genre2(webtoon.getGenre2())
+				.summary(webtoon.getSummary())
+				.plot(webtoon.getPlot())
+				.end_flag(webtoon.getEnd_flag())
+				.thumbnail(webtoon.getThumbnail())
+				.build();
+		res.setData(webtoonDto);
+		res.setCode(0);
+		res.setMsg("get webtoon info");
+		
+		return res;
+		
 	}
 
 }
