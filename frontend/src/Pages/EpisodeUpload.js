@@ -7,6 +7,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 //색상
 import { grey } from '@material-ui/core/colors';
+//preview
+import Preview from '../Components/preview';
+
 const useStyles = makeStyles(theme => ({
     menu: {
         '& > *': {
@@ -84,10 +87,20 @@ export default function Upload() {
             alert("파일의 크기가 너무 큽니다");
         }
         else {
-            images=script;
-            images.push(file);
-            setScript(images);
-            alert(file.name + "이(가) 선택되었습니다 \n\n 선택된 이미지: " + images.length + "개");
+            var img = new Image();
+         
+            img.src = window.URL.createObjectURL(file);
+            img.onload = function() {
+                if(img.width<=690){
+                    images=script;
+                    images.push(file);
+                    setScript(images);
+                    alert(file.name + "이(가) 선택되었습니다 \n\n 선택된 이미지: " + images.length + "개");
+                }
+                else{
+                    alert("파일 사이즈가 맞지 않습니다.")
+                }
+            }
         }
     }
 
@@ -111,7 +124,17 @@ export default function Upload() {
             alert("파일의 크기가 너무 큽니다");
         }
         else {
-            alert(file.name + "이(가) 선택되었습니다");
+            var img = new Image();
+         
+            img.src = window.URL.createObjectURL(file);
+            img.onload = function() {
+                if(img.height <=330 && img.width<=430){
+                    setThumbnail(file);
+                }
+                else{
+                    alert("파일 사이즈를 맞춰주세요")
+                }
+            }    
         }
     }
 
@@ -143,21 +166,11 @@ export default function Upload() {
         }
     }
 
-    /*
     const handlePreview =()=>{
-        if(script.length>=){
-            window.open
-        }
-        var reader = new FileReader();
-
-        for(var i=0 ; i < script.length ; i++){
-            reader.readAsDataURL(script[i]);
-            var tempImage = new Image();
-            tempImage.src = reader.result;
-
+        if(script.length>=1){
+            window.open("/mypage/upload/preview?val="+script,"preview")
         }
     }
-    */
    
     return (
         <div>
@@ -247,9 +260,14 @@ export default function Upload() {
                                 </Button>
                             </label>
 
-                            <Button variant="contained" onClick={handlePreview} style={{ height: 30, marginTop: 20 }}>
+                            <Button variant="contained" style={{ height: 30, marginTop: 20 }} onClick={handlePreview}>
                                 전체 보기
                             </Button>
+
+                            <body1 className={classes.fontStyle}>
+                                <br/>
+                                가로 크기는 690px로 제한하며, 세로 크기는 제한 없습니다.
+                            </body1>
                         </div>
 
                     </div>

@@ -16,7 +16,7 @@ const styles = theme => ({
 class Webtoonthumbnail extends Component {
     render() {
         return (
-            <img src={this.props.thumbnail} />
+            <img src={this.props.thumbnail} width="128" height="128" />
         )
     }
 }
