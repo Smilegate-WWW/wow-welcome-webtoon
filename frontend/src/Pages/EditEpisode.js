@@ -77,7 +77,8 @@ export default function EditEpisode() {
 
     const classes = useStyles();
 
-    const episodeDelete = () => {
+    var episodeDelete = function(ep_no){
+        console.log(ep_no)
         var myHeaders = new Headers();
         myHeaders.append("Authorization", localStorage.getItem("AUTHORIZATION"));
 
@@ -86,14 +87,16 @@ export default function EditEpisode() {
             method: 'DELETE',
             redirect: 'follow'
         };
-
+        /*
         fetch("/myArticleList/" +idx+ "/", requestOptions)
             .then(response => response.json())
             .then(result => {
                 console.log(result)
                 alert("회차가 삭제되었습니다!")
+                window.location.reload();
             })
             .catch(error => console.log('error', error));
+            */
     }
 
     return (
@@ -141,7 +144,7 @@ export default function EditEpisode() {
                                         <img src={episode.thumnail} width="64" height="64" />
                                     </TableCell>
                                     <TableCell align="left">
-                                        <a href={"/webtoon/episode?idx="+idx+"&ep_no"+episode.ep_no} style={{}}>
+                                        <a href={"/mypage/myEpisode?idx="+idx+"&ep_no="+episode.ep_no+"&ep_idx="+episode.idx} style={{}}>
                                             {episode.ep_no}화. {episode.title}
                                         </a>
                                     </TableCell>
@@ -157,7 +160,7 @@ export default function EditEpisode() {
                                         </Button>
                                     </TableCell>
                                     <TableCell align="center">
-                                        <Button variant="contained" onClick={episodeDelete}>
+                                        <Button variant="contained" onClick={episodeDelete(episode.ep_no)}>
                                             <span style={{ color: "#212121", fontWeight: 520 }}>삭제</span>
                                         </Button>
                                     </TableCell>
