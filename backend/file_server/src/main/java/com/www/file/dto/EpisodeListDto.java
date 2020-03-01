@@ -17,14 +17,16 @@ public class EpisodeListDto {
 	private String title;
 	private String thumnail;
 	private LocalDateTime created_date;
-	//별점 ****
+	private float rating_avg;
 	
 	@Builder 
-	public EpisodeListDto(int idx, int ep_no, String title, String thumbnail, LocalDateTime created_date) {
+	public EpisodeListDto(int idx, int ep_no, String title, String thumbnail, 
+			float rating_avg, LocalDateTime created_date) {
 		this.idx = idx;
 		this.ep_no = ep_no;
 		this.title = title;
 		this.thumnail = thumbnail;
+		this.rating_avg = rating_avg;
 		this.created_date = created_date;
 	}
 	

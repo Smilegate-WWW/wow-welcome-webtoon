@@ -109,6 +109,7 @@ public class EpisodeService {
 		    			.idx(episode.getIdx())
 		    			.ep_no(episode.getEp_no())
 		    			.title(episode.getTitle())
+		    			.rating_avg(episode.getRating_avg())
 		    			.thumbnail("http://localhost:8081/static/ep_thumbnail/"+episode.getThumbnail())
 		    			.created_date(episode.getCreated_date())
 		    			.build();
@@ -125,7 +126,6 @@ public class EpisodeService {
 	    
 	    return episodeDtoList;
 	    
-        
 	}
 	
 	public int getEpisodeCount(int webtoon_idx) {
@@ -176,14 +176,8 @@ public class EpisodeService {
 		checkCondition(thumbnail, manuscripts, episodeDto, res);
 		Optional<Webtoon> WebtoonEntityWrapper = webtoonRepository.findById(webtoon_idx);
         Webtoon webtoon = WebtoonEntityWrapper.get();
-     
         
         int lastno;
-        /*
-        WebtoonDto webtoonDto = WebtoonDto.builder()
-	    		.episodes(webtoon.getEpisodes())
-	    		.build();
-	    		*/
         List<Episode> episodeList = webtoon.getEpisodes();
         
         //첫 회차 등록이 아닐 시 가장 마지막 회차 번호 +1
@@ -202,6 +196,10 @@ public class EpisodeService {
         String thumbnailName = thumbnail.getOriginalFilename();
         episodeDto.setThumbnail(thumbnailName);
         
+        File ThumbDestinationFile = new File(filePath+"/ep_thumbnail/"+thumbnailName);
+        ThumbDestinationFile.getParentFile().mkdir();
+		thumbnail.transferTo(ThumbDestinationFile);
+		
         System.out.println(manuscripts.length);
         String manuscriptsName="";
         for(int i=0;i<manuscripts.length;i++) {

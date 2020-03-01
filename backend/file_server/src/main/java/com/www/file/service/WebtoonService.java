@@ -138,6 +138,7 @@ public class WebtoonService {
 						.title(webtoon.getTitle())
 						.thumbnail("http://localhost:8081/static/web_thumbnail/"+webtoon.getThumbnail())
 						.created_date(webtoon.getCreated_date())
+						
 						.build();
 				
 				List<Episode> episodeList = webtoon.getEpisodes();
