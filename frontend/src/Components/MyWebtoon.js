@@ -20,6 +20,8 @@ class WebtoonPoster extends Component {
     }
 }
 
+
+
 class MyWebtoon extends Component {
     render() {
         const { classes } = this.props;
@@ -35,8 +37,8 @@ class MyWebtoon extends Component {
                                 <Typography>등록일&ensp;{this.props.created_date.slice(0,10)}</Typography>
                                 <Typography>업데이트일&ensp;{this.props.last_updated.slice(0,10)}</Typography>
                                 <div style={{ display: "flex", margin:3}}>
-                                    <Button variant="contained" href="/mypage/editRegister" style={{marginRight:10}}>작품 정보 수정</Button>
-                                    <Button variant="contained" href="/mypage/editEpisode">회차 관리</Button>
+                                    <Button variant="contained" href={"/mypage/editRegister?idx="+this.props.idx} style={{marginRight:10}}>작품 정보 수정</Button>
+                                    <Button variant="contained" href={"/mypage/editEpisode?idx="+this.props.idx}>회차 관리</Button>
                                 </div>
                             </CardContent>
                         </CardActionArea>

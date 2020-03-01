@@ -49,22 +49,58 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+//주소 파싱하여 idx 알아오기
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(window.location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+//회차 idx
+var idx = getParameterByName('idx');
+var ep_no = getParameterByName('ep_no');
+
 export default function EditUpload() {
-    const [comment, setComment] = React.useState('');
-    const [thumbnail, setThumbnail] = React.useState('');
-    var images=new Array();
-    var imageNum=0;
+    const [iniData, setIniData] = React.useState([]);
+
+    React.useEffect(() => {
+        var myHeaders = new Headers();
+        myHeaders.append("Authorization",localStorage.getItem("AUTHORIZATION"));
+        
+        var requestOptions = {
+          method: 'GET',
+          headers: myHeaders,
+          redirect: 'follow'
+        };
+        
+        fetch("/myArticleDetail/"+idx+"/"+ep_no, requestOptions)
+          .then(response => response.json())
+          .then(result => {
+              console.log(result)
+              setIniData(result.data)
+        })
+          .catch(error => console.log('error', error));
+    }, []);
+
+    const [comment, setComment] = React.useState("");
+    const [thumbnail, setThumbnail] = React.useState("");
+    const [title,setTitle]=React.useState("");
+    const [script, setScript] = React.useState([]);
+    var images = [];
 
     const classes = useStyles();
+
+    const handleTitleChange=(e)=>{
+        setTitle(e.target.value);
+    }
 
     const handleCommentChange = (e) => {
         setComment(e.target.value);
     }
 
     const handleImageChange = (e) => {
-        
         const file = e.target.files[0];
-        images[imageNum]=file;
 
         let reader = new FileReader();
         reader.onloadend = () => {
@@ -81,9 +117,20 @@ export default function EditUpload() {
             alert("파일의 크기가 너무 큽니다");
         }
         else {
-            imageNum++;
-            alert(file.name + "이(가) 선택되었습니다 \n\n 선택된 이미지: "+imageNum+"개");
-            console.log(images);
+            var img = new Image();
+
+            img.src = window.URL.createObjectURL(file);
+            img.onload = function () {
+                if (img.width <= 690) {
+                    images = script;
+                    images.push(file);
+                    setScript(images);
+                    alert(file.name + "이(가) 선택되었습니다 \n\n 선택된 이미지: " + images.length + "개");
+                }
+                else {
+                    alert("파일 사이즈가 맞지 않습니다.")
+                }
+            }
         }
     }
 
@@ -94,7 +141,9 @@ export default function EditUpload() {
         reader.onloadend = () => {
             console.log("load end");
         };
-        reader.readAsDataURL(file);
+        if (file != null) {
+            reader.readAsDataURL(file);
+        }
         if (file.length === 0) {
             alert("파일이 선택되지 않았습니다.");
         }
@@ -105,10 +154,56 @@ export default function EditUpload() {
             alert("파일의 크기가 너무 큽니다");
         }
         else {
-            alert(file.name + "이(가) 선택되었습니다");
+            var img = new Image();
+
+            img.src = window.URL.createObjectURL(file);
+            img.onload = function () {
+                if (img.height <= 330 && img.width <= 430) {
+                    alert("파일이 선택되었습니다.")
+                    setThumbnail(file);
+                }
+                else {
+                    alert("파일 사이즈를 맞춰주세요")
+                }
+            }
         }
     }
 
+    const hadleSubmit = () => {
+        if (title=="" || comment === "" || script.length == 0) {
+            alert("필요한 모든 정보를 입력해주세요")
+        }
+        else {
+            var myHeaders = new Headers();
+            myHeaders.append("Authorization", localStorage.getItem("AUTHORIZATION"));
+
+            var formdata = new FormData();
+            formdata.append("thumbnail", thumbnail);
+            for (var i = 0; i < script.length; i++) {
+                formdata.append("manuscript", script[i]);
+            }
+            formdata.append("title",title);
+            formdata.append("author_comment", comment);
+
+            var requestOptions = {
+                headers:myHeaders,
+                method: 'PUT',
+                body: formdata,
+                redirect: 'follow'
+            };
+
+            fetch("/myArticleDetail/" + idx+"/"+ep_no, requestOptions)
+                .then(response => response.json())
+                .then(result => {
+                    console.log(result)
+                    if(result.code ==0 ){
+                        alert("회차 정보가 수정되었습니다.")
+                        window.location.href="/mypage/editEpisode?idx="+idx;
+                    }
+                })
+                .catch(error => console.log('error', error));
+        }
+    }
 
     return (
         <div>
@@ -135,7 +230,7 @@ export default function EditUpload() {
                             id="episodeNo"
                             variant="outlined"
                             size="small"
-                            label="5" //임의 설정
+                            label={iniData.ep_no}
                             style={{ width: 100 }}
                             InputProps={{
                                 readOnly: true,
@@ -145,6 +240,18 @@ export default function EditUpload() {
                         <p className={classes.fontStyle}>
                             회차 No는 순차적으로 자동 지정되기 때문에 임의로 설정이 불가능합니다.
                         </p>
+                    </div>
+                            
+                    <div style={{ display: "flex" }}>
+                        <h5>회차 제목&emsp;&emsp;&emsp;</h5>
+                        <TextField
+                            id="title"
+                            variant="outlined"
+                            value={title}
+                            onChange={handleTitleChange}
+                            size="small"
+                            style={{ width: 800 }}
+                        />
                     </div>
 
                     <div style={{ display: "flex" }}>
@@ -208,8 +315,8 @@ export default function EditUpload() {
                 <Button variant="contained" href="/mypage">
                     <span style={{ fontWeight: 550 }}>취소</span>
                 </Button>
-                <Button variant="contained" color="primary" >
-                    <span style={{ color: "#fafafa", fontWeight: 550 }}>등록</span>
+                <Button variant="contained" color="primary" onClick={hadleSubmit}>
+                    <span style={{ color: "#fafafa", fontWeight: 550 }}>수정</span>
                 </Button>
             </div>
         </div>

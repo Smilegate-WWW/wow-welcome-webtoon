@@ -52,12 +52,23 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+//주소 파싱하여 idx 알아오기
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(window.location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+var idx = getParameterByName('idx');
+var episode_idx = getParameterByName('episode_idx');
+
 export default function Upload() {
     const [title, setTitle] = React.useState("");
     const [comment, setComment] = React.useState("");
     const [thumbnail, setThumbnail] = React.useState("");
-    const [script,setScript]=React.useState([]);
-    var images=[];
+    const [script, setScript] = React.useState([]);
+    var images = [];
 
     const classes = useStyles();
 
@@ -88,16 +99,16 @@ export default function Upload() {
         }
         else {
             var img = new Image();
-         
+
             img.src = window.URL.createObjectURL(file);
-            img.onload = function() {
-                if(img.width<=690){
-                    images=script;
+            img.onload = function () {
+                if (img.width <= 690) {
+                    images = script;
                     images.push(file);
                     setScript(images);
                     alert(file.name + "이(가) 선택되었습니다 \n\n 선택된 이미지: " + images.length + "개");
                 }
-                else{
+                else {
                     alert("파일 사이즈가 맞지 않습니다.")
                 }
             }
@@ -111,8 +122,8 @@ export default function Upload() {
         reader.onloadend = () => {
             console.log("load end");
         };
-        if(file!=null){
-        reader.readAsDataURL(file);
+        if (file != null) {
+            reader.readAsDataURL(file);
         }
         if (file.length === 0) {
             alert("파일이 선택되지 않았습니다.");
@@ -125,53 +136,62 @@ export default function Upload() {
         }
         else {
             var img = new Image();
-         
+
             img.src = window.URL.createObjectURL(file);
-            img.onload = function() {
-                if(img.height <=330 && img.width<=430){
+            img.onload = function () {
+                if (img.height <= 330 && img.width <= 430) {
+                    alert("파일이 선택되었습니다.")
                     setThumbnail(file);
                 }
-                else{
+                else {
                     alert("파일 사이즈를 맞춰주세요")
                 }
-            }    
+            }
         }
     }
 
     const hadleSubmit = () => {
-        console.log(title,comment,script)
         if (title === "" || comment === "" || script.length == 0) {
             alert("필요한 모든 정보를 입력해주세요")
         }
         else {
-            var episodeInfo = JSON.stringify({ "ep_no": null, "title": title, "auth_comment": comment })
+            var myHeaders = new Headers();
+            myHeaders.append("Authorization", localStorage.getItem("AUTHORIZATION"));
 
             var formdata = new FormData();
             formdata.append("thumbnail", thumbnail);
             for (var i = 0; i < script.length; i++) {
-                formdata.append("manuimages", script[i]);
+                formdata.append("manuscript", script[i]);
             }
-            formdata.append("episode", episodeInfo);
+            formdata.append("title", title);
+            formdata.append("author_comment", comment);
 
             var requestOptions = {
+                headers:myHeaders,
                 method: 'POST',
                 body: formdata,
                 redirect: 'follow'
             };
 
-            fetch("/myArticleDetail/", requestOptions)
+            fetch("/myArticleDetail/" + idx, requestOptions)
                 .then(response => response.json())
-                .then(result => console.log(result))
+                .then(result => {
+                    console.log(result)
+                    if(result.code ==0 ){
+                        alert("새로운 회차가 등록되었습니다")
+                        window.location.href="/mypage/editEpisode?idx="+idx;
+                    }
+                })
                 .catch(error => console.log('error', error));
         }
     }
 
-    const handlePreview =()=>{
-        if(script.length>=1){
-            window.open("/mypage/upload/preview?val="+script,"preview")
+    const handlePreview = () => {
+        if (script.length >= 1) {
+            window.open("/mypage/upload/preview?val=" + script, "preview")
         }
     }
-   
+
     return (
         <div>
             <Header />
@@ -197,7 +217,7 @@ export default function Upload() {
                             id="episodeNo"
                             variant="outlined"
                             size="small"
-                            label="5" //임의 설정
+                            label={episode_idx}
                             style={{ width: 100 }}
                             InputProps={{
                                 readOnly: true,
@@ -265,7 +285,7 @@ export default function Upload() {
                             </Button>
 
                             <body1 className={classes.fontStyle}>
-                                <br/>
+                                <br />
                                 가로 크기는 690px로 제한하며, 세로 크기는 제한 없습니다.
                             </body1>
                         </div>

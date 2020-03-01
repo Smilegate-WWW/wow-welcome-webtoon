@@ -40,14 +40,43 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+//주소 파싱하여 idx 알아오기
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(window.location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
 
+var idx = getParameterByName('idx');
 
 export default function EditRegister() {
-    const classes = useStyles();
 
+    const [iniData, setIniData] = React.useState('');
+
+    React.useEffect(() => {
+        var myHeaders = new Headers();
+        myHeaders.append("Authorization", localStorage.getItem("AUTHORIZATION"));
+
+        var requestOptions = {
+            method: 'GET',
+            headers: myHeaders,
+            redirect: 'follow'
+        };
+
+        fetch("/myTitleDetail/" + idx, requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                console.log(result)
+                setIniData(result.data);
+            })
+            .catch(error => console.log('error', error));
+    }, []);
+    const classes = useStyles();
+    
     // 작품정보 받아와서 넘겨주기.
-    const [title, setTitle] = React.useState('');
-    const [type, setType] = React.useState('');
+    const [title, setTitle] = React.useState(iniData.title+"");
+    const [type, setType] = React.useState(iniData.type+"");
     const [genre, setGenre] = React.useState({
         daily: false,
         gag: false,
@@ -57,9 +86,9 @@ export default function EditRegister() {
         pure: false,
         emotion: false,
     });
-    const [summary, setSummary] = React.useState('');
-    const [plot, setPlot] = React.useState('');
-    const [thumbnail, setThumbnail] = React.useState('');
+    const [summary, setSummary] = React.useState(iniData.summary+"");
+    const [plot, setPlot] = React.useState(iniData.plot+"");
+    const [thumbnail, setThumbnail] = React.useState("");
 
     const genreArray = [genre.daily, genre.gag, genre.fantasy, genre.action, genre.drama, genre.pure, genre.emotion];
 
@@ -80,7 +109,7 @@ export default function EditRegister() {
     }
     const handleThumbnailChange = (e) => {
         const file = e.target.files[0];
-        setThumbnail(file);
+        
         let reader = new FileReader();
         reader.onloadend = () => {
             console.log("load end");
@@ -95,8 +124,21 @@ export default function EditRegister() {
         else if (file.size > 1048576) {
             alert("파일의 크기가 너무 큽니다");
         }
+        else {
+            var img = new Image();
+         
+            img.src = window.URL.createObjectURL(file);
+            img.onload = function() {
+                if(img.height <=330 && img.width<=430){
+                    alert("파일이 선택되었습니다.")
+                    setThumbnail(file);
+                }
+                else{
+                    alert("파일 사이즈를 맞춰주세요")
+                }
+            }    
+        }
     }
-
     const handleCancleBtnClick = () => {
         alert("변경된 내용이 저장되지 않았습니다.");
     }
@@ -108,7 +150,7 @@ export default function EditRegister() {
             }
         }
 
-        if (title === '' || type === '' || summary === '' || plot === '') {
+        if (title === "" || type === "" || summary === "" || plot === "") {
             alert("정보를 모두 입력해주세요!!");
         }
         else if (genreNum > 2) {
@@ -117,9 +159,9 @@ export default function EditRegister() {
         else {
             // 장르 2개 넘겨주기
             const genreTrue = [];
-            let genre1 = null;
-            let genre2 = null;
-            var j = 0;
+            let genre1 = 0;
+            let genre2 = 0;
+            var j=0;
             for (var i = 0; i < genreArray.length; i++) {
                 if (genreArray[i] == true) {
                     genreTrue[j] = i;
@@ -127,49 +169,75 @@ export default function EditRegister() {
                 }
             }
             if (j == 0) {
-                genre1 = null;
-                genre2 = null;
+                genre1 = 0;
+                genre2 = 0;
             }
             else if (j == 1) {
                 genre1 = genreTrue[0];
-                genre2 = null;
+                genre2 = 0;
             }
             else {
                 genre1 = genreTrue[0];
                 genre2 = genreTrue[1];
             }
-            var myHeaders = new Headers();
-            myHeaders.append("Content-Type","multipart/form-data");
-            myHeaders.append("Authorization", localStorage.getItem("AUTHORIZATION"));
 
-            var webtoonInfo = JSON.stringify({"title":title,"toon_type":type,"genre1":genre1,"genre2":genre2,"summary":summary,"plot":plot});
+            var myHeaders = new Headers();
+            myHeaders.append("Authorization", localStorage.getItem("AUTHORIZATION"));
 
             var formdata = new FormData();
             formdata.append("thumbnail", thumbnail);
-            formdata.append("webtoon", webtoonInfo);
+            formdata.append("title", title);
+            formdata.append("toon_type", type);
+            formdata.append("genre1", genre1);
+            formdata.append("genre2", genre2);
+            formdata.append("summary", summary);
+            formdata.append("plot", plot);
+            formdata.append("end_flag", "0");
+
 
             var requestOptions = {
+                headers: myHeaders,
                 method: 'PUT',
                 body: formdata,
                 redirect: 'follow'
             };
 
-            fetch("/myTitleDetail/"+"//idx", requestOptions)
-                .then(response => response.text())
-                .then(result => console.log(result))
+            fetch("/myTitleDetail/" + idx, requestOptions)
+                .then(response => response.json())
+                .then(result => {
+                    console.log(result)
+                    if(result.code==0){
+                        alert("작품 정보가 수정되었습니다.")
+                        window.location.href="/mypage"
+                    }
+                    else{
+                        alert("세션이 만료되었습니다.")
+                        window.location.href="/login"
+                    }
+                })
                 .catch(error => console.log('error', error));
         }
     }
-    
-    const handleDelete=()=>{
+
+    const handleDelete = () => {
+        var myHeaders = new Headers();
+        myHeaders.append("Authorization", localStorage.getItem("AUTHORIZATION"));
+
         var requestOptions = {
+            headers: myHeaders,
             method: 'DELETE',
             redirect: 'follow'
-          };
-          
-          fetch("/myArticleList/", requestOptions)
+        };
+
+        fetch("/myArticleList/" + idx, requestOptions)
             .then(response => response.text())
-            .then(result => console.log(result))
+            .then(result => {
+                console.log(result)
+                if(result.code ==0 ){
+                    alert("삭제가 완료되었습니다.")
+                    window.location.href="/mypage";
+                }
+            })
             .catch(error => console.log('error', error));
     }
     return (
@@ -233,7 +301,7 @@ export default function EditRegister() {
                                 <Checkbox
                                     checked={genre.daily}
                                     onChange={handleGenreChange('daily')}
-                                    value="0"
+                                    value="1"
                                     color="primary"
                                 />
                             }
@@ -244,7 +312,7 @@ export default function EditRegister() {
                                 <Checkbox
                                     checked={genre.gag}
                                     onChange={handleGenreChange('gag')}
-                                    value="1"
+                                    value="2"
                                     color="primary"
                                 />
                             }
@@ -255,7 +323,7 @@ export default function EditRegister() {
                                 <Checkbox
                                     checked={genre.fantasy}
                                     onChange={handleGenreChange('fantasy')}
-                                    value="2"
+                                    value="3"
                                     color="primary"
                                 />
                             }
@@ -266,7 +334,7 @@ export default function EditRegister() {
                                 <Checkbox
                                     checked={genre.action}
                                     onChange={handleGenreChange('action')}
-                                    value="3"
+                                    value="4"
                                     color="primary"
                                 />
                             }
@@ -277,7 +345,7 @@ export default function EditRegister() {
                                 <Checkbox
                                     checked={genre.drama}
                                     onChange={handleGenreChange('drama')}
-                                    value="4"
+                                    value="5"
                                     color="primary"
                                 />
                             }
@@ -288,7 +356,7 @@ export default function EditRegister() {
                                 <Checkbox
                                     checked={genre.pure}
                                     onChange={handleGenreChange('pure')}
-                                    value="5"
+                                    value="6"
                                     color="primary"
                                 />
                             }
@@ -299,7 +367,7 @@ export default function EditRegister() {
                                 <Checkbox
                                     checked={genre.emotion}
                                     onChange={handleGenreChange('emotion')}
-                                    value="6"
+                                    value="7"
                                     color="primary"
                                 />
                             }
@@ -333,13 +401,14 @@ export default function EditRegister() {
                     <div style={{ display: "flex" }}>
                         <h5 >썸네일&emsp;&emsp;</h5>
                         <div>
-                            <input
-                                value={thumbnail}
+                        <input
                                 accept=".jpg"
                                 id="thumbnail"
                                 type="file"
                                 style={{ display: "none" }}
                                 onChange={handleThumbnailChange}
+                                data-width="300"
+                                data-height="300"
                             />
                             <label htmlFor="thumbnail">
                                 <Button variant="contained" component="span" style={{ height: 100, width: 100 }}>
