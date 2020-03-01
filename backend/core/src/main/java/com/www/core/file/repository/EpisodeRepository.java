@@ -15,7 +15,13 @@ import org.springframework.transaction.annotation.Transactional;
 public interface EpisodeRepository extends JpaRepository<Episode, Integer>{
 	Page<Episode> findAllByWebtoonIdx(Pageable pageable,@Param("webtoon_idx") int webtoon_idx);
 	List<Episode> findAllByWebtoonIdx(@Param("webtoon_idx") int webtoon_idx);
-
+	
+	/*
+	@Modifying
+	@Transactional
+	@Query(value = "select from Episode where webtoon_idx =:webtoon_idx and ep_no =: no ")
+	Episode findbyWebtoonIdxAndNo(@Param("webtoon_idx") int webtoon_idx, @Param("ep_no") int no);
+	*/
 	@Modifying(flushAutomatically = true, clearAutomatically = true)
 	@Transactional
 	@Query(value = "UPDATE Episode e " +

@@ -1,5 +1,6 @@
 package com.www.file.controller;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,8 @@ import com.www.core.common.Response;
 import com.www.core.common.TokenChecker;
 import com.www.core.file.entity.Episode;
 import com.www.core.file.entity.Webtoon;
+import com.www.file.dto.EpisodeContents;
+import com.www.file.dto.EpisodeDto;
 import com.www.file.dto.EpisodeListDto;
 import com.www.file.dto.EpisodePage;
 import com.www.file.dto.MainWebtoonDto;
@@ -67,7 +70,7 @@ public class MainController {
 			@RequestParam(value="page", defaultValue = "1") Integer page){
 		Response<EpisodePage> res = new Response<EpisodePage>();
 		EpisodePage episodePage = new EpisodePage();
-		List<EpisodeListDto> episodeList = episodeService.getEpisodeList(idx,page,res,episodePage);
+		List<EpisodeListDto> episodeList = episodeService.getEpisodeList(idx,page,res,episodePage,-1);
 		Integer[] pageList = episodeService.getPageList(page,idx);
 		//EpisodePage episodePage = new EpisodePage(episodeList, pageList);
 		episodePage.setEpisodelist(episodeList);
@@ -83,5 +86,15 @@ public class MainController {
 		return res;
 		
 	}
+	
+	//회차 출력
+	@GetMapping("/detail/{webtoon_idx}/{no}")
+	public Response<EpisodeContents> showEpisode(@PathVariable("webtoon_idx") int webtoon_idx,
+			@PathVariable("no") int no) throws IOException{
+		
+		return mainService.showEpisode(webtoon_idx, no);
+		
+	}
+			
 	
 }

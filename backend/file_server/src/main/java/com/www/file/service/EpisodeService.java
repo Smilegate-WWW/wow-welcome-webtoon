@@ -68,29 +68,35 @@ public class EpisodeService {
 	
 	@Transactional
 	public List<EpisodeListDto> getEpisodeList(int idx, Integer pageNum, Response<EpisodePage> res
-			,EpisodePage episodePage) {
+			,EpisodePage episodePage, int user_idx) {
 		
 		Pageable pageable = PageRequest.of(pageNum-1, PAGE_EPISODE_COUNT);
 		Page<Episode> page = episodeRepository.findAllByWebtoonIdx(pageable,idx);		
 	    List<EpisodeListDto> episodeDtoList = new ArrayList<>();
 	 
 	    int totalpages = page.getTotalPages();
-	    
+	    if(totalpages==0) totalpages=1;
 	    ///////////////////////////////////////
 	    if(!webtoonRepository.existsById(idx)) {
 	    	System.out.println("존재하지 않음");
-	    	
 	    	
 	    }
 	    else {
 	    	//웹툰 정보 기입
 		    Optional<Webtoon> WebtoonEntityWrapper = webtoonRepository.findById(idx);
 	        Webtoon webtoon = WebtoonEntityWrapper.get();
+	        
+	        if(webtoon.getUsers().getIdx()!=user_idx && user_idx!=-1) {
+	        	System.out.println("작가 일치 X");
+	        	res.setCode(1);
+	        	res.setMsg("fail: user do not match");
+	        	return episodeDtoList;
+	        }
 	        episodePage.setTitle(webtoon.getTitle());
 	        episodePage.setPlot(webtoon.getPlot());
 	        episodePage.setId(webtoon.getUsers().getUserid());
 	        episodePage.setWriter(webtoon.getUsers().getName());
-	        episodePage.setWebtoon_thumbnail(webtoon.getThumbnail());
+	        episodePage.setWebtoon_thumbnail("http://localhost:8081/static/web_thumbnail/"+webtoon.getThumbnail());
 	        System.out.println("5");
 	    }
 	    /////////////////////////////////////////////
@@ -102,7 +108,7 @@ public class EpisodeService {
 		    			.idx(episode.getIdx())
 		    			.ep_no(episode.getEp_no())
 		    			.title(episode.getTitle())
-		    			.thumbnail(episode.getThumbnail())
+		    			.thumbnail("http://localhost:8081/static/ep_thumbnail/"+episode.getThumbnail())
 		    			.created_date(episode.getCreated_date())
 		    			.build();
 		    	episodeDtoList.add(episodeDto);
@@ -291,5 +297,35 @@ public class EpisodeService {
         
 	}
 
+	public Response<EpisodeDto> getEpisodeInfo(int webtoon_idx, int no){
+		
+		Response<EpisodeDto> res = new Response<EpisodeDto>();
+		
+		Optional<Webtoon> webtoonWrapper = webtoonRepository.findById(webtoon_idx);
+		Webtoon webtoon = webtoonWrapper.get();
+		List<Episode> epList = webtoon.getEpisodes();
+		Episode episode = new Episode();
+		
+		for(Episode ep : epList) {
+			if(no == ep.getEp_no()) {
+				episode = ep;
+				break;
+			}
+		}
+		
+		EpisodeDto episodeDto = EpisodeDto.builder()
+				.ep_no(episode.getEp_no())
+				.title(episode.getTitle())
+				.author_comment(episode.getAuthor_comment())
+				.thumbnail(episode.getThumbnail())
+				.contents(episode.getContents())
+				.build();
+		
+		res.setData(episodeDto);
+		res.setCode(0);
+		res.setMsg("get episode info");
+		return res;
+		
+	}
 
 }

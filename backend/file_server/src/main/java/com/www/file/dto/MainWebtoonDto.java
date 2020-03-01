@@ -15,6 +15,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class MainWebtoonDto {
 	
+	private int idx;
 	private String title;
 	private String thumbnail;
 	private int genre1;
@@ -24,7 +25,8 @@ public class MainWebtoonDto {
 	private Integer[] pagelist;
 	
 	@Builder
-	public MainWebtoonDto(String title, String thumbnail, int genre1, int genre2) {
+	public MainWebtoonDto(int idx, String title, String thumbnail, int genre1, int genre2) {
+		this.idx = idx;
 		this.title = title;
 		this.thumbnail = thumbnail;
 		this.genre1 = genre1;

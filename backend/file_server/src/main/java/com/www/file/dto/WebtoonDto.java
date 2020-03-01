@@ -2,6 +2,8 @@ package com.www.file.dto;
 
 import com.www.core.auth.entity.Users;
 import com.www.core.file.entity.*;
+
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -47,12 +49,18 @@ public class WebtoonDto {
 		return build;
 	}
 	
-	/*
 	@Builder
-	public WebtoonDto(List<Episode> episodes) {
-		this.episodes = episodes;
+	public WebtoonDto(String title, int toon_type, int genre1, int genre2, String summary, String plot, 
+			String thumbnail, int end_flag) {
+		this.title = title;
+		this.toon_type =toon_type;
+		this.genre1 = genre1;
+		this.genre2 = genre2;
+		this.summary = summary;
+		this.plot = plot;
+		this.thumbnail = thumbnail;
+		this.end_flag = end_flag;
 	}
-	*/
 	
 
 }

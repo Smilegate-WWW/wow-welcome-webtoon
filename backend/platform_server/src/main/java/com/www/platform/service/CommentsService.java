@@ -115,7 +115,7 @@ public class  CommentsService {
             Page<Comments> commentsPage = commentsRepository.findAllByEpIdx(pageable, epIdx);
             int totalElements = (int) commentsPage.getTotalElements();
 
-            if(page > commentsPage.getTotalPages()){
+            if(page > commentsPage.getTotalPages() & commentsPage.getTotalPages() > 1){
                 result.setCode(23);
                 result.setMsg("fail : entered page exceeds the total pages");
             }
@@ -164,7 +164,7 @@ public class  CommentsService {
         Page<Comments> commentsPage = commentsRepository.findAllByUsersIdx(pageable, userIdx);
         int totalElements = (int) commentsPage.getTotalElements();
 
-        if(page > commentsPage.getTotalPages()){
+        if(page > commentsPage.getTotalPages() & commentsPage.getTotalPages() > 1){
             result.setCode(23);
             result.setMsg("fail : entered page exceeds the total pages");
         }

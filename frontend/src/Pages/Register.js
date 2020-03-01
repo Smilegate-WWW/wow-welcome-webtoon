@@ -77,7 +77,7 @@ export default function Register() {
     }
     const handleThumbnailChange = (e) => {
         const file = e.target.files[0];
-        setThumbnail(file);
+        
         let reader = new FileReader();
         reader.onloadend = () => {
             console.log("load end");
@@ -93,7 +93,18 @@ export default function Register() {
             alert("파일의 크기가 너무 큽니다");
         }
         else {
-            alert(file.name + "이(가) 선택되었습니다");
+            var img = new Image();
+         
+            img.src = window.URL.createObjectURL(file);
+            img.onload = function() {
+                alert(img.height, img.width)
+                if(img.height <=330 && img.width<=430){
+                    setThumbnail(file);
+                }
+                else{
+                    alert("파일 사이즈를 맞춰주세요")
+                }
+            }    
         }
     }
 
@@ -140,11 +151,10 @@ export default function Register() {
             }
 
             var myHeaders = new Headers();
-            myHeaders.append("Content-Type", "multipart/form-data");
             myHeaders.append("Authorization", localStorage.getItem("AUTHORIZATION"));
 
             var formdata = new FormData();
-            formdata.append("thumbnail", null);
+            formdata.append("thumbnail", thumbnail);
             formdata.append("title", title);
             formdata.append("toon_type", type);
             formdata.append("genre1", genre1);
@@ -162,7 +172,13 @@ export default function Register() {
 
             fetch("/myTitleDetail", requestOptions)
                 .then(response => response.json())
-                .then(result => console.log(result))
+                .then(result =>{ 
+                    console.log(result)
+                    if(result.code==0){
+                        alert("새로운 웹툰이 등록되었습니다.")
+                        window.location.href="/mypage";
+                    }
+                })
                 .catch(error => console.log('error', error));
 
         }
@@ -332,6 +348,8 @@ export default function Register() {
                                 type="file"
                                 style={{ display: "none" }}
                                 onChange={handleThumbnailChange}
+                                data-width="300"
+                                data-height="300"
                             />
                             <label htmlFor="thumbnail">
                                 <Button variant="contained" component="span" style={{ height: 100, width: 100 }}>

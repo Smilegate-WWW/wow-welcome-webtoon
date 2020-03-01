@@ -3,6 +3,8 @@ import { Button } from '@material-ui/core';
 
 class Comment extends Component {
     render() {
+        var cmt_idx=1;
+
         const handleGood = () => {
             var myHeaders = new Headers();
             myHeaders.append("Content-Type", "application/json");
@@ -17,7 +19,7 @@ class Comment extends Component {
                 redirect: 'follow'
             };
 
-            fetch("/comments/4/like", requestOptions)
+            fetch("/comments/"+cmt_idx+"/like", requestOptions)
                 .then(response => response.text())
                 .then(result => console.log(result))
                 .catch(error => console.log('error', error));
@@ -37,7 +39,7 @@ class Comment extends Component {
                 redirect: 'follow'
             };
 
-            fetch("/comments/3/dislike", requestOptions)
+            fetch("/comments/"+cmt_idx+"/dislike", requestOptions)
                 .then(response => response.text())
                 .then(result => console.log(result))
                 .catch(error => console.log('error', error));
