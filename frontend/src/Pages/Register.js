@@ -58,6 +58,8 @@ export default function Register() {
     const [summary, setSummary] = React.useState("");
     const [plot, setPlot] = React.useState("");
     const [thumbnail, setThumbnail] = React.useState("");
+    const [thumbnailstr, setThumbnailstr] = React.useState("");
+
     const genreArray = [genre.daily, genre.gag, genre.fantasy, genre.action, genre.drama, genre.pure, genre.emotion];
 
     const handleTitleChange = (e) => {
@@ -81,6 +83,7 @@ export default function Register() {
         let reader = new FileReader();
         reader.onloadend = () => {
             console.log("load end");
+            setThumbnailstr(reader.result);
         };
         reader.readAsDataURL(file);
         if (file.length === 0) {
@@ -352,9 +355,10 @@ export default function Register() {
                                 data-height="300"
                             />
                             <label htmlFor="thumbnail">
-                                <Button variant="contained" component="span" style={{ height: 100, width: 100 }}>
+                                <Button variant="contained" component="span" style={{ height: 100, marginRight:5, width: 100 }}>
                                     430 X 330
                                 </Button>
+                                <img src={thumbnailstr} alt="thumbnail" width="100" height="100" />
                             </label>
                         </div>
                         <p style={{
