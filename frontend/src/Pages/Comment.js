@@ -103,6 +103,7 @@ export default function Comment() {
             redirect: 'follow'
         };
 
+        console.log("/comments/"+idx);
         fetch("/comments/" + idx, requestOptions)
             .then(response => response.text())
             .then(result => console.log(result))
@@ -158,14 +159,14 @@ export default function Comment() {
                         </TableHead>
                         <TableBody>
                             {myComments.map(myComment => (
-                                <TableRow key={myComment.content}>
-                                    <TableCell align="center">{myComment.webtoon_thumbnail}</TableCell>
+                                <TableRow key={myComment.idx}>
+                                    <TableCell align="center"><img src={myComment.webtoon_thumbnail}/></TableCell>
                                     <TableCell align="center">
                                         <div className={classes.titleField}>
                                             {myComment.webtoon_title}
                                         </div>
                                     </TableCell>
-                                    <TableCell align="center">{myComment.ep_no}</TableCell>
+                                    <TableCell align="center">{myComment.ep_no}화</TableCell>
                                     <TableCell align="center">
                                         <div className={classes.commentField}>
                                             {myComment.content}

@@ -31,6 +31,12 @@ class Comment extends Component {
                     else if(result.code==24){
                         alert("자신이 단 댓글을 추천할 수 없습니다.")
                     }
+                    else if(result.code==44){
+                        //만료된 토큰 처리 필요
+                    }
+                    else if(result.code==42){
+                        alert("[ERROR 42] 잘못된 접근입니다, 관리자에게 문의하세요.")
+                    }
                     else{
                         alert("잘못된 접근입니다, 관리자에게 문의하세요.")
                     }
@@ -63,6 +69,12 @@ class Comment extends Component {
                     }
                     else if(result.code==25){
                         alert("자신이 단 댓글을 비추천할 수 없습니다.")
+                    }
+                    else if(result.code==44){
+                        //만료된 토큰 처리 필요
+                    }
+                    else if(result.code==42){
+                        alert("[ERROR 42] 잘못된 접근입니다, 관리자에게 문의하세요.")
                     }
                     else{
                         alert("잘못된 접근입니다, 관리자에게 문의하세요.")
