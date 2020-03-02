@@ -7,6 +7,9 @@ import com.www.core.common.Response;
 import com.www.core.file.entity.Episode;
 import com.www.core.file.repository.EpisodeRepository;
 import com.www.core.platform.entity.Comments;
+import com.www.core.platform.entity.CommentsDislike;
+import com.www.core.platform.repository.CommentsDislikeRepository;
+import com.www.core.platform.repository.CommentsLikeRepository;
 import com.www.core.platform.repository.CommentsRepository;
 import com.www.platform.dto.CommentsDto;
 import com.www.platform.dto.CommentsResponseDto;
@@ -33,6 +36,8 @@ import java.util.stream.Collectors;
 @Service
 public class  CommentsService {
     private CommentsRepository commentsRepository;
+    private CommentsLikeRepository commentsLikeRepository;
+    private CommentsDislikeRepository commentsDislikeRepository;
     private UsersRepository usersRepository;
     private EpisodeRepository episodeRepository;
 
@@ -73,6 +78,8 @@ public class  CommentsService {
                 result.setMsg("fail : user isn't comment owner");
             }
             else{   // 댓글 삭제
+                commentsLikeRepository.deleteAllByCommentsIdx(commentsIdx);
+                commentsDislikeRepository.deleteAllByCommentsIdx(commentsIdx);
                 commentsRepository.deleteById(commentsIdx);
                 result.setCode(0);
                 result.setMsg("request complete : delete comment");
