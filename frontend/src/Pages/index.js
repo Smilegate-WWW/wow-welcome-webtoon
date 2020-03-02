@@ -12,4 +12,3 @@ export {default as EditRegister} from './EditRegister';
 export {default as EditEpisode} from './EditEpisode';
 export {default as EditUpload} from './EditEpisodeUpload';
 export {default as Preview} from '../Components/preview';
-export {default as MyEpisode} from './MyEpisode';

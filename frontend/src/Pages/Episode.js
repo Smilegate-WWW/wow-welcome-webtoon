@@ -49,17 +49,23 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-//주소 파싱하여 idx 알아오기
-function getParameterByName(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(window.location.search);
-    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+//에피소드 정보
+const episode = {
+    ep_idx: 3,
+    no: 1,
+    title: "은성이의 사랑",
+    starRating: 4.5,
+    cuts: [
+        { cut: "http://placeimg.com/500/800/any" },
+        { cut: "http://placeimg.com/500/1000/any" },
+        { cut: "http://placeimg.com/500/300/any" },
+        { cut: "http://placeimg.com/500/256/any" },
+        { cut: "http://placeimg.com/500/800/any" },
+        { cut: "http://placeimg.com/500/900/any" },
+        { cut: "http://placeimg.com/500/800/any" },
+    ],
+    authorComment: "오늘하루최고~~",
 }
-
-var idx = getParameterByName('idx');
-var ep_no = getParameterByName('ep_no');
-var ep_idx = getParameterByName('ep_idx');
 
 //댓글 정보
 let comments = [
@@ -71,8 +77,8 @@ let comments = [
         badNum: 5,
     }
 ]
-let best_comments = []
-let comment_page = 1;
+let best_comments =[]
+let comment_page=1;
 
 //탭 관련
 function TabPanel(props) {
@@ -112,19 +118,19 @@ function commentLoading() {
     };
 
     //url 수정
-    fetch("/episodes/" + ep_idx + "/comments?page=1", requestOptions)
+    fetch("/episodes/"+episode.ep_idx+"/comments?page=1", requestOptions)
         .then(response => response.json())
         .then(result => {
             console.log(result)
-            if (result.code == 0) {
-                comments = result.data.comments;
+            if(result.code==0){
+                comments=result.data.comments;
                 console.log(comments);
                 comment_page = result.data.total_pages;
             }
-            else if (result.code == 20) {
+            else if (result.code==20){
                 alert("[ERROR 20] 잘못된 접근입니다, 관리자에게 문의하세요.");
             }
-            else if (result.code == 23) {
+            else if (result.code ==23){
                 alert("[ERROR 23] 잘못된 접근입니다, 관리자에게 문의하세요.");
             }
             /*
@@ -134,7 +140,7 @@ function commentLoading() {
                 //재발급 실패시 로그인 만료 -> direct "/login"
             }
             */
-            else {
+            else{
                 alert("잘못된 접근입니다, 관리자에게 문의하세요.");
             }
         })
@@ -147,15 +153,15 @@ function bestCommentLoading() {
         redirect: 'follow'
     };
 
-    fetch("/episodes/" + ep_idx + "/comments/best", requestOptions)
+    fetch("/episodes/"+episode.ep_idx+"/comments/best", requestOptions)
         .then(response => response.json())
         .then(result => {
             console.log(result)
-            if (result.code == 0) {
-                best_comments = result.data;
+            if(result.code==0){
+                best_comments=result.data;
                 console.log(best_comments);
             }
-            else if (result.code == 20) {
+            else if (result.code==20){
                 alert("[ERROR 20] 잘못된 접근입니다, 관리자에게 문의하세요.");
             }
         })
@@ -164,37 +170,10 @@ function bestCommentLoading() {
 
 export default function Episode() {
 
-    const [contents, setContents] = React.useState([]);
-    const [thumbnail, setThumbnail] = React.useState("");
-    const [title, setTitle] = React.useState("");
-    const [author, setAuthor] = React.useState("");
-    const [summary, setSummary] = React.useState("");
-    const [rating_avg, setRating_avg] = React.useState("");
-
-    React.useEffect(() => {
-        // 회차 정보
-        var requestOptions = {
-            method: 'GET',
-            redirect: 'follow'
-        };
-
-        fetch("/detail/" + idx + "/" + ep_no, requestOptions)
-            .then(response => response.json())
-            .then(result => {
-                console.log(result)
-                setTitle(result.data.title)
-                setAuthor(result.data.author)
-                setSummary(result.data.summary)
-                setThumbnail(result.data.thumbnail)
-                setRating_avg(result.data.rating_avg)
-                setContents(result.data.contents)
-
-            })
-            .catch(error => console.log('error', error));
-
+    React.useEffect(()=> {
         commentLoading();
         bestCommentLoading();
-    }, []);
+    },[]);
 
     const classes = useStyles();
     const [comment, setComment] = React.useState("");
@@ -224,7 +203,7 @@ export default function Episode() {
             redirect: 'follow'
         };
 
-        fetch("/episodes/" + ep_idx + "/comments", requestOptions)
+        fetch("/episodes/"+episode.ep_idx+"/comments", requestOptions)
             .then(response => response.text())
             .then(result => console.log(result))
             .catch(error => console.log('error', error));
@@ -233,9 +212,9 @@ export default function Episode() {
     const handleRating = () => {
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
-        myHeaders.append("AUTHORIZATION", localStorage.getItem("AUTHORIZATION"));
+        myHeaders.append("AUTHORIZATION",  localStorage.getItem("AUTHORIZATION"));
 
-        var raw = JSON.stringify({ "rating": score });
+        var raw = JSON.stringify({ "rating": score});
         console.log(score);
 
         var requestOptions = {
@@ -245,7 +224,7 @@ export default function Episode() {
             redirect: 'follow'
         };
 
-        fetch("/episodes/" + ep_idx + "/rating", requestOptions)
+        fetch("/episodes/"+episode.ep_idx+"/rating", requestOptions)
             .then(response => response.text())
             .then(result => console.log(result))
             .catch(error => console.log('error', error));
@@ -268,19 +247,19 @@ export default function Episode() {
 
             <div style={{ borderTop: '1px solid grey', minHeight: 600, marginBottom: 30 }}>
                 <div className={classes.title} style={{ display: "flex" }}>
-                    <img src={thumbnail} alt="thumbnail" style={{ margin: 10, height: 120, }} width="128" height="128" />
+                    <img src="http://placeimg.com/128/128/any" alt="thumbnail" style={{ margin: 10, height: 120, }} />
                     <div>
-                        <h2>{title} ({author}})</h2>
-                        <body1>{summary}}</body1>
+                        <h2>웹툰 제목 (작가)</h2>
+                        <body1>줄거리저ㅜㄹ거리줄ㄹ거리줄럭리줄러길줄럭리줄러기</body1>
                     </div>
                 </div>
 
                 <div className={classes.body} style={{ width: 950, borderTop: '1px solid grey' }}>
                     <div style={{ marginLeft: 30 }}>
-                        <h5 style={{ marginTop: 20, marginBottom: 0 }}>{ep_no}화 {title}</h5>
+                        <h5 style={{ marginTop: 20, marginBottom: 0 }}>{episode.no}화 {episode.title}</h5>
                         <Box component="span" mb={0} borderColor="transparent" style={{ display: "flex", }}>
-                            <Rating name="read-only" value={rating_avg} readOnly style={{ marginTop: 30 }} />
-                            <body2 style={{ marginTop: 30 }}>&nbsp;({rating_avg})&ensp;</body2>
+                            <Rating name="read-only" value={episode.starRating} readOnly style={{ marginTop: 30 }} />
+                            <body2 style={{ marginTop: 30 }}>&nbsp;({episode.starRating})&ensp;</body2>
                             <FormControl className={classes.formControl}>
                                 <InputLabel htmlFor="star-score">별점</InputLabel>
                                 <Select
@@ -300,14 +279,14 @@ export default function Episode() {
                         </Box>
                     </div>
                     <div style={{ width: 950, borderTop: '1px solid grey', paddingTop: 40, paddingBottom: 40 }} align="center">
-                        {contents.map(content => (
-                            <img src={content} alt="cut" key={content}/>
+                        {episode.cuts.map(cut => (
+                            <img src={cut.cut} alt="cut" />
                         ))}
                     </div>
                     <div style={{ width: 950, borderTop: '1px solid grey', borderBottom: '1px solid grey', paddingBottom: 20 }}>
                         <div style={{ marginLeft: 30 }}>
                             <h4>작가의 말</h4>
-                            <body1>...</body1>
+                            <body1>{episode.authorComment}</body1>
                         </div>
                     </div>
                     <div className={classes.comment}>
