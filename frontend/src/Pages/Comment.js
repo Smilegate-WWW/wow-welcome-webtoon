@@ -88,7 +88,8 @@ export default function Comment() {
         setChecked(event.target.checked);
     };
 
-    const deleteComment = () => {
+    /* 댓글 삭제 */
+    const deleteComment = (idx) => {
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
         myHeaders.append("AUTHORIZATION", localStorage.getItem("AUTHORIZATION"));
@@ -102,7 +103,7 @@ export default function Comment() {
             redirect: 'follow'
         };
 
-        fetch("/comments/22", requestOptions)
+        fetch("/comments/" + idx, requestOptions)
             .then(response => response.text())
             .then(result => console.log(result))
             .catch(error => console.log('error', error));
@@ -157,24 +158,24 @@ export default function Comment() {
                         </TableHead>
                         <TableBody>
                             {myComments.map(myComment => (
-                                <TableRow key={myComment.comment}>
-                                    <TableCell align="center">{myComment.image}</TableCell>
+                                <TableRow key={myComment.content}>
+                                    <TableCell align="center">{myComment.webtoon_thumbnail}</TableCell>
                                     <TableCell align="center">
                                         <div className={classes.titleField}>
-                                            {myComment.title}
+                                            {myComment.webtoon_title}
                                         </div>
                                     </TableCell>
-                                    <TableCell align="center">{myComment.no}</TableCell>
+                                    <TableCell align="center">{myComment.ep_no}</TableCell>
                                     <TableCell align="center">
                                         <div className={classes.commentField}>
-                                            {myComment.comment}
+                                            {myComment.content}
                                         </div>
                                     </TableCell>
-                                    <TableCell align="center">{myComment.good_cnt}</TableCell>
-                                    <TableCell align="center">{myComment.bad_cnt}</TableCell>
-                                    <TableCell align="center">{myComment.register_date}</TableCell>
+                                    <TableCell align="center">{myComment.like_cnt}</TableCell>
+                                    <TableCell align="center">{myComment.dislike_cnt}</TableCell>
+                                    <TableCell align="center">{myComment.created_date}</TableCell>
                                     <TableCell align="center">
-                                        <Button variant="contained" color="primary" onClick={deleteComment} >
+                                        <Button variant="contained" color="primary" onClick={()=>deleteComment(myComment.idx)} >
                                             삭제
                                         </Button>
                                     </TableCell>

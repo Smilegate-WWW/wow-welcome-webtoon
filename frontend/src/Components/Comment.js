@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { Button } from '@material-ui/core';
 
-import Episode from '../Pages/Episode';
+var Episode = require("../Pages/Episode")
 
 class Comment extends Component {
     render() {
-        //var cmt_idx=1;
 
         const handleGood = () => {
             var myHeaders = new Headers();
@@ -22,10 +21,20 @@ class Comment extends Component {
             };
 
             fetch("/comments/"+this.props.cmt_idx+"/like", requestOptions)
-                .then(response => response.text())
+                .then(response => response.json())
                 .then(result => {
                     console.log(result)
-                    Episode.Episode();
+                    if(result.code==0){}
+                    else if(result.code==21){
+                        alert("[ERROR 21] 잘못된 접근입니다, 관리자에게 문의하세요.")
+                    }
+                    else if(result.code==24){
+                        alert("자신이 단 댓글을 추천할 수 없습니다.")
+                    }
+                    else{
+                        alert("잘못된 접근입니다, 관리자에게 문의하세요.")
+                    }
+                    Episode.commentLoading()
                 })
                 .catch(error => console.log('error', error));
         }
@@ -45,10 +54,20 @@ class Comment extends Component {
             };
 
             fetch("/comments/"+this.props.cmt_idx+"/dislike", requestOptions)
-                .then(response => response.text())
+                .then(response => response.json())
                 .then(result => {
                     console.log(result)
-                    Episode.Episode();
+                    if(result.code==0){}
+                    else if(result.code==21){
+                        alert("[ERROR 21] 잘못된 접근입니다, 관리자에게 문의하세요.")
+                    }
+                    else if(result.code==25){
+                        alert("자신이 단 댓글을 비추천할 수 없습니다.")
+                    }
+                    else{
+                        alert("잘못된 접근입니다, 관리자에게 문의하세요.")
+                    }
+                    Episode.commentLoading()
                 })
                 .catch(error => console.log('error', error));
         }

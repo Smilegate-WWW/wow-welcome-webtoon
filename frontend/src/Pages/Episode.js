@@ -59,20 +59,12 @@ function getParameterByName(name) {
 
 var idx = getParameterByName('idx');
 var ep_no = getParameterByName('ep_no');
-var ep_idx = getParameterByName('ep_idx');
+var ep_idx=getParameterByName('ep_idx');
 
 //댓글 정보
-let comments = [
-    {
-        nickname: "감자돌이",
-        comment: "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
-        date: "2020.02.05",
-        goodNum: 125,
-        badNum: 5,
-    }
-]
-let best_comments = []
-let comment_page = 1;
+let comments = []
+let best_comments =[]
+let comment_page=1;
 
 //탭 관련
 function TabPanel(props) {
@@ -105,57 +97,52 @@ function a11yProps(index) {
     };
 }
 
-function commentLoading() {
+/* 댓글 목록 조회 */
+export function commentLoading() {
     var requestOptions = {
         method: 'GET',
         redirect: 'follow'
     };
 
-    //url 수정
-    fetch("/episodes/" + ep_idx + "/comments?page=1", requestOptions)
+    //댓글 page 추가 후 url 변수 수정해야함!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    fetch("/episodes/"+ep_idx+"/comments?page=1", requestOptions)
         .then(response => response.json())
         .then(result => {
             console.log(result)
-            if (result.code == 0) {
-                comments = result.data.comments;
-                console.log(comments);
+            if(result.code==0){
+                comments=result.data.comments;
                 comment_page = result.data.total_pages;
             }
-            else if (result.code == 20) {
+            else if (result.code==20){
                 alert("[ERROR 20] 잘못된 접근입니다, 관리자에게 문의하세요.");
             }
-            else if (result.code == 23) {
+            else if (result.code ==23){
                 alert("[ERROR 23] 잘못된 접근입니다, 관리자에게 문의하세요.");
             }
-            /*
-            else if(result.code ==44){
-                //access token 재발급 api 접근
-                //재발급 성공시 페이지 재 로딩
-                //재발급 실패시 로그인 만료 -> direct "/login"
-            }
-            */
-            else {
+            else{
                 alert("잘못된 접근입니다, 관리자에게 문의하세요.");
             }
         })
         .catch(error => console.log('error', error));
 }
 
-function bestCommentLoading() {
+
+/* 베스트 댓글 목록 조회 */
+export function bestCommentLoading() {
     var requestOptions = {
         method: 'GET',
         redirect: 'follow'
     };
 
-    fetch("/episodes/" + ep_idx + "/comments/best", requestOptions)
+    fetch("/episodes/"+ep_idx+"/comments/best", requestOptions)
         .then(response => response.json())
         .then(result => {
             console.log(result)
-            if (result.code == 0) {
-                best_comments = result.data;
+            if(result.code==0){
+                best_comments=result.data;
                 console.log(best_comments);
             }
-            else if (result.code == 20) {
+            else if (result.code==20){
                 alert("[ERROR 20] 잘못된 접근입니다, 관리자에게 문의하세요.");
             }
         })
@@ -170,9 +157,9 @@ export default function Episode() {
     const [author, setAuthor] = React.useState("");
     const [summary, setSummary] = React.useState("");
     const [rating_avg, setRating_avg] = React.useState("");
-    const [webtoon_title,setWebtoon_title]=React.useState("");
-    const [author_comment,setAuthor_comment]=React.useState("");
-
+    const [webtoon_title, setWebtoon_title] = React.useState("");
+    const [author_comment,setAuthor_comment] = React.useState("");
+    
     React.useEffect(() => {
         // 회차 정보
         var requestOptions = {
@@ -195,10 +182,10 @@ export default function Episode() {
 
             })
             .catch(error => console.log('error', error));
-
+        // 댓글 로드
         commentLoading();
         bestCommentLoading();
-    }, []);
+    },[]);
 
     const classes = useStyles();
     const [comment, setComment] = React.useState("");
@@ -214,12 +201,14 @@ export default function Episode() {
     const tabChange = (event, newValue) => {
         setValue(newValue);
     };
+    /* 댓글 등록 */
+    // 로그인 체크 필요 + token 유효시간 체크 필요
     const submitComment = () => {
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
         myHeaders.append("AUTHORIZATION", localStorage.getItem("AUTHORIZATION"));
 
-        var raw = JSON.stringify({ "content": "댓글 내용" });
+        var raw = JSON.stringify({ "content": comment });
 
         var requestOptions = {
             method: 'POST',
@@ -228,18 +217,28 @@ export default function Episode() {
             redirect: 'follow'
         };
 
-        fetch("/episodes/" + ep_idx + "/comments", requestOptions)
-            .then(response => response.text())
-            .then(result => console.log(result))
+        fetch("/episodes/"+ep_idx+"/comments", requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                console.log(result)
+                if(result.code==0){
+                    alert("댓글 등록이 완료되었습니다.")
+                }
+                else{
+                    alert("잘못된 접근입니다, 관리자에게 문의하세요.")
+                }
+            })
             .catch(error => console.log('error', error));
     }
 
+    /* 별점 주기 */
+    // 로그인 체크 필요 + token 유효시간 체크 필요
     const handleRating = () => {
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
-        myHeaders.append("AUTHORIZATION", localStorage.getItem("AUTHORIZATION"));
+        myHeaders.append("AUTHORIZATION",  localStorage.getItem("AUTHORIZATION"));
 
-        var raw = JSON.stringify({ "rating": score });
+        var raw = JSON.stringify({ "rating": score});
         console.log(score);
 
         var requestOptions = {
@@ -249,7 +248,7 @@ export default function Episode() {
             redirect: 'follow'
         };
 
-        fetch("/episodes/" + ep_idx + "/rating", requestOptions)
+        fetch("/episodes/"+ep_idx+"/rating", requestOptions)
             .then(response => response.text())
             .then(result => console.log(result))
             .catch(error => console.log('error', error));

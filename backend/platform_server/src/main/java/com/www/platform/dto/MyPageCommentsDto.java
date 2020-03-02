@@ -11,18 +11,21 @@ import java.util.Optional;
 @Getter
 public class MyPageCommentsDto {
 
+    private int idx;
     private String webtoon_thumbnail;
     private String webtoon_title;
     private int ep_no;
+    private int like_cnt;
+    private int dislike_cnt;
     private String content;
 
-    @Builder
-    public MyPageCommentsDto(String webtoon_thumbnail, String webtoon_title,
-                             int ep_no, String content) {
-        this.webtoon_thumbnail = webtoon_thumbnail;
-        this.webtoon_title = webtoon_title;
-        this.ep_no = ep_no;
-        this.content = content;
-
+    public MyPageCommentsDto(Comments entity) {
+        idx = entity.getIdx();
+        webtoon_thumbnail = entity.getEp().getWebtoon().getThumbnail();
+        webtoon_title = entity.getEp().getWebtoon().getTitle();
+        ep_no = entity.getEp().getEp_no();
+        like_cnt = entity.getLike_cnt();
+        dislike_cnt = entity.getDislike_cnt();
+        content = entity.getContent();
     }
 }
