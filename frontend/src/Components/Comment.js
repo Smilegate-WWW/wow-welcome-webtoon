@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { Button } from '@material-ui/core';
 
+import Episode from '../Pages/Episode';
+
 class Comment extends Component {
     render() {
-        var cmt_idx=1;
+        //var cmt_idx=1;
 
         const handleGood = () => {
             var myHeaders = new Headers();
@@ -19,9 +21,12 @@ class Comment extends Component {
                 redirect: 'follow'
             };
 
-            fetch("/comments/"+cmt_idx+"/like", requestOptions)
+            fetch("/comments/"+this.props.cmt_idx+"/like", requestOptions)
                 .then(response => response.text())
-                .then(result => console.log(result))
+                .then(result => {
+                    console.log(result)
+                    Episode.Episode();
+                })
                 .catch(error => console.log('error', error));
         }
 
@@ -39,9 +44,12 @@ class Comment extends Component {
                 redirect: 'follow'
             };
 
-            fetch("/comments/"+cmt_idx+"/dislike", requestOptions)
+            fetch("/comments/"+this.props.cmt_idx+"/dislike", requestOptions)
                 .then(response => response.text())
-                .then(result => console.log(result))
+                .then(result => {
+                    console.log(result)
+                    Episode.Episode();
+                })
                 .catch(error => console.log('error', error));
         }
 
@@ -62,6 +70,7 @@ class Comment extends Component {
                             &ensp;{this.props.badNum}
                         </Button>
                     </div>
+        <div style={{display:"none"}}>{this.props.cmt_idx}</div>
                 </div>
             </div>
         )

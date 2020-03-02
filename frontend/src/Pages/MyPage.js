@@ -138,7 +138,7 @@ export default function MyPage() {
                     <GridList cellHeight={300} className={classes.gridList} spacing={15} cols={4}>
                         {myWebtoons.map(myWebtoon => (
                             <GridListTile key={myWebtoon.title} item="true">
-                                <MyWebtoon title={myWebtoon.title} thumbnail={myWebtoon.thumbnail} created_date={myWebtoon.created_date} last_updated={myWebtoon.last_updated} />
+                                <MyWebtoon idx={myWebtoon.idx} title={myWebtoon.title} thumbnail={myWebtoon.thumbnail} created_date={myWebtoon.created_date} last_updated={myWebtoon.last_updated} />
                             </GridListTile>
                         ))}
                         <PlusWebtoon href="/mypage/register" />

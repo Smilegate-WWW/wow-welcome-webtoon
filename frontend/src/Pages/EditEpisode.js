@@ -35,69 +35,68 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const episodes = [
-    {
-        thumbnail: "http://placeimg.com/64/64/any",
-        title: "11화. 은성이의 사랑",
-        starRating: 5,
-        updateDate: "2020.02.04",
-    },
-    {
-        thumbnail: "http://placeimg.com/64/64/any",
-        title: "11화. 은성이의 사랑",
-        starRating: 5,
-        updateDate: "2020.02.04",
-    },
-    {
-        thumbnail: "http://placeimg.com/64/64/any",
-        title: "11화. 은성이의 사랑",
-        starRating: 5,
-        updateDate: "2020.02.04",
-    },
-    {
-        thumbnail: "http://placeimg.com/64/64/any",
-        title: "11화. 은성이의 사랑",
-        starRating: 5,
-        updateDate: "2020.02.04",
-    },
-    {
-        thumbnail: "http://placeimg.com/64/64/any",
-        title: "11화. 은성이의 사랑",
-        starRating: 5,
-        updateDate: "2020.02.04",
-    },
-];
-
-function showEpisode() {
-    var requestOptions = {
-        method: 'GET',
-        redirect: 'follow'
-    };
-
-    fetch("/myArticleList/", requestOptions)
-        .then(response => response.text())
-        .then(result => console.log(result))
-        .catch(error => console.log('error', error));
+//주소 파싱하여 idx 알아오기
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(window.location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
+var idx = getParameterByName('idx');
+
 export default function EditEpisode() {
-    showEpisode();
+    const [episodes, setEpisodes] = React.useState([]);
+    const [webtoon_thumbnail, setWebtoon_thumbnail] = React.useState("");
+    const [title, setTitle] = React.useState("");
+    const [writer, setWriter] = React.useState("");
+    const [plot, setPlot] = React.useState("");
 
-    const classes = useStyles();
+    React.useEffect(() => {
+        var myHeaders = new Headers();
+        myHeaders.append("Authorization", localStorage.getItem("AUTHORIZATION"));
 
-    const episodeDelete = () => {
         var requestOptions = {
-            method: 'DELETE',
+            headers: myHeaders,
+            method: 'GET',
             redirect: 'follow'
         };
 
-        fetch("/myArticleList/" + "/webtoonidx/idx", requestOptions)
+        fetch("/myArticleList/" + idx + "?page=1", requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                console.log(result)
+                setEpisodes(result.data.episodelist)
+                setWebtoon_thumbnail(result.data.webtoon_thumbnail)
+                setTitle(result.data.title)
+                setWriter(result.data.writer)
+                setPlot(result.data.plot)
+            })
+            .catch(error => console.log('error', error));
+    }, []);
+
+    const classes = useStyles();
+
+    var episodeDelete = function(ep_no){
+        console.log(ep_no)
+        var myHeaders = new Headers();
+        myHeaders.append("Authorization", localStorage.getItem("AUTHORIZATION"));
+
+        var requestOptions = {
+            headers: myHeaders,
+            method: 'DELETE',
+            redirect: 'follow'
+        };
+        /*
+        fetch("/myArticleList/" +idx+ "/", requestOptions)
             .then(response => response.json())
             .then(result => {
                 console.log(result)
                 alert("회차가 삭제되었습니다!")
+                window.location.reload();
             })
             .catch(error => console.log('error', error));
+            */
     }
 
     return (
@@ -117,11 +116,11 @@ export default function EditEpisode() {
 
             <div style={{ border: '1px solid grey', minHeight: 600, }}>
                 <div className={classes.title} style={{ display: "flex" }}>
-                    <img src="http://placeimg.com/128/128/any" alt="thumbnail" style={{ margin: 10, height: 120, }} />
+                    <img src={webtoon_thumbnail} alt="thumbnail" style={{ margin: 10, height: 120, }} width="128" height="128" />
                     <div>
-                        <h2>웹툰 제목 (작가)</h2>
-                        <h5>줄거리저ㅜㄹ거리줄ㄹ거리줄럭리줄러길줄럭리줄러기</h5>
-                        <Button variant="contained" href="/mypage/upload" style={{marginLeft:5}}>
+                        <h2>{title} ({writer})</h2>
+                        <h5>{plot}</h5>
+                        <Button variant="contained" href={"/mypage/upload?idx=" + idx + "&episode_idx=" + (episodes.length + 1)} style={{ marginLeft: 5 }}>
                             <span style={{ color: "#212121", fontWeight: 520 }}>새 회차 등록</span>
                         </Button>
                     </div>
@@ -142,11 +141,11 @@ export default function EditEpisode() {
                             {episodes.map(episode => (
                                 <TableRow key={episode.title}>
                                     <TableCell align="center">
-                                        <img src={episode.thumbnail} />
+                                        <img src={episode.thumnail} width="64" height="64" />
                                     </TableCell>
                                     <TableCell align="left">
-                                        <a href="/webtoon/episode" style={{}}>
-                                            {episode.title}
+                                        <a href={"/mypage/myEpisode?idx="+idx+"&ep_no="+episode.ep_no+"&ep_idx="+episode.idx} style={{}}>
+                                            {episode.ep_no}화. {episode.title}
                                         </a>
                                     </TableCell>
                                     <TableCell align="center">
@@ -154,14 +153,14 @@ export default function EditEpisode() {
                                             <Rating name="read-only" value={episode.starRating} readOnly />
                                         </Box>
                                     </TableCell>
-                                    <TableCell align="center">{episode.updateDate}</TableCell>
+                                    <TableCell align="center">{episode.created_date.slice(0, 10)}</TableCell>
                                     <TableCell align="center">
-                                        <Button variant="contained" href="/mypage/editUpload">
+                                        <Button variant="contained" href={"/mypage/editUpload?idx="+idx+"&ep_no="+episode.ep_no}>
                                             <span style={{ color: "#212121", fontWeight: 520 }}>수정</span>
                                         </Button>
                                     </TableCell>
                                     <TableCell align="center">
-                                        <Button variant="contained" onClick={episodeDelete}>
+                                        <Button variant="contained" onClick={episodeDelete(episode.ep_no)}>
                                             <span style={{ color: "#212121", fontWeight: 520 }}>삭제</span>
                                         </Button>
                                     </TableCell>

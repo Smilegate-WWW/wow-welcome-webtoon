@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
     },
     buttons: {
         marginTop: theme.spacing(1),
-        paddingLeft: theme.spacing(80),
+        paddingLeft: theme.spacing(87),
         '& > *': {
             margin: theme.spacing(1),
         },
@@ -97,8 +97,8 @@ export default function Register() {
          
             img.src = window.URL.createObjectURL(file);
             img.onload = function() {
-                alert(img.height, img.width)
                 if(img.height <=330 && img.width<=430){
+                    alert("파일이 선택되었습니다.")
                     setThumbnail(file);
                 }
                 else{
@@ -372,9 +372,6 @@ export default function Register() {
                 </Button>
                 <Button variant="contained" color="primary" onClick={handleSubmit}>
                     <span style={{ color: "#fafafa", fontWeight: 550 }}>등록</span>
-                </Button>
-                <Button variant="contained" color="primary" href="/mypage/upload" onClick={handleSubmit}>
-                    <span style={{ color: "#fafafa", fontWeight: 550 }}>등록 후 1회 올리기</span>
                 </Button>
             </div>
         </div >
