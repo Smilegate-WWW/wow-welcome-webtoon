@@ -113,7 +113,7 @@ public class  CommentsService {
 
             if(page < 1){
                 result.setCode(23);
-                result.setMsg("fail : entered page exceeds the total pages");
+                result.setMsg("fail : page is not in valid range");
                 return result;
             }
 
@@ -122,7 +122,7 @@ public class  CommentsService {
 
             if(page > commentsPage.getTotalPages() & page != 1){
                 result.setCode(23);
-                result.setMsg("fail : entered page exceeds the total pages");
+                result.setMsg("fail : page is not in valid range");
             }
             else{
                 result.setCode(0);
@@ -167,7 +167,7 @@ public class  CommentsService {
 
         if(page < 1){
             result.setCode(23);
-            result.setMsg("fail : entered page exceeds the total pages");
+            result.setMsg("fail : page is not in valid range");
             return result;
         }
 
@@ -177,7 +177,7 @@ public class  CommentsService {
 
         if(page > commentsPage.getTotalPages() && page != 1){
             result.setCode(23);
-            result.setMsg("fail : entered page exceeds the total pages");
+            result.setMsg("fail : page is not in valid range");
         }
         else{
             List<MyPageCommentsDto> myPageCommentsDtosList = new ArrayList<>(totalElements);
