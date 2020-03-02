@@ -57,56 +57,45 @@ const useStyles = makeStyles(theme => ({
 }));
 
 //comment 정보
-const myComments = [
-    {
-        image: <img src="http://placeimg.com/64/64/any" />,
-        title: "유미의 세포들",
-        no: "12화",
-        comment: "풀이 없으면 인간은 사막이다 오아이스도 없는 사막이다 보이는 끝까지 찾아다녀도 목숨이 있는 때까지 방황하여도 보이는 것은 거친 모래뿐일 것이다 이상의 꽃이 없으면 쓸쓸한 인간에 남는 것은 영락과 부패 뿐이다 낙원을 장식하는 천자만홍이",
-        good_cnt: 12,
-        bad_cnt: 3,
-        register_date: "2020.02.08",
-    },
-    {
-        image: <img src="http://placeimg.com/64/64/any" />,
-        title: "감자들의 감자 심는 이야기~~~",
-        no: "12화",
-        comment: "풀이 없으면 인간은 사막이다 오아이스도 없는 사막이다 보이는 끝까지 찾아다녀도 목숨이 있는 때까지 방황하여도 보이는 것은 거친 모래뿐일 것이다 이상의 꽃이 없으면 쓸쓸한 인간에 남는 것은 영락과 부패 뿐이다 낙원을 장식하는 천자만홍이",
-        good_cnt: 12,
-        bad_cnt: 3,
-        register_date: "2020.02.08",
-    },
-    {
-        image: <img src="http://placeimg.com/64/64/any" />,
-        title: "유미의 세포들",
-        no: "12화",
-        comment: "풀이 없으면 인간은 사막이다 오아이스도 없는 사막이다 보이는 끝까지 찾아다녀도 목숨이 있는 때까지 방황하여도 보이는 것은 거친 모래뿐일 것이다 이상의 꽃이 없으면 쓸쓸한 인간에 남는 것은 영락과 부패 뿐이다 낙원을 장식하는 천자만홍이",
-        good_cnt: 12,
-        bad_cnt: 3,
-        register_date: "2020.02.08",
-    },
-    {
-        image: <img src="http://placeimg.com/64/64/any" />,
-        title: "유미의 세포들",
-        no: "12화",
-        comment: "풀이 없으면 인간은 사막이다 오아이스도 없는 사막이다 보이는 끝까지 찾아다녀도 목숨이 있는 때까지 방황하여도 보이는 것은 거친 모래뿐일 것이다 이상의 꽃이 없으면 쓸쓸한 인간에 남는 것은 영락과 부패 뿐이다 낙원을 장식하는 천자만홍이",
-        good_cnt: 12,
-        bad_cnt: 3,
-        register_date: "2020.02.08",
-    },
-    {
-        image: <img src="http://placeimg.com/64/64/any" />,
-        title: "복학왕",
-        no: "12화",
-        comment: "풀이 없으면 인간은 사막이다 오아이스도 없는 사막이다 보이는 끝까지 찾아다녀도 목숨이 있는 때까지 방황하여도 보이는 것은 거친 모래뿐일 것이다 이상의 꽃이 없으면 쓸쓸한 인간에 남는 것은 영락과 부패 뿐이다 낙원을 장식하는 천자만홍이",
-        good_cnt: 12,
-        bad_cnt: 3,
-        register_date: "2020.02.08",
-    },
-];
+let myComments = [];
+let myComment_page=1;
+
+/* 내 댓글 목록 조회 */
+function MyCommentLoading() {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("AUTHORIZATION", localStorage.getItem("AUTHORIZATION"));
+
+    var requestOptions = {
+     method: 'GET',
+      headers: myHeaders,
+     redirect: 'follow'
+    };
+
+    //댓글 목록 페이지 추가 후 수정 필요!!!!!!!!!!!!!!
+    fetch("/users/comments?page=1", requestOptions)
+    .then(response => response.json())
+     .then(result => {
+        console.log(result)
+        myComments=result.data.comments;
+        console.log(myComments);
+        myComment_page=result.data.total_pages;
+        if(result.code==0){
+        }
+        else{
+            alert("잘못된 접근입니다, 관리자에게 문의하세요.")
+        }
+    })
+    .catch(error => console.log('error', error));
+}
 
 
 export default function Comment() {
+    /* 댓글 로드 */
+    React.useState(() => {
+        MyCommentLoading();
+    },[]);
+
     const classes = useStyles();
     const [checked, setChecked] = React.useState(true);
 
@@ -114,7 +103,8 @@ export default function Comment() {
         setChecked(event.target.checked);
     };
 
-    const deleteComment = () => {
+    /* 댓글 삭제 */
+    const deleteComment = (idx) => {
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
         myHeaders.append("AUTHORIZATION", localStorage.getItem("AUTHORIZATION"));
@@ -128,7 +118,7 @@ export default function Comment() {
             redirect: 'follow'
         };
 
-        fetch("/comments/22", requestOptions)
+        fetch("/comments/" + idx, requestOptions)
             .then(response => response.text())
             .then(result => console.log(result))
             .catch(error => console.log('error', error));
@@ -183,24 +173,24 @@ export default function Comment() {
                         </TableHead>
                         <TableBody>
                             {myComments.map(myComment => (
-                                <TableRow key={myComment.comment}>
-                                    <TableCell align="center">{myComment.image}</TableCell>
+                                <TableRow key={myComment.content}>
+                                    <TableCell align="center">{myComment.webtoon_thumbnail}</TableCell>
                                     <TableCell align="center">
                                         <div className={classes.titleField}>
-                                            {myComment.title}
+                                            {myComment.webtoon_title}
                                         </div>
                                     </TableCell>
-                                    <TableCell align="center">{myComment.no}</TableCell>
+                                    <TableCell align="center">{myComment.ep_no}</TableCell>
                                     <TableCell align="center">
                                         <div className={classes.commentField}>
-                                            {myComment.comment}
+                                            {myComment.content}
                                         </div>
                                     </TableCell>
-                                    <TableCell align="center">{myComment.good_cnt}</TableCell>
-                                    <TableCell align="center">{myComment.bad_cnt}</TableCell>
-                                    <TableCell align="center">{myComment.register_date}</TableCell>
+                                    <TableCell align="center">{myComment.like_cnt}</TableCell>
+                                    <TableCell align="center">{myComment.dislike_cnt}</TableCell>
+                                    <TableCell align="center">{myComment.created_date}</TableCell>
                                     <TableCell align="center">
-                                        <Button variant="contained" color="primary" onClick={deleteComment} >
+                                        <Button variant="contained" color="primary" onClick={()=>deleteComment(myComment.idx)} >
                                             삭제
                                         </Button>
                                     </TableCell>
