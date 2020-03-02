@@ -32,7 +32,7 @@ class Webtoon extends Component {
                             <CardContent>
                                 <Webtoonthumbnail container justify="center" thumbnail={this.props.thumbnail} />
                                 <Typography gutterBottom variant="body1" component="h4">
-                                    {this.props.title}({this.props.artist})
+                                    {this.props.title}({this.props.author})
                                 </Typography>
                                 <Box component="span" mb={0} borderColor="transparent">
                                     <Rating name="read-only" value={this.props.ep_rating_avg} readOnly />

@@ -52,8 +52,6 @@ var idx = getParameterByName('idx');
 
 export default function EditRegister() {
 
-    const [iniData, setIniData] = React.useState('');
-
     React.useEffect(() => {
         var myHeaders = new Headers();
         myHeaders.append("Authorization", localStorage.getItem("AUTHORIZATION"));
@@ -68,15 +66,19 @@ export default function EditRegister() {
             .then(response => response.json())
             .then(result => {
                 console.log(result)
-                setIniData(result.data);
+                setTitle(result.data.title);
+                setType(result.data.toon_type);
+                setSummary(result.data.summary);
+                setPlot(result.data.plot);
+                setThumbnail(result.data.thumbnail);
             })
             .catch(error => console.log('error', error));
     }, []);
     const classes = useStyles();
     
     // 작품정보 받아와서 넘겨주기.
-    const [title, setTitle] = React.useState(iniData.title+"");
-    const [type, setType] = React.useState(iniData.type+"");
+    const [title, setTitle] = React.useState("");
+    const [type, setType] = React.useState("");
     const [genre, setGenre] = React.useState({
         daily: false,
         gag: false,
@@ -86,8 +88,8 @@ export default function EditRegister() {
         pure: false,
         emotion: false,
     });
-    const [summary, setSummary] = React.useState(iniData.summary+"");
-    const [plot, setPlot] = React.useState(iniData.plot+"");
+    const [summary, setSummary] = React.useState("");
+    const [plot, setPlot] = React.useState("");
     const [thumbnail, setThumbnail] = React.useState("");
 
     const genreArray = [genre.daily, genre.gag, genre.fantasy, genre.action, genre.drama, genre.pure, genre.emotion];
@@ -240,6 +242,7 @@ export default function EditRegister() {
             })
             .catch(error => console.log('error', error));
     }
+
     return (
         <div>
             <Header />
@@ -257,7 +260,7 @@ export default function EditRegister() {
             </div>
 
             <div className={classes.body} style={{ border: '1px solid grey' }}>
-                <h4>새 작품 등록</h4>
+                <h4>작품 수정</h4>
                 <div className={classes.components}>
                     <div style={{ display: "flex", height: 50, }}>
                         <h5 >작품 제목&emsp;</h5>

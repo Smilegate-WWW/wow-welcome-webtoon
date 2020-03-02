@@ -8,7 +8,7 @@ import TextField from '@material-ui/core/TextField';
 //색상
 import { grey } from '@material-ui/core/colors';
 //preview
-import Preview from '../Components/preview';
+import Preview from './Preview';
 
 const useStyles = makeStyles(theme => ({
     menu: {
@@ -68,6 +68,7 @@ export default function Upload() {
     const [comment, setComment] = React.useState("");
     const [thumbnail, setThumbnail] = React.useState("");
     const [script, setScript] = React.useState([]);
+    const [thumbnailstr,setThumbnailstr]=React.useState("");
     var images = [];
 
     const classes = useStyles();
@@ -106,6 +107,7 @@ export default function Upload() {
                     images = script;
                     images.push(file);
                     setScript(images);
+                    localStorage.setItem("SCRIPT",script)
                     alert(file.name + "이(가) 선택되었습니다 \n\n 선택된 이미지: " + images.length + "개");
                 }
                 else {
@@ -117,14 +119,13 @@ export default function Upload() {
 
     const handleThumbnailChange = (e) => {
         const file = e.target.files[0];
-        setThumbnail(file);
+
         let reader = new FileReader();
         reader.onloadend = () => {
             console.log("load end");
+            setThumbnailstr(reader.result);
         };
-        if (file != null) {
-            reader.readAsDataURL(file);
-        }
+        reader.readAsDataURL(file);
         if (file.length === 0) {
             alert("파일이 선택되지 않았습니다.");
         }
@@ -188,7 +189,7 @@ export default function Upload() {
 
     const handlePreview = () => {
         if (script.length >= 1) {
-            window.open("/mypage/upload/preview?val=" + script, "preview")
+            window.open("/mypage/upload/preview", "preview")
         }
     }
 
@@ -223,7 +224,6 @@ export default function Upload() {
                                 readOnly: true,
                             }}
                         />
-
                         <p className={classes.fontStyle}>
                             회차 No는 순차적으로 자동 지정되기 때문에 임의로 설정이 불가능합니다.
                         </p>
@@ -241,7 +241,7 @@ export default function Upload() {
                         />
                     </div>
 
-                    <div style={{ display: "flex" }}>
+                    <div style={{ display: "flex", height:110}}>
                         <h5>썸네일 이미지&emsp;</h5>
                         <div>
                             <input
@@ -252,9 +252,10 @@ export default function Upload() {
                                 onChange={handleThumbnailChange}
                             />
                             <label htmlFor="thumbnail">
-                                <Button variant="contained" component="span" style={{ height: 100, width: 100, marginLeft: 10 }}>
+                                <Button variant="contained" component="span" style={{ height: 100, width: 100, marginLeft: 10,marginRight:5 }}>
                                     430 X 330
                                 </Button>
+                            <img src={thumbnailstr} alt="thumbnail" width="100" height="100"/>
                             </label>
                         </div>
                         <div style={{ marginTop: 80, }}>

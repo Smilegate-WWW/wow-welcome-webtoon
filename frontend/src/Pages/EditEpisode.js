@@ -77,8 +77,7 @@ export default function EditEpisode() {
 
     const classes = useStyles();
 
-    var episodeDelete = function(ep_no){
-        console.log(ep_no)
+    function episodeDelete(ep_no){
         var myHeaders = new Headers();
         myHeaders.append("Authorization", localStorage.getItem("AUTHORIZATION"));
 
@@ -87,16 +86,15 @@ export default function EditEpisode() {
             method: 'DELETE',
             redirect: 'follow'
         };
-        /*
-        fetch("/myArticleList/" +idx+ "/", requestOptions)
+        
+        fetch("/myArticleList/" +idx+ "/"+ep_no, requestOptions)
             .then(response => response.json())
             .then(result => {
                 console.log(result)
                 alert("회차가 삭제되었습니다!")
-                window.location.reload();
             })
             .catch(error => console.log('error', error));
-            */
+        
     }
 
     return (
@@ -160,7 +158,7 @@ export default function EditEpisode() {
                                         </Button>
                                     </TableCell>
                                     <TableCell align="center">
-                                        <Button variant="contained" onClick={episodeDelete(episode.ep_no)}>
+                                        <Button variant="contained" onClick={()=>episodeDelete(episode.ep_no)}>
                                             <span style={{ color: "#212121", fontWeight: 520 }}>삭제</span>
                                         </Button>
                                     </TableCell>
