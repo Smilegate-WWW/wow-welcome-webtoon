@@ -111,11 +111,16 @@ public class  CommentsService {
             // repository에서 Page<entity>로 받은 내용을 Page<dto>로 변환하는 법 아래 참고
             // https://stackoverflow.com/questions/27557240/getting-a-page-of-dto-objects-from-spring-data-repository
 
-            Pageable pageable = PageRequest.of(page <= 0 ? 0 : page - 1, 15, Sort.Direction.DESC, "idx");
-            Page<Comments> commentsPage = commentsRepository.findAllByEpIdx(pageable, epIdx);
-            int totalElements = (int) commentsPage.getTotalElements();
+            if(page < 1){
+                result.setCode(23);
+                result.setMsg("fail : entered page exceeds the total pages");
+                return result;
+            }
 
-            if(page > commentsPage.getTotalPages() & commentsPage.getTotalPages() > 1){
+            Pageable pageable = PageRequest.of(page - 1, 15, Sort.Direction.DESC, "idx");
+            Page<Comments> commentsPage = commentsRepository.findAllByEpIdx(pageable, epIdx);
+
+            if(page > commentsPage.getTotalPages() & page != 1){
                 result.setCode(23);
                 result.setMsg("fail : entered page exceeds the total pages");
             }
@@ -160,26 +165,24 @@ public class  CommentsService {
     public Response<MyPageCommentsResponseDto> getMyPageComments(int userIdx, int page){
         Response<MyPageCommentsResponseDto> result = new Response<MyPageCommentsResponseDto>();
 
-        Pageable pageable = PageRequest.of(page <= 0 ? 0 : page - 1, 10, Sort.Direction.DESC, "idx");
-        Page<Comments> commentsPage = commentsRepository.findAllByUsersIdx(pageable, userIdx);
-        int totalElements = (int) commentsPage.getTotalElements();
+        if(page < 1){
+            result.setCode(23);
+            result.setMsg("fail : entered page exceeds the total pages");
+            return result;
+        }
 
-        if(page > commentsPage.getTotalPages() & commentsPage.getTotalPages() > 1){
+        Pageable pageable = PageRequest.of(page - 1, 10, Sort.Direction.DESC, "idx");
+        Page<Comments> commentsPage = commentsRepository.findAllByUsersIdx(pageable, userIdx);
+        int totalElements = commentsPage.getContent().size();
+
+        if(page > commentsPage.getTotalPages() && page != 1){
             result.setCode(23);
             result.setMsg("fail : entered page exceeds the total pages");
         }
         else{
             List<MyPageCommentsDto> myPageCommentsDtosList = new ArrayList<>(totalElements);
-            Comments comments;
             for(int i = 0 ; i < totalElements; i++){
-                comments = commentsPage.getContent().get(i);
-                MyPageCommentsDto myPageCommentsDto = MyPageCommentsDto.builder()
-                        .webtoon_title(comments.getEp().getWebtoon().getTitle())
-                        .webtoon_thumbnail(comments.getEp().getWebtoon().getThumbnail())
-                        .ep_no(comments.getEp().getEp_no())
-                        .content(comments.getContent())
-                        .build();
-                myPageCommentsDtosList.add(myPageCommentsDto);
+                myPageCommentsDtosList.add(new MyPageCommentsDto(commentsPage.getContent().get(i)));
             }
 
             result.setCode(0);
