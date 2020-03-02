@@ -170,7 +170,9 @@ export default function Episode() {
     const [author, setAuthor] = React.useState("");
     const [summary, setSummary] = React.useState("");
     const [rating_avg, setRating_avg] = React.useState("");
-
+    const [author_comment, setAuthor_comment] = React.useState("");
+    const [webtoon_title, setWebtoon_title] = React.useState("");
+    
     React.useEffect(() => {
         // 회차 정보
         var requestOptions = {
@@ -182,12 +184,14 @@ export default function Episode() {
             .then(response => response.json())
             .then(result => {
                 console.log(result)
+                setWebtoon_title(result.data.webtoon_title)
                 setTitle(result.data.title)
                 setAuthor(result.data.author)
                 setSummary(result.data.summary)
                 setThumbnail(result.data.thumbnail)
                 setRating_avg(result.data.rating_avg)
                 setContents(result.data.contents)
+                setAuthor_comment(result.data.author_comment)
 
             })
             .catch(error => console.log('error', error));
@@ -270,8 +274,8 @@ export default function Episode() {
                 <div className={classes.title} style={{ display: "flex" }}>
                     <img src={thumbnail} alt="thumbnail" style={{ margin: 10, height: 120, }} width="128" height="128" />
                     <div>
-                        <h2>{title} ({author}})</h2>
-                        <body1>{summary}}</body1>
+                        <h2>{webtoon_title} ({author})</h2>
+                        <body1>{summary}</body1>
                     </div>
                 </div>
 
@@ -307,7 +311,7 @@ export default function Episode() {
                     <div style={{ width: 950, borderTop: '1px solid grey', borderBottom: '1px solid grey', paddingBottom: 20 }}>
                         <div style={{ marginLeft: 30 }}>
                             <h4>작가의 말</h4>
-                            <body1>...</body1>
+                        <body1>{author_comment}</body1>
                         </div>
                     </div>
                     <div className={classes.comment}>

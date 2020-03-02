@@ -62,36 +62,43 @@ var idx = getParameterByName('idx');
 var ep_no = getParameterByName('ep_no');
 
 export default function EditUpload() {
-    const [iniData, setIniData] = React.useState([]);
-
     React.useEffect(() => {
         var myHeaders = new Headers();
-        myHeaders.append("Authorization",localStorage.getItem("AUTHORIZATION"));
-        
+        myHeaders.append("Authorization", localStorage.getItem("AUTHORIZATION"));
+
         var requestOptions = {
-          method: 'GET',
-          headers: myHeaders,
-          redirect: 'follow'
+            method: 'GET',
+            headers: myHeaders,
+            redirect: 'follow'
         };
-        
-        fetch("/myArticleDetail/"+idx+"/"+ep_no, requestOptions)
-          .then(response => response.json())
-          .then(result => {
-              console.log(result)
-              setIniData(result.data)
-        })
-          .catch(error => console.log('error', error));
+
+        fetch("/myArticleDetail/" + idx + "/" + ep_no, requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                console.log(result)
+                setComment(result.data.author_comment);
+                setThumbnail(result.data.thumbnail);
+                setTitle(result.data.title);
+                setScript(result.data.contents);
+                let reader = new FileReader();
+                reader.onload = () => {
+                    console.log("load end");
+                    setThumbnailstr(reader.result);
+                }
+            })
+            .catch(error => console.log('error', error));
     }, []);
 
     const [comment, setComment] = React.useState("");
     const [thumbnail, setThumbnail] = React.useState("");
-    const [title,setTitle]=React.useState("");
+    const [title, setTitle] = React.useState("");
     const [script, setScript] = React.useState([]);
+    const [thumbnailstr, setThumbnailstr] = React.useState("");
     var images = [];
 
     const classes = useStyles();
 
-    const handleTitleChange=(e)=>{
+    const handleTitleChange = (e) => {
         setTitle(e.target.value);
     }
 
@@ -136,14 +143,14 @@ export default function EditUpload() {
 
     const handleThumbnailChange = (e) => {
         const file = e.target.files[0];
-        setThumbnail(file);
+
         let reader = new FileReader();
         reader.onloadend = () => {
             console.log("load end");
+            setThumbnailstr(reader.result);
         };
-        if (file != null) {
-            reader.readAsDataURL(file);
-        }
+        reader.readAsDataURL(file);
+
         if (file.length === 0) {
             alert("파일이 선택되지 않았습니다.");
         }
@@ -170,7 +177,7 @@ export default function EditUpload() {
     }
 
     const hadleSubmit = () => {
-        if (title=="" || comment === "" || script.length == 0) {
+        if (title == "" || comment === "" || script.length == 0) {
             alert("필요한 모든 정보를 입력해주세요")
         }
         else {
@@ -182,23 +189,23 @@ export default function EditUpload() {
             for (var i = 0; i < script.length; i++) {
                 formdata.append("manuscript", script[i]);
             }
-            formdata.append("title",title);
+            formdata.append("title", title);
             formdata.append("author_comment", comment);
 
             var requestOptions = {
-                headers:myHeaders,
+                headers: myHeaders,
                 method: 'PUT',
                 body: formdata,
                 redirect: 'follow'
             };
 
-            fetch("/myArticleDetail/" + idx+"/"+ep_no, requestOptions)
+            fetch("/myArticleDetail/" + idx + "/" + ep_no, requestOptions)
                 .then(response => response.json())
                 .then(result => {
                     console.log(result)
-                    if(result.code ==0 ){
+                    if (result.code == 0) {
                         alert("회차 정보가 수정되었습니다.")
-                        window.location.href="/mypage/editEpisode?idx="+idx;
+                        window.location.href = "/mypage/editEpisode?idx=" + idx;
                     }
                 })
                 .catch(error => console.log('error', error));
@@ -230,7 +237,7 @@ export default function EditUpload() {
                             id="episodeNo"
                             variant="outlined"
                             size="small"
-                            label={iniData.ep_no}
+                            label={ep_no}
                             style={{ width: 100 }}
                             InputProps={{
                                 readOnly: true,
@@ -241,8 +248,8 @@ export default function EditUpload() {
                             회차 No는 순차적으로 자동 지정되기 때문에 임의로 설정이 불가능합니다.
                         </p>
                     </div>
-                            
-                    <div style={{ display: "flex" }}>
+
+                    <div style={{ display: "flex", height: 110 }}>
                         <h5>회차 제목&emsp;&emsp;&emsp;</h5>
                         <TextField
                             id="title"
@@ -265,9 +272,10 @@ export default function EditUpload() {
                                 onChange={handleThumbnailChange}
                             />
                             <label htmlFor="thumbnail">
-                                <Button variant="contained" component="span" style={{ height: 100, width: 100, marginLeft: 10 }}>
+                                <Button variant="contained" component="span" style={{ height: 100, width: 100, marginRight: 5, marginLeft: 10 }}>
                                     430 X 330
                                 </Button>
+                                <img src={thumbnailstr} alt="thumbnail" width="100" height="100" />
                             </label>
                         </div>
                         <div style={{ marginTop: 80, }}>

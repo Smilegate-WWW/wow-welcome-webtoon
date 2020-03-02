@@ -49,9 +49,9 @@ export default function EditInfo() {
 
     const [pw, setPw] = useState("");
     const [pwCheck, setPwCheck] = useState("");
-    const [name, setName] = useState("");
-    const [gender, setGender] = React.useState("");
-    const [birth, setBirth] = useState("");
+    const [name, setName] = useState(localStorage.getItem("NAME"));
+    const [gender, setGender] = React.useState(localStorage.getItem("GENDER"));
+    const [birth, setBirth] = useState(localStorage.getItem("BIRTHDAY"));
 
     const handlePwChange = (e) => {
         setPw(e.target.value);
