@@ -17,6 +17,7 @@ public class MainWebtoonDto {
 	
 	private int idx;
 	private String title;
+	private String author;
 	private String thumbnail;
 	private int genre1;
 	private int genre2;
@@ -25,9 +26,10 @@ public class MainWebtoonDto {
 	private Integer[] pagelist;
 	
 	@Builder
-	public MainWebtoonDto(int idx, String title, String thumbnail, int genre1, int genre2, float epRatingAvg, int hits) {
+	public MainWebtoonDto(int idx, String author, String title, String thumbnail, int genre1, int genre2, float epRatingAvg, int hits) {
 		this.idx = idx;
 		this.title = title;
+		this.author = author;
 		this.thumbnail = thumbnail;
 		this.genre1 = genre1;
 		this.genre2 = genre2;
