@@ -87,6 +87,7 @@ public class MainService {
 						.thumbnail("http://localhost:8081/static/web_thumbnail/"+webtoon.getThumbnail())
 						.genre1(webtoon.getGenre1())
 						.genre2(webtoon.getGenre2())
+						.author(webtoon.getUsers().getName())
 						.hits(webtoon.getHits())
 						.epRatingAvg(webtoon.getEpRatingAvg())
 						.build();
@@ -150,7 +151,9 @@ public class MainService {
 		episodeRepository.save(episode);
 		
 		EpisodeContents episodeContents = EpisodeContents.builder()
-				.title(webtoon.getTitle())
+				.webtoon_title(webtoon.getTitle())
+				.title(episode.getTitle())
+				.author_comment(episode.getAuthor_comment())
 				.author(webtoon.getUsers().getName())
 				.summary(webtoon.getSummary())
 				.thumbnail("http://localhost:8081/static/web_thumbnail/"+webtoon.getThumbnail())

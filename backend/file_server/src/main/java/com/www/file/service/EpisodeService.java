@@ -93,7 +93,7 @@ public class EpisodeService {
 	        	res.setMsg("fail: user do not match");
 	        	return episodeDtoList;
 	        }
-	        episodePage.setTitle(webtoon.getTitle());
+	        episodePage.setWebtoon_title(webtoon.getTitle());
 	        episodePage.setPlot(webtoon.getPlot());
 	        episodePage.setId(webtoon.getUsers().getUserid());
 	        episodePage.setWriter(webtoon.getUsers().getName());
@@ -111,6 +111,7 @@ public class EpisodeService {
 		    			.title(episode.getTitle())
 		    			.rating_avg(episode.getRating_avg())
 		    			.thumbnail("http://localhost:8081/static/ep_thumbnail/"+episode.getThumbnail())
+		    			.author_comment(episode.getAuthor_comment())
 		    			.created_date(episode.getCreated_date())
 		    			.build();
 		    	episodeDtoList.add(episodeDto);
@@ -208,7 +209,7 @@ public class EpisodeService {
         }
         
         episodeDto.setContents(manuscriptsName);
-
+        
 		//file 외부 폴더로 이동
 		for(int i=0;i<manuscripts.length;i++) {
 			File destinationFile = new File(filePath+"/webtoon/"+manuscripts[i].getOriginalFilename());
@@ -223,7 +224,7 @@ public class EpisodeService {
 		return res;
 	}
 	
-	public Response<EpisodeDto> editEpisode(int webtoon_idx,int no, MultipartFile thumbnail, MultipartFile[] manuscripts, EpisodeDto episodeDto) {
+	public Response<EpisodeDto> editEpisode(int webtoon_idx,int no, MultipartFile thumbnail, MultipartFile[] manuscripts, EpisodeDto episodeDto) throws IllegalStateException, IOException {
 		
 		Response<EpisodeDto> res = new Response<EpisodeDto>();
 		Optional<Webtoon> webtoonWrapper = webtoonRepository.findById(webtoon_idx);
@@ -252,14 +253,26 @@ public class EpisodeService {
         String thumbnailName = thumbnail.getOriginalFilename();
         episodeDto.setThumbnail(thumbnailName);
         episode.setThumbnail(thumbnailName);
-
+        
+        File ThumbDestinationFile = new File(filePath+"/ep_thumbnail/"+thumbnailName);
+        ThumbDestinationFile.getParentFile().mkdir();
+		thumbnail.transferTo(ThumbDestinationFile);
+		
         String manuscriptsName="";
         for(int i=0;i<manuscripts.length;i++) {
         	if(i!=0) manuscriptsName+=";";
         	manuscriptsName += manuscripts[i].getOriginalFilename();
         }
+        
         episodeDto.setContents(manuscriptsName);
         episode.setContents(manuscriptsName);
+        
+        //file 외부 폴더로 이동
+      	for(int i=0;i<manuscripts.length;i++) {
+      		File destinationFile = new File(filePath+"/webtoon/"+manuscripts[i].getOriginalFilename());
+      		destinationFile.getParentFile().mkdir();
+            manuscripts[i].transferTo(destinationFile);
+        }
         
         episodeRepository.save(episode);
         res.setData(episodeDto);

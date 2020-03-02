@@ -107,7 +107,7 @@ export default function Webtoon() {
                             {episodes.map(episode => (
                                 <TableRow key={episode.title}>
                                     <TableCell align="center">
-                                        <img src={episode.thumbnail}/>
+                                        <img src={episode.thumnail} width="64" height="64"/>
                                     </TableCell>
                                     <TableCell align="left">
                                         <a href="/webtoon/episode" style={{}}>

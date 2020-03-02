@@ -170,7 +170,38 @@ function bestCommentLoading() {
 
 export default function Episode() {
 
-    React.useEffect(()=> {
+    const [contents, setContents] = React.useState([]);
+    const [thumbnail, setThumbnail] = React.useState("");
+    const [title, setTitle] = React.useState("");
+    const [author, setAuthor] = React.useState("");
+    const [summary, setSummary] = React.useState("");
+    const [rating_avg, setRating_avg] = React.useState("");
+    const [author_comment, setAuthor_comment] = React.useState("");
+    const [webtoon_title, setWebtoon_title] = React.useState("");
+    
+    React.useEffect(() => {
+        // 회차 정보
+        var requestOptions = {
+            method: 'GET',
+            redirect: 'follow'
+        };
+
+        fetch("/detail/" + idx + "/" + ep_no, requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                console.log(result)
+                setWebtoon_title(result.data.webtoon_title)
+                setTitle(result.data.title)
+                setAuthor(result.data.author)
+                setSummary(result.data.summary)
+                setThumbnail(result.data.thumbnail)
+                setRating_avg(result.data.rating_avg)
+                setContents(result.data.contents)
+                setAuthor_comment(result.data.author_comment)
+
+            })
+            .catch(error => console.log('error', error));
+
         commentLoading();
         bestCommentLoading();
     },[]);
@@ -249,8 +280,8 @@ export default function Episode() {
                 <div className={classes.title} style={{ display: "flex" }}>
                     <img src="http://placeimg.com/128/128/any" alt="thumbnail" style={{ margin: 10, height: 120, }} />
                     <div>
-                        <h2>웹툰 제목 (작가)</h2>
-                        <body1>줄거리저ㅜㄹ거리줄ㄹ거리줄럭리줄러길줄럭리줄러기</body1>
+                        <h2>{webtoon_title} ({author})</h2>
+                        <body1>{summary}</body1>
                     </div>
                 </div>
 
@@ -286,7 +317,7 @@ export default function Episode() {
                     <div style={{ width: 950, borderTop: '1px solid grey', borderBottom: '1px solid grey', paddingBottom: 20 }}>
                         <div style={{ marginLeft: 30 }}>
                             <h4>작가의 말</h4>
-                            <body1>{episode.authorComment}</body1>
+                        <body1>{author_comment}</body1>
                         </div>
                     </div>
                     <div className={classes.comment}>

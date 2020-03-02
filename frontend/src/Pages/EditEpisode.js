@@ -86,14 +86,15 @@ export default function EditEpisode() {
             method: 'DELETE',
             redirect: 'follow'
         };
-
-        fetch("/myArticleList/" +idx+ "/", requestOptions)
+        
+        fetch("/myArticleList/" +idx+ "/"+ep_no, requestOptions)
             .then(response => response.json())
             .then(result => {
                 console.log(result)
                 alert("회차가 삭제되었습니다!")
             })
             .catch(error => console.log('error', error));
+            
     }
 
     return (
@@ -157,7 +158,7 @@ export default function EditEpisode() {
                                         </Button>
                                     </TableCell>
                                     <TableCell align="center">
-                                        <Button variant="contained" onClick={episodeDelete}>
+                                        <Button variant="contained" onClick={()=>episodeDelete(episode.ep_no)}>
                                             <span style={{ color: "#212121", fontWeight: 520 }}>삭제</span>
                                         </Button>
                                     </TableCell>

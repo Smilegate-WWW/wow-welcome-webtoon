@@ -229,8 +229,8 @@ export default function Home() {
                         <div className={classes.gridRoot}>
                             <GridList cellHeight={250} className={classes.gridList} spacing={15} cols={5}>
                                 {list.map(webtoon => (
-                                    <GridListTile key={webtoon} item >
-                                        <Webtoon title={webtoon.title} thumbnail={webtoon.thumbnail} artist={webtoon.artist} ep_rating_avg={webtoon.ep_rating_avg} />
+                                    <GridListTile key={webtoon.idx} item="true" >
+                                        <Webtoon title={webtoon.title} thumbnail={webtoon.thumbnail} author={webtoon.author} ep_rating_avg={webtoon.ep_rating_avg} idx={webtoon.idx} />
                                     </GridListTile>
                                 ))}
                             </GridList>
@@ -240,8 +240,8 @@ export default function Home() {
                         <div className={classes.gridRoot}>
                             <GridList cellHeight={250} className={classes.gridList} spacing={15} cols={5}>
                                 {listByhits.map(webtoon => (
-                                    <GridListTile key={webtoon} item >
-                                        <Webtoon title={webtoon.title} thumbnail={webtoon.thumbnail} artist={webtoon.artist} ep_rating_avg={webtoon.ep_rating_avg} />
+                                    <GridListTile key={webtoon.idx} item="true" >
+                                        <Webtoon title={webtoon.title} thumbnail={webtoon.thumbnail} author={webtoon.author} ep_rating_avg={webtoon.ep_rating_avg} idx={webtoon.idx}/>
                                     </GridListTile>
                                 ))}
                             </GridList>
@@ -251,8 +251,8 @@ export default function Home() {
                         <div className={classes.gridRoot}>
                             <GridList cellHeight={250} className={classes.gridList} spacing={15} cols={5}>
                                 {listByep_rating_avg.map(webtoon => (
-                                    <GridListTile key={webtoon} item >
-                                        <Webtoon title={webtoon.title} thumbnail={webtoon.thumbnail} artist={webtoon.artist} ep_rating_avg={webtoon.ep_rating_avg} />
+                                    <GridListTile key={webtoon.idx} item="true" >
+                                        <Webtoon title={webtoon.title} thumbnail={webtoon.thumbnail} author={webtoon.author} ep_rating_avg={webtoon.ep_rating_avg} idx={webtoon.idx}/>
                                     </GridListTile>
                                 ))}
                             </GridList>
