@@ -92,6 +92,7 @@ export default function EditEpisode() {
             .then(result => {
                 console.log(result)
                 alert("회차가 삭제되었습니다!")
+                window.location.reload();
             })
             .catch(error => console.log('error', error));
         
