@@ -9,6 +9,8 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
+// 토큰 재발급
+var ReToken = require("../AuthRoute");
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -108,8 +110,14 @@ export default function EditInfo() {
                         alert("재로그인 해주세요")
                         window.location.href = "/login";
                     }
-                    else {
-                        alert("실패했습니다. 다시 로그인 후 이용해주세요.");
+                    else if(result.code==44){
+                        ReToken.ReToken()
+                    }
+                    else if(result.code==42){
+                        alert("[ERROR 42] 잘못된 접근입니다, 관리자에게 문의하세요.")
+                    }
+                    else{
+                        alert("잘못된 접근입니다, 관리자에게 문의하세요.")
                     }
                 })
                 .catch(error => console.log('error', error));
@@ -141,8 +149,14 @@ export default function EditInfo() {
                     localStorage.clear();
                     window.location.href="/";
                 }
-                else {
-                    alert("실패했습니다. 다시 로그인 후 이용해주세요.");
+                else if(result.code==44){
+                    ReToken.ReToken()
+                }
+                else if(result.code==42){
+                    alert("[ERROR 42] 잘못된 접근입니다, 관리자에게 문의하세요.")
+                }
+                else{
+                    alert("잘못된 접근입니다, 관리자에게 문의하세요.")
                 }
             })
             .catch(error => console.log('error', error));

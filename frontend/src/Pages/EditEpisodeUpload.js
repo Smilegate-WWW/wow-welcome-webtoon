@@ -7,6 +7,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 //색상
 import { grey } from '@material-ui/core/colors';
+// 토큰 재발급
+var ReToken = require("../AuthRoute");
+
 const useStyles = makeStyles(theme => ({
     menu: {
         '& > *': {
@@ -76,14 +79,25 @@ export default function EditUpload() {
             .then(response => response.json())
             .then(result => {
                 console.log(result)
-                setComment(result.data.author_comment);
-                setThumbnail(result.data.thumbnail);
-                setTitle(result.data.title);
-                setScript(result.data.contents);
-                let reader = new FileReader();
-                reader.onload = () => {
-                    console.log("load end");
-                    setThumbnailstr(reader.result);
+                if (result.code == 0) {
+                    setComment(result.data.author_comment);
+                    setThumbnail(result.data.thumbnail);
+                    setTitle(result.data.title);
+                    setScript(result.data.contents);
+                    let reader = new FileReader();
+                    reader.onload = () => {
+                        console.log("load end");
+                        setThumbnailstr(reader.result);
+                    }
+                }
+                else if(result.code==44){
+                    ReToken.ReToken()
+                }
+                else if(result.code==42){
+                    alert("[ERROR 42] 잘못된 접근입니다, 관리자에게 문의하세요.")
+                }
+                else{
+                    alert("잘못된 접근입니다, 관리자에게 문의하세요.")
                 }
             })
             .catch(error => console.log('error', error));
@@ -206,6 +220,15 @@ export default function EditUpload() {
                     if (result.code == 0) {
                         alert("회차 정보가 수정되었습니다.")
                         window.location.href = "/mypage/editEpisode?idx=" + idx;
+                    }
+                    else if(result.code==44){
+                        ReToken.ReToken()
+                    }
+                    else if(result.code==42){
+                        alert("[ERROR 42] 잘못된 접근입니다, 관리자에게 문의하세요.")
+                    }
+                    else{
+                        alert("잘못된 접근입니다, 관리자에게 문의하세요.")
                     }
                 })
                 .catch(error => console.log('error', error));

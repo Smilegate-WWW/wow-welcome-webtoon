@@ -22,6 +22,8 @@ import PropTypes from 'prop-types';
 import Comment from '../Components/Comment';
 //paging
 import Pagination from '@material-ui/lab/Pagination';
+// 토큰 재발급
+var ReToken = require("../AuthRoute");
 
 const useStyles = makeStyles(theme => ({
     menu: {
@@ -237,7 +239,7 @@ export default function Episode() {
                     alert("댓글 글자수 200자 제한을 초과하였습니다.")
                 }
                 else if(result.code==44){
-                    //만료된 토큰 처리 필요
+                    ReToken.ReToken()
                 }
                 else if(result.code==42){
                     alert("[ERROR 42] 잘못된 접근입니다, 관리자에게 문의하세요.")
@@ -280,7 +282,7 @@ export default function Episode() {
                     alert("이미 별점 주기에 참여하셨습니다.")
                 }
                 else if(result.code==44){
-                    //만료된 토큰 처리 필요
+                    ReToken.ReToken()
                 }
                 else if(result.code==42){
                     alert("[ERROR 42] 잘못된 접근입니다, 관리자에게 문의하세요.")

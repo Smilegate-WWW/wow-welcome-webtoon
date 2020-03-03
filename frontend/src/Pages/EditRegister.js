@@ -12,6 +12,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 //체크박스
 import Checkbox from '@material-ui/core/Checkbox';
 import { grey } from '@material-ui/core/colors';
+// 토큰 재발급
+var ReToken = require("../AuthRoute");
 
 const useStyles = makeStyles(theme => ({
     menu: {
@@ -66,21 +68,32 @@ export default function EditRegister() {
             .then(response => response.json())
             .then(result => {
                 console.log(result)
-                setTitle(result.data.title);
-                setType(result.data.toon_type);
-                setSummary(result.data.summary);
-                setPlot(result.data.plot);
-                setThumbnail(result.data.thumbnail);
-                let reader = new FileReader();
-                reader.onload = () => {
-                    console.log("load end");
-                    setThumbnailstr(reader.result);
+                if (result.code == 0) {
+                    setTitle(result.data.title);
+                    setType(result.data.toon_type);
+                    setSummary(result.data.summary);
+                    setPlot(result.data.plot);
+                    setThumbnail(result.data.thumbnail);
+                    let reader = new FileReader();
+                    reader.onload = () => {
+                        console.log("load end");
+                        setThumbnailstr(reader.result);
+                    }
                 }
+                else if(result.code==44){
+                    ReToken.ReToken()
+                }
+                else if(result.code==42){
+                    alert("[ERROR 42] 잘못된 접근입니다, 관리자에게 문의하세요.")
+                }
+                else{
+                    alert("잘못된 접근입니다, 관리자에게 문의하세요.")
+                }                
             })
             .catch(error => console.log('error', error));
     }, []);
     const classes = useStyles();
-    
+
     // 작품정보 받아와서 넘겨주기.
     const [title, setTitle] = React.useState("");
     const [type, setType] = React.useState("");
@@ -117,7 +130,7 @@ export default function EditRegister() {
     }
     const handleThumbnailChange = (e) => {
         const file = e.target.files[0];
-        
+
         let reader = new FileReader();
         reader.onloadend = () => {
             console.log("load end");
@@ -135,17 +148,17 @@ export default function EditRegister() {
         }
         else {
             var img = new Image();
-         
+
             img.src = window.URL.createObjectURL(file);
-            img.onload = function() {
-                if(img.height <=330 && img.width<=430){
+            img.onload = function () {
+                if (img.height <= 330 && img.width <= 430) {
                     alert("파일이 선택되었습니다.")
                     setThumbnail(file);
                 }
-                else{
+                else {
                     alert("파일 사이즈를 맞춰주세요")
                 }
-            }    
+            }
         }
     }
     const handleCancleBtnClick = () => {
@@ -170,7 +183,7 @@ export default function EditRegister() {
             const genreTrue = [];
             let genre1 = 0;
             let genre2 = 0;
-            var j=0;
+            var j = 0;
             for (var i = 0; i < genreArray.length; i++) {
                 if (genreArray[i] == true) {
                     genreTrue[j] = i;
@@ -215,13 +228,18 @@ export default function EditRegister() {
                 .then(response => response.json())
                 .then(result => {
                     console.log(result)
-                    if(result.code==0){
+                    if (result.code == 0) {
                         alert("작품 정보가 수정되었습니다.")
-                        window.location.href="/mypage"
+                        window.location.href = "/mypage"
+                    }
+                    else if(result.code==44){
+                        ReToken.ReToken()
+                    }
+                    else if(result.code==42){
+                        alert("[ERROR 42] 잘못된 접근입니다, 관리자에게 문의하세요.")
                     }
                     else{
-                        alert("세션이 만료되었습니다.")
-                        window.location.href="/login"
+                        alert("잘못된 접근입니다, 관리자에게 문의하세요.")
                     }
                 })
                 .catch(error => console.log('error', error));
@@ -242,9 +260,18 @@ export default function EditRegister() {
             .then(response => response.text())
             .then(result => {
                 console.log(result)
-                if(result.code ==0 ){
+                if (result.code == 0) {
                     alert("삭제가 완료되었습니다.")
-                    window.location.href="/mypage";
+                    window.location.href = "/mypage";
+                }
+                else if(result.code==44){
+                    ReToken.ReToken()
+                }
+                else if(result.code==42){
+                    alert("[ERROR 42] 잘못된 접근입니다, 관리자에게 문의하세요.")
+                }
+                else{
+                    alert("잘못된 접근입니다, 관리자에게 문의하세요.")
                 }
             })
             .catch(error => console.log('error', error));
@@ -408,7 +435,7 @@ export default function EditRegister() {
                     <div style={{ display: "flex" }}>
                         <h5 >썸네일&emsp;&emsp;</h5>
                         <div>
-                        <input
+                            <input
                                 accept=".jpg"
                                 id="thumbnail"
                                 type="file"
@@ -418,7 +445,7 @@ export default function EditRegister() {
                                 data-height="300"
                             />
                             <label htmlFor="thumbnail">
-                                <Button variant="contained" component="span" style={{ height: 100, marginRight: 5,width: 100 }}>
+                                <Button variant="contained" component="span" style={{ height: 100, marginRight: 5, width: 100 }}>
                                     430 X 330
                                 </Button>
                                 <img src={thumbnailstr} alt="thumbnail" width="100" height="100" />

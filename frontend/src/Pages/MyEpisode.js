@@ -5,12 +5,6 @@ import { makeStyles } from '@material-ui/core/styles';
 //별점
 import Box from '@material-ui/core/Box';
 import Rating from '@material-ui/lab/Rating';
-//select
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-//댓글 다는 field
-import TextField from '@material-ui/core/TextField';
 //탭
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
@@ -20,6 +14,10 @@ import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 //comment component
 import Comment from '../Components/Comment';
+//paging
+import Pagination from '@material-ui/lab/Pagination';
+// 토큰 재발급
+var ReToken = require("../AuthRoute");
 
 const useStyles = makeStyles(theme => ({
     menu: {
@@ -47,6 +45,11 @@ const useStyles = makeStyles(theme => ({
     comment: {
         margin: theme.spacing(0, 5),
     },
+    paging: {
+        '& > *': {
+            marginTop: theme.spacing(2),
+        },
+    }
 }));
 
 //주소 파싱하여 idx 알아오기
@@ -127,13 +130,10 @@ function commentLoading() {
             else if (result.code == 23) {
                 alert("[ERROR 23] 잘못된 접근입니다, 관리자에게 문의하세요.");
             }
-            /*
+            
             else if(result.code ==44){
-                //access token 재발급 api 접근
-                //재발급 성공시 페이지 재 로딩
-                //재발급 실패시 로그인 만료 -> direct "/login"
+                ReToken.ReToken()
             }
-            */
             else {
                 alert("잘못된 접근입니다, 관리자에게 문의하세요.");
             }

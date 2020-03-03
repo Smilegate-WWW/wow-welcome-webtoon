@@ -9,6 +9,8 @@ import TextField from '@material-ui/core/TextField';
 import { grey } from '@material-ui/core/colors';
 //preview
 import Preview from './Preview';
+// 토큰 재발급
+var ReToken = require("../AuthRoute");
 
 const useStyles = makeStyles(theme => ({
     menu: {
@@ -181,6 +183,15 @@ export default function Upload() {
                     if(result.code ==0 ){
                         alert("새로운 회차가 등록되었습니다")
                         window.location.href="/mypage/editEpisode?idx="+idx;
+                    }
+                    else if(result.code==44){
+                        ReToken.ReToken()
+                    }
+                    else if(result.code==42){
+                        alert("[ERROR 42] 잘못된 접근입니다, 관리자에게 문의하세요.")
+                    }
+                    else{
+                        alert("잘못된 접근입니다, 관리자에게 문의하세요.")
                     }
                 })
                 .catch(error => console.log('error', error));

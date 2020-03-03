@@ -15,6 +15,10 @@ import Paper from '@material-ui/core/Paper';
 //스위치
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+//paging
+import Pagination from '@material-ui/lab/Pagination';
+// 토큰 재발급
+var ReToken = require("../AuthRoute");
 
 const useStyles = makeStyles(theme => ({
     menu: {
@@ -51,14 +55,20 @@ const useStyles = makeStyles(theme => ({
     alarm: {
         marginLeft: theme.spacing(135)
     },
+    paging: {
+        '& > *': {
+            marginTop: theme.spacing(2),
+        },
+        marginBottom:theme.spacing(3)
+    }
 }));
 
 export default function MyPage() {
     const classes = useStyles();
 
-    const [myWebtoons,setMyWebtoons]=React.useState([]);
+    const [myWebtoons, setMyWebtoons] = React.useState([]);
 
-    React.useEffect(() => {
+    const mypageLoading = (page) => {
         var myHeaders = new Headers();
         myHeaders.append("Authorization", localStorage.getItem("AUTHORIZATION"));
         myHeaders.append("Accept", "application/json");
@@ -76,14 +86,30 @@ export default function MyPage() {
                 console.log(result)
                 if (result.code == 0) {
                     setMyWebtoons(result.data.webtoonlist);
+                    //pageNum=result.data.~
                 }
-                else {
-                    alert("세션이 만료되었습니다.");
-                    window.location.href = "/login";
+                else if(result.code==44){
+                    ReToken.ReToken()
+                }
+                else if(result.code==42){
+                    alert("[ERROR 42] 잘못된 접근입니다, 관리자에게 문의하세요.")
+                }
+                else{
+                    alert("잘못된 접근입니다, 관리자에게 문의하세요.")
                 }
             })
             .catch(error => console.log('error', error));
-    },[]);
+    }
+
+    React.useEffect(() => {
+        mypageLoading(1);
+    }, []);
+
+    //page 정보
+    var pageNum=1;
+    const handlePaging = (event, value) => {
+        mypageLoading(value);
+    };
 
     return (
         <div>
@@ -135,6 +161,9 @@ export default function MyPage() {
 
             <div className={classes.gridRoot}>
                 <Paper>
+                    <div className={classes.paging}>
+                        <Pagination count={pageNum} color="primary" onChange={handlePaging} />
+                    </div>
                     <GridList cellHeight={300} className={classes.gridList} spacing={15} cols={4}>
                         {myWebtoons.map(myWebtoon => (
                             <GridListTile key={myWebtoon.title} item="true">
@@ -145,8 +174,6 @@ export default function MyPage() {
                     </GridList>
                 </Paper>
             </div>
-
-
         </div>
     )
 };

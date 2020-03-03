@@ -15,6 +15,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
+// 토큰 재발급
+var ReToken = require("../AuthRoute");
 
 const useStyles = makeStyles(theme => ({
     menu: {
@@ -86,7 +88,7 @@ export default function Comment() {
                 alert("[ERROR 42] 잘못된 접근입니다, 관리자에게 문의하세요.")
             }
             else if(result.code==44){
-                //토큰 재발급
+                ReToken.ReToken()
             }
         })
           .catch(error => console.log('error', error));
@@ -132,7 +134,7 @@ export default function Comment() {
                     alert("[ERROR 42] 잘못된 접근입니다, 관리자에게 문의하세요.")
                 }
                 else if(result.code==44){
-                    //토큰 재발급
+                    ReToken.ReToken()
                 }
             })
             .catch(error => console.log('error', error));

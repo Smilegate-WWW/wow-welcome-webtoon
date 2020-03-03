@@ -2,7 +2,7 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 
-function postToken() {
+export function ReToken() {
   var myHeaders = new Headers();
 
   myHeaders.append("Content-Type", "application/json");
@@ -23,7 +23,16 @@ function postToken() {
     .then(response => {
       localStorage.setItem("AUTHORIZATION", response.headers.get('Authorization'))
       response.json().then(
-        result => console.log(result)
+        result => {
+          console.log(result)
+          if (result.code == 0) {
+            return 
+          }
+          else {
+            alert("재로그인이 필요합니다.")
+            window.location.href="/login"
+          }
+        }
       )
     })
     .catch(error => console.log('error', error))
@@ -39,7 +48,7 @@ function AuthRoute({ component: Component, render, ...rest }) {
       decodeToken = jwt_decode(temp.replace("bearer ", ""))
       // token 유효시간 체크
       if (((decodeToken.exp * 1000) - Date.now()) < 1000 * 30) {
-        postToken();
+        ReToken();
       }
     }
 

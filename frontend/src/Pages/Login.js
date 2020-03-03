@@ -87,6 +87,12 @@ export default function Login() {
                             else if (result.code == 2) {
                                 alert("아이디, 비밀번호가 일치하지 않습니다!")
                             }
+                            else if(result.code==42){
+                                alert("[ERROR 42] 잘못된 접근입니다, 관리자에게 문의하세요.")
+                            }
+                            else{
+                                alert("잘못된 접근입니다, 관리자에게 문의하세요.")
+                            }
                         }
                     )
                 })

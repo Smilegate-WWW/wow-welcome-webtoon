@@ -61,7 +61,7 @@ const useStyles = makeStyles(theme => ({
         '& > *': {
             marginTop: theme.spacing(2),
         },
-        marginLeft: theme.spacing(65)
+        
     }
 }));
 
@@ -167,7 +167,7 @@ export default function Home() {
         setTabValue(newValue);
         webtoonListLoading(1,newValue);
     };
-    
+
     //page 정보
     const handlePaging = (event, value) => {
         //webtoonListLoading(value,tabValue);

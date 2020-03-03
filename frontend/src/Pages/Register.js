@@ -12,6 +12,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 //체크박스
 import Checkbox from '@material-ui/core/Checkbox';
 import { grey } from '@material-ui/core/colors';
+// 토큰 재발급
+var ReToken = require("../AuthRoute");
 
 const useStyles = makeStyles(theme => ({
     menu: {
@@ -180,6 +182,15 @@ export default function Register() {
                     if(result.code==0){
                         alert("새로운 웹툰이 등록되었습니다.")
                         window.location.href="/mypage";
+                    }
+                    else if(result.code==44){
+                        ReToken.ReToken()
+                    }
+                    else if(result.code==42){
+                        alert("[ERROR 42] 잘못된 접근입니다, 관리자에게 문의하세요.")
+                    }
+                    else{
+                        alert("잘못된 접근입니다, 관리자에게 문의하세요.")
                     }
                 })
                 .catch(error => console.log('error', error));

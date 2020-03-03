@@ -13,6 +13,8 @@ import Paper from '@material-ui/core/Paper';
 //별점
 import Box from '@material-ui/core/Box';
 import Rating from '@material-ui/lab/Rating';
+// 토큰 재발급
+var ReToken = require("../AuthRoute");
 
 const useStyles = makeStyles(theme => ({
     menu: {
@@ -77,7 +79,7 @@ export default function EditEpisode() {
 
     const classes = useStyles();
 
-    function episodeDelete(ep_no){
+    function episodeDelete(ep_no) {
         var myHeaders = new Headers();
         myHeaders.append("Authorization", localStorage.getItem("AUTHORIZATION"));
 
@@ -86,16 +88,27 @@ export default function EditEpisode() {
             method: 'DELETE',
             redirect: 'follow'
         };
-        
-        fetch("/myArticleList/" +idx+ "/"+ep_no, requestOptions)
+
+        fetch("/myArticleList/" + idx + "/" + ep_no, requestOptions)
             .then(response => response.json())
             .then(result => {
                 console.log(result)
-                alert("회차가 삭제되었습니다!")
-                window.location.reload();
+                if (result.code == 0) {
+                    alert("회차가 삭제되었습니다!")
+                    window.location.reload();
+                }
+                else if (result.code == 44){
+                    ReToken.ReToken()
+                }
+                else if(result.code==42){
+                    alert("[ERROR 42] 잘못된 접근입니다, 관리자에게 문의하세요.")
+                }
+                else{
+                    alert("잘못된 접근입니다, 관리자에게 문의하세요.")
+                }
             })
             .catch(error => console.log('error', error));
-        
+
     }
 
     return (
@@ -143,7 +156,7 @@ export default function EditEpisode() {
                                         <img src={episode.thumnail} width="64" height="64" />
                                     </TableCell>
                                     <TableCell align="left">
-                                        <a href={"/mypage/myEpisode?idx="+idx+"&ep_no="+episode.ep_no+"&ep_idx="+episode.idx} style={{}}>
+                                        <a href={"/mypage/myEpisode?idx=" + idx + "&ep_no=" + episode.ep_no + "&ep_idx=" + episode.idx} style={{}}>
                                             {episode.ep_no}화. {episode.title}
                                         </a>
                                     </TableCell>
@@ -154,12 +167,12 @@ export default function EditEpisode() {
                                     </TableCell>
                                     <TableCell align="center">{episode.created_date.slice(0, 10)}</TableCell>
                                     <TableCell align="center">
-                                        <Button variant="contained" href={"/mypage/editUpload?idx="+idx+"&ep_no="+episode.ep_no}>
+                                        <Button variant="contained" href={"/mypage/editUpload?idx=" + idx + "&ep_no=" + episode.ep_no}>
                                             <span style={{ color: "#212121", fontWeight: 520 }}>수정</span>
                                         </Button>
                                     </TableCell>
                                     <TableCell align="center">
-                                        <Button variant="contained" onClick={()=>episodeDelete(episode.ep_no)}>
+                                        <Button variant="contained" onClick={() => episodeDelete(episode.ep_no)}>
                                             <span style={{ color: "#212121", fontWeight: 520 }}>삭제</span>
                                         </Button>
                                     </TableCell>
