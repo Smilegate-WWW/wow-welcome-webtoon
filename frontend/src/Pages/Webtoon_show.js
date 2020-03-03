@@ -119,7 +119,7 @@ export default function Webtoon() {
                                     </TableCell>
                                     <TableCell align="center">
                                         <Box component="span" mb={0} borderColor="transparent">
-                                            <Rating name="read-only" value={episode.starRating} readOnly />
+                                            <Rating name="read-only" value={episode.rating_avg} readOnly />
                                         </Box>
                                     </TableCell>
                                     <TableCell align="center">{episode.created_date.slice(0, 10)}</TableCell>

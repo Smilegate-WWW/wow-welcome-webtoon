@@ -239,7 +239,13 @@ export default function Episode() {
                 if (result.code == 0) {
                     alert("댓글 등록이 완료되었습니다.")
                 }
-                else {
+                else if(result.code==44){
+                    //만료된 토큰 처리 필요
+                }
+                else if(result.code==42){
+                    alert("[ERROR 42] 잘못된 접근입니다, 관리자에게 문의하세요.")
+                }
+                else{
                     alert("잘못된 접근입니다, 관리자에게 문의하세요.")
                 }
             })
@@ -263,9 +269,26 @@ export default function Episode() {
             redirect: 'follow'
         };
 
-        fetch("/episodes/" + ep_idx + "/rating", requestOptions)
-            .then(response => response.text())
-            .then(result => console.log(result))
+        fetch("/episodes/"+ep_idx+"/rating", requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                console.log(result)
+                if(result.code==0){
+                    alert("별점 등록이 완료되었습니다.");
+                }
+                else if(result.code==20){
+                    alert("존재하지 않는 회차입니다. 관리자에게 문의하세요.");
+                }
+                else if(result.code==26){
+                    alert("이미 별점 주기에 참여하셨습니다.")
+                }
+                else if(result.code==44){
+                    //만료된 토큰 처리 필요
+                }
+                else if(result.code==42){
+                    alert("[ERROR 42] 잘못된 접근입니다, 관리자에게 문의하세요.")
+                }
+            })
             .catch(error => console.log('error', error));
     }
 
@@ -286,7 +309,7 @@ export default function Episode() {
 
             <div style={{ borderTop: '1px solid grey', minHeight: 600, marginBottom: 30 }}>
                 <div className={classes.title} style={{ display: "flex" }}>
-                    <img src={thumbnail} alt="thumbnail" style={{ margin: 10, height: 120, }} width="128" height="128" />
+                    <img src={thumbnail} alt="thumbnail img" style={{ margin: 10, height: 120, }} width="128" height="128" />
                     <div>
                         <h2>{webtoon_title} ({author})</h2>
                         <body1>{summary}</body1>
@@ -319,7 +342,7 @@ export default function Episode() {
                     </div>
                     <div style={{ width: 950, borderTop: '1px solid grey', paddingTop: 40, paddingBottom: 40 }} align="center">
                         {contents.map(content => (
-                            <img src={content} alt="cut" key={content} />
+                            <img src={content} alt="webtoon img" key={content}/>
                         ))}
                     </div>
                     <div style={{ width: 950, borderTop: '1px solid grey', borderBottom: '1px solid grey', paddingBottom: 20 }}>

@@ -17,4 +17,8 @@ public interface CommentsLikeRepository extends JpaRepository<CommentsLike, Inte
     @Query("DELETE FROM comments_like " +
             "WHERE idx = :idx")
     void deleteByIdx(@Param("idx") int idx);
+
+    @Modifying
+    @Transactional
+    void deleteAllByCommentsIdx(@Param("comments_idx") int commentsIdx);
 }
