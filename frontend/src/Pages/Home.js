@@ -17,7 +17,8 @@ import Box from '@material-ui/core/Box';
 //웹툰 리스트 출력
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
-
+//paging
+import Pagination from '@material-ui/lab/Pagination';
 
 const useStyles = makeStyles(theme => ({
     menu: {
@@ -54,7 +55,14 @@ const useStyles = makeStyles(theme => ({
     gridList: {
         width: 1200,
         height: 800,
+        margin: theme.spacing(3, 1)
     },
+    paging: {
+        '& > *': {
+            marginTop: theme.spacing(2),
+        },
+        marginLeft: theme.spacing(65)
+    }
 }));
 
 //오늘 인기 웹툰 정보
@@ -131,57 +139,48 @@ function a11yProps(index) {
     };
 }
 
+let tempList=[];
 
+//page, sorting 인수로 넘김
+function webtoonListLoading(page,sortBy){
+    var requestOptions = {
+        method: 'GET',
+        redirect: 'follow'
+    };
 
+    fetch("/webtoonlist?page="+page+"&sortBy="+sortBy, requestOptions)
+        .then(response => response.json())
+        .then(result => {
+            console.log(result)
+            if (result.code == 0) {
+                tempList=result.data.webtoonlist;
+            }
+        })
+        .catch(error => console.log('error', error));
+
+}
 export default function Home() {
     const classes = useStyles();
-    const [value, setValue] = React.useState(0);
+    const [tabValue, setTabValue] = React.useState(0);
 
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
+    const handleTabChange = (event, newValue) => {
+        setTabValue(newValue);
+        webtoonListLoading(1,newValue);
+        setList(tempList);
     };
 
     const [list, setList] = React.useState([]);
-    const [listByhits, setListByhits] = React.useState([]);
-    const [listByep_rating_avg, setListByep_rating_avg] = React.useState([]);
-
+    
+    //page 정보
+    const handlePaging = (event, value) => {
+        console.log(value)
+        //webtoonListLoading(value,tabValue);
+        //setList(tempList);
+    };
+    
     React.useEffect(() => {
-        var requestOptions = {
-            method: 'GET',
-            redirect: 'follow'
-        };
-
-        fetch("/webtoonlist?page=1&sortBy=0", requestOptions)
-            .then(response => response.json())
-            .then(result => {
-                console.log(result)
-                if (result.code == 0) {
-                    setList(result.data.webtoonlist);
-                }
-            })
-            .catch(error => console.log('error', error));
-
-
-        fetch("/webtoonlist?page=1&sortBy=1", requestOptions)
-            .then(response => response.json())
-            .then(result => {
-                console.log(result)
-                if (result.code == 0) {
-                    setListByhits(result.data.webtoonlist);
-                }
-            })
-            .catch(error => console.log('error', error));
-
-
-        fetch("/webtoonlist?page=1&sortBy=2", requestOptions)
-            .then(response => response.json())
-            .then(result => {
-                console.log(result)
-                if (result.code == 0) {
-                    setListByep_rating_avg(result.data.webtoonlist);
-                }
-            })
-            .catch(error => console.log('error', error));
+        webtoonListLoading(1,0);
+        setList(tempList);
     }, [])
 
     return (
@@ -218,15 +217,15 @@ export default function Home() {
             <div className={classes.webtoonList}>
                 <Paper elevation={3}>
                     <AppBar position="static" color="inherit">
-                        <Tabs value={value} onChange={handleChange} aria-label="webtoonListTabLabel">
+                        <Tabs value={tabValue} onChange={handleTabChange} aria-label="webtoonListTabLabel">
                             <Tab label="업데이트순"  {...a11yProps(0)} />
                             <Tab label="조회순" {...a11yProps(1)} />
                             <Tab label="별점순" {...a11yProps(2)} />
                         </Tabs>
                     </AppBar>
 
-                    <TabPanel value={value} index={0}>
-                        <div className={classes.gridRoot}>
+                    <TabPanel value={tabValue} index={0}>
+                        <div>
                             <GridList cellHeight={250} className={classes.gridList} spacing={15} cols={5}>
                                 {list.map(webtoon => (
                                     <GridListTile key={webtoon.idx} item="true" >
@@ -234,28 +233,37 @@ export default function Home() {
                                     </GridListTile>
                                 ))}
                             </GridList>
+                            <div className={classes.paging}>
+                                <Pagination count={10} color="primary" onClick={handlePaging} />
+                            </div>
                         </div>
                     </TabPanel>
-                    <TabPanel value={value} index={1}>
-                        <div className={classes.gridRoot}>
+                    <TabPanel value={tabValue} index={1}>
+                        <div>
                             <GridList cellHeight={250} className={classes.gridList} spacing={15} cols={5}>
-                                {listByhits.map(webtoon => (
+                                {list.map(webtoon => (
                                     <GridListTile key={webtoon.idx} item="true" >
-                                        <Webtoon title={webtoon.title} thumbnail={webtoon.thumbnail} author={webtoon.author} ep_rating_avg={webtoon.epRatingAvg} idx={webtoon.idx}/>
+                                        <Webtoon title={webtoon.title} thumbnail={webtoon.thumbnail} author={webtoon.author} ep_rating_avg={webtoon.epRatingAvg} idx={webtoon.idx} />
                                     </GridListTile>
                                 ))}
                             </GridList>
+                            <div className={classes.paging}>
+                                    <Pagination count={10} color="primary" onClick={handlePaging} />
+                                </div>
                         </div>
                     </TabPanel>
-                    <TabPanel value={value} index={2}>
-                        <div className={classes.gridRoot}>
+                    <TabPanel value={tabValue} index={2}>
+                        <div>
                             <GridList cellHeight={250} className={classes.gridList} spacing={15} cols={5}>
-                                {listByep_rating_avg.map(webtoon => (
+                                {list.map(webtoon => (
                                     <GridListTile key={webtoon.idx} item="true" >
-                                        <Webtoon title={webtoon.title} thumbnail={webtoon.thumbnail} author={webtoon.author} ep_rating_avg={webtoon.epRatingAvg} idx={webtoon.idx}/>
+                                        <Webtoon title={webtoon.title} thumbnail={webtoon.thumbnail} author={webtoon.author} ep_rating_avg={webtoon.epRatingAvg} idx={webtoon.idx} />
                                     </GridListTile>
                                 ))}
                             </GridList>
+                            <div className={classes.paging}>
+                                    <Pagination count={10} color="primary"  onChange={handlePaging} />
+                            </div>
                         </div>
                     </TabPanel>
                 </Paper>

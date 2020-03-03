@@ -53,7 +53,6 @@ const useStyles = makeStyles(theme => ({
         '& > *': {
             marginTop: theme.spacing(2),
         },
-        marginLeft: theme.spacing(35)
     }
 }));
 
@@ -70,8 +69,7 @@ var ep_no = getParameterByName('ep_no');
 var ep_idx = getParameterByName('ep_idx');
 
 //댓글 정보
-let comments = []
-let best_comments = []
+let tmp_comments = []
 let comment_page = 1;
 
 //탭 관련
@@ -112,13 +110,12 @@ export function commentLoading(page) {
         redirect: 'follow'
     };
 
-    //댓글 page 추가 후 url 변수 수정해야함!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     fetch("/episodes/" + ep_idx + "/comments?page=" + page, requestOptions)
         .then(response => response.json())
         .then(result => {
             console.log(result)
             if (result.code == 0) {
-                comments = result.data.comments;
+                tmp_comments = result.data.comments;
                 comment_page = result.data.total_pages;
             }
             else if (result.code == 20) {
@@ -134,29 +131,6 @@ export function commentLoading(page) {
         .catch(error => console.log('error', error));
 }
 
-
-/* 베스트 댓글 목록 조회 */
-export function bestCommentLoading() {
-    var requestOptions = {
-        method: 'GET',
-        redirect: 'follow'
-    };
-
-    fetch("/episodes/" + ep_idx + "/comments/best", requestOptions)
-        .then(response => response.json())
-        .then(result => {
-            console.log(result)
-            if (result.code == 0) {
-                best_comments = result.data;
-                console.log(best_comments);
-            }
-            else if (result.code == 20) {
-                alert("[ERROR 20] 잘못된 접근입니다, 관리자에게 문의하세요.");
-            }
-        })
-        .catch(error => console.log('error', error));
-}
-
 export default function Episode() {
 
     const [contents, setContents] = React.useState([]);
@@ -167,6 +141,11 @@ export default function Episode() {
     const [rating_avg, setRating_avg] = React.useState("");
     const [webtoon_title, setWebtoon_title] = React.useState("");
     const [author_comment, setAuthor_comment] = React.useState("");
+       
+    //댓글 관련
+    const [comments,setComments]=React.useState([]);
+    const [bestComments,setBestComments]=React.useState([]);
+
 
     React.useEffect(() => {
         // 회차 정보
@@ -192,7 +171,21 @@ export default function Episode() {
             .catch(error => console.log('error', error));
         // 댓글 로드
         commentLoading(1);
-        bestCommentLoading();
+        setComments(tmp_comments);
+
+        fetch("/episodes/" + ep_idx + "/comments/best", requestOptions)
+        .then(response => response.json())
+        .then(result => {
+            console.log(result)
+            if (result.code == 0) {
+                setBestComments(result.data);
+            }
+            else if (result.code == 20) {
+                alert("[ERROR 20] 잘못된 접근입니다, 관리자에게 문의하세요.");
+            }
+        })
+        .catch(error => console.log('error', error));
+        
     }, []);
 
     const classes = useStyles();
@@ -205,6 +198,7 @@ export default function Episode() {
     const handlePaging = (event, value) => {
       setPage(value);
       commentLoading(value);
+      setComments(tmp_comments);
     };
 
     const handleCommentChange = (e) => {
@@ -238,6 +232,7 @@ export default function Episode() {
                 console.log(result)
                 if (result.code == 0) {
                     alert("댓글 등록이 완료되었습니다.")
+                    setComment("")
                 }
                 else if(result.code==44){
                     //만료된 토큰 처리 필요
@@ -375,19 +370,16 @@ export default function Episode() {
                             </AppBar>
 
                             <TabPanel value={value} index={0}>
-                                {best_comments.map(comment => (
+                                {bestComments.map(comment => (
                                     <Comment cmt_idx={comment.idx} nickname={comment.user_id} comment={comment.content} date={comment.created_date} goodNum={comment.like_cnt} badNum={comment.dislike_cnt} />
                                 ))}
-                                <div className={classes.paging}>
-                                    <Pagination count={10} color="primary" />
-                                </div>
                             </TabPanel>
                             <TabPanel value={value} index={1}>
                                 {comments.map(comment => (
-                                    <Comment cmt_idx={comment.idx} nickname={comment.user_id} comment={comment.content} date={comment.created_date} goodNum={comment.like_cnt} badNum={comment.dislike_cnt} />
+                                    <Comment key={comment.idx} cmt_idx={comment.idx} nickname={comment.user_id} comment={comment.content} date={comment.created_date} goodNum={comment.like_cnt} badNum={comment.dislike_cnt} />
                                 ))}
                                 <div className={classes.paging}>
-                                    <Pagination count={10} color="primary" onClick={handlePaging}/>
+                                    <Pagination count={comment_page} color="primary" onChange={handlePaging}/>
                                 </div>
                             </TabPanel>
 
