@@ -94,11 +94,11 @@ class Comment extends Component {
                 <div style={{ display: "flex" }}>
                     <span style={{fontSize:10, paddingTop:20}}>{this.props.date}</span>
                     <div style={{ marginLeft: 580, display: "flex" }}>
-                        <Button variant="contained" onClick={handleGood} style={{ marginRight: 10, width: 50 }}>
+                        <Button variant="contained" onClick={this.handleGood} style={{ marginRight: 10, width: 50 }}>
                             <img src="/Icon/commentGood.png" alt="icon" />
                             &ensp;{goodNum}
                         </Button>
-                        <Button variant="contained" onClick={handleBad} style={{ marginRight: 5, width: 50 }}>
+                        <Button variant="contained" onClick={this.handleBad} style={{ marginRight: 5, width: 50 }}>
                             <img src="/Icon/commentBad.png" alt="icon" />
                             &ensp;{badNum}
                         </Button>
