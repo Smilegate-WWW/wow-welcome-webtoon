@@ -194,6 +194,7 @@ export default function Episode() {
     const [value, setValue] = React.useState(0);
 
     //page 정보
+    const [page,setPage]=React.useState(1);
     const handlePaging = (event, value) => {
       setPage(value);
       commentLoading(value);
