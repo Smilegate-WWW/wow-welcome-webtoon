@@ -22,6 +22,7 @@ import PropTypes from 'prop-types';
 import Comment from '../Components/Comment';
 //paging
 import Pagination from '@material-ui/lab/Pagination';
+import { render } from '@testing-library/react';
 
 const useStyles = makeStyles(theme => ({
     menu: {
@@ -68,10 +69,6 @@ var idx = getParameterByName('idx');
 var ep_no = getParameterByName('ep_no');
 var ep_idx = getParameterByName('ep_idx');
 
-//댓글 정보
-let tmp_comments = []
-let comment_page = 1;
-
 //탭 관련
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -103,34 +100,6 @@ function a11yProps(index) {
     };
 }
 
-/* 댓글 목록 조회 */
-export function commentLoading(page) {
-    var requestOptions = {
-        method: 'GET',
-        redirect: 'follow'
-    };
-
-    fetch("/episodes/" + ep_idx + "/comments?page=" + page, requestOptions)
-        .then(response => response.json())
-        .then(result => {
-            console.log(result)
-            if (result.code == 0) {
-                tmp_comments = result.data.comments;
-                comment_page = result.data.total_pages;
-            }
-            else if (result.code == 20) {
-                alert("[ERROR 20] 잘못된 접근입니다, 관리자에게 문의하세요.");
-            }
-            else if (result.code == 23) {
-                alert("[ERROR 23] 잘못된 접근입니다, 관리자에게 문의하세요.");
-            }
-            else {
-                alert("잘못된 접근입니다, 관리자에게 문의하세요.");
-            }
-        })
-        .catch(error => console.log('error', error));
-}
-
 export default function Episode() {
 
     const [contents, setContents] = React.useState([]);
@@ -145,8 +114,9 @@ export default function Episode() {
     //댓글 관련
     const [comments,setComments]=React.useState([]);
     const [bestComments,setBestComments]=React.useState([]);
+    const [cmt_page,setCmtPage]=React.useState(1);
 
-
+    //first rendering
     React.useEffect(() => {
         // 회차 정보
         var requestOptions = {
@@ -166,13 +136,12 @@ export default function Episode() {
                 setContents(result.data.contents)
                 setAuthor_comment(result.data.author_comment)
                 setWebtoon_title(result.data.webtoon_title)
-
             })
             .catch(error => console.log('error', error));
         // 댓글 로드
-        commentLoading(1);
-        setComments(tmp_comments);
+        loadComment(1);
 
+        // 베스트 댓글 로드
         fetch("/episodes/" + ep_idx + "/comments/best", requestOptions)
         .then(response => response.json())
         .then(result => {
@@ -184,8 +153,7 @@ export default function Episode() {
                 alert("[ERROR 20] 잘못된 접근입니다, 관리자에게 문의하세요.");
             }
         })
-        .catch(error => console.log('error', error));
-        
+        .catch(error => console.log('error', error));       
     }, []);
 
     const classes = useStyles();
@@ -193,11 +161,8 @@ export default function Episode() {
     const [score, setScore] = React.useState("5");
     const [value, setValue] = React.useState(0);
 
-    //page 정보
     const handlePaging = (event, value) => {
-      setPage(value);
-      commentLoading(value);
-      setComments(tmp_comments);
+        loadComment(value);
     };
     const handleCommentChange = (e) => {
         setComment(e.target.value);
@@ -208,6 +173,35 @@ export default function Episode() {
     const tabChange = (event, newValue) => {
         setValue(newValue);
     };
+
+    /* 댓글 조회 */
+    const loadComment = (page) => {
+        var requestOptions = {
+            method: 'GET',
+            redirect: 'follow'
+        };
+    
+        fetch("/episodes/" + ep_idx + "/comments?page=" + page, requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                console.log(result)
+                if (result.code == 0) {
+                    setComments(result.data.comments);
+                    setCmtPage(result.data.total_pages);
+                }
+                else if (result.code == 20) {
+                    alert("[ERROR 20] 잘못된 접근입니다, 관리자에게 문의하세요.");
+                }
+                else if (result.code == 23) {
+                    alert("[ERROR 23] 잘못된 접근입니다, 관리자에게 문의하세요.");
+                }
+                else {
+                    alert("잘못된 접근입니다, 관리자에게 문의하세요.");
+                }
+            })
+            .catch(error => console.log('error', error));
+    }
+
     /* 댓글 등록 */
     // 로그인 체크 필요 + token 유효시간 체크 필요
     const submitComment = () => {
@@ -215,6 +209,7 @@ export default function Episode() {
         myHeaders.append("Content-Type", "application/json");
         myHeaders.append("AUTHORIZATION", localStorage.getItem("AUTHORIZATION"));
 
+        if(comment.length!=0){
         var raw = JSON.stringify({ "content": comment });
 
         var requestOptions = {
@@ -231,6 +226,7 @@ export default function Episode() {
                 if (result.code == 0) {
                     alert("댓글 등록이 완료되었습니다.")
                     setComment("")
+                    loadComment(1)
                 }
                 else if(result.code==27){
                     alert("댓글 글자수 200자 제한을 초과하였습니다.")
@@ -246,6 +242,10 @@ export default function Episode() {
                 }
             })
             .catch(error => console.log('error', error));
+        }
+        else{
+            alert("댓글 내용을 입력해주세요.");
+        }
     }
 
     /* 별점 주기 */
@@ -380,7 +380,7 @@ export default function Episode() {
                                     <Comment key={comment.idx} cmt_idx={comment.idx} nickname={comment.user_id} comment={comment.content} date={comment.created_date} goodNum={comment.like_cnt} badNum={comment.dislike_cnt} />
                                 ))}
                                 <div className={classes.paging}>
-                                    <Pagination count={comment_page} color="primary" onChange={handlePaging}/>
+                                    <Pagination count={cmt_page} color="primary" onChange={handlePaging}/>
                                 </div>
                             </TabPanel>
 
