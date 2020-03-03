@@ -20,6 +20,8 @@ import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 //comment component
 import Comment from '../Components/Comment';
+//paging
+import Pagination from '@material-ui/lab/Pagination';
 
 const useStyles = makeStyles(theme => ({
     menu: {
@@ -47,6 +49,12 @@ const useStyles = makeStyles(theme => ({
     comment: {
         margin: theme.spacing(0, 5),
     },
+    paging: {
+        '& > *': {
+            marginTop: theme.spacing(2),
+        },
+        marginLeft: theme.spacing(35)
+    }
 }));
 
 //주소 파싱하여 idx 알아오기
@@ -59,12 +67,12 @@ function getParameterByName(name) {
 
 var idx = getParameterByName('idx');
 var ep_no = getParameterByName('ep_no');
-var ep_idx=getParameterByName('ep_idx');
+var ep_idx = getParameterByName('ep_idx');
 
 //댓글 정보
 let comments = []
-let best_comments =[]
-let comment_page=1;
+let best_comments = []
+let comment_page = 1;
 
 //탭 관련
 function TabPanel(props) {
@@ -98,28 +106,28 @@ function a11yProps(index) {
 }
 
 /* 댓글 목록 조회 */
-export function commentLoading() {
+export function commentLoading(page) {
     var requestOptions = {
         method: 'GET',
         redirect: 'follow'
     };
 
     //댓글 page 추가 후 url 변수 수정해야함!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    fetch("/episodes/"+ep_idx+"/comments?page=1", requestOptions)
+    fetch("/episodes/" + ep_idx + "/comments?page=" + page, requestOptions)
         .then(response => response.json())
         .then(result => {
             console.log(result)
-            if(result.code==0){
-                comments=result.data.comments;
+            if (result.code == 0) {
+                comments = result.data.comments;
                 comment_page = result.data.total_pages;
             }
-            else if (result.code==20){
+            else if (result.code == 20) {
                 alert("[ERROR 20] 잘못된 접근입니다, 관리자에게 문의하세요.");
             }
-            else if (result.code ==23){
+            else if (result.code == 23) {
                 alert("[ERROR 23] 잘못된 접근입니다, 관리자에게 문의하세요.");
             }
-            else{
+            else {
                 alert("잘못된 접근입니다, 관리자에게 문의하세요.");
             }
         })
@@ -134,15 +142,15 @@ export function bestCommentLoading() {
         redirect: 'follow'
     };
 
-    fetch("/episodes/"+ep_idx+"/comments/best", requestOptions)
+    fetch("/episodes/" + ep_idx + "/comments/best", requestOptions)
         .then(response => response.json())
         .then(result => {
             console.log(result)
-            if(result.code==0){
-                best_comments=result.data;
+            if (result.code == 0) {
+                best_comments = result.data;
                 console.log(best_comments);
             }
-            else if (result.code==20){
+            else if (result.code == 20) {
                 alert("[ERROR 20] 잘못된 접근입니다, 관리자에게 문의하세요.");
             }
         })
@@ -158,8 +166,8 @@ export default function Episode() {
     const [summary, setSummary] = React.useState("");
     const [rating_avg, setRating_avg] = React.useState("");
     const [webtoon_title, setWebtoon_title] = React.useState("");
-    const [author_comment,setAuthor_comment] = React.useState("");
-    
+    const [author_comment, setAuthor_comment] = React.useState("");
+
     React.useEffect(() => {
         // 회차 정보
         var requestOptions = {
@@ -183,14 +191,21 @@ export default function Episode() {
             })
             .catch(error => console.log('error', error));
         // 댓글 로드
-        commentLoading();
+        commentLoading(1);
         bestCommentLoading();
-    },[]);
+    }, []);
 
     const classes = useStyles();
     const [comment, setComment] = React.useState("");
     const [score, setScore] = React.useState("5");
     const [value, setValue] = React.useState(0);
+
+    //page 정보
+    const [page, setPage] = React.useState(1);
+    const handlePaging = (event, value) => {
+      setPage(value);
+      commentLoading(value);
+    };
 
     const handleCommentChange = (e) => {
         setComment(e.target.value);
@@ -217,14 +232,14 @@ export default function Episode() {
             redirect: 'follow'
         };
 
-        fetch("/episodes/"+ep_idx+"/comments", requestOptions)
+        fetch("/episodes/" + ep_idx + "/comments", requestOptions)
             .then(response => response.json())
             .then(result => {
                 console.log(result)
-                if(result.code==0){
+                if (result.code == 0) {
                     alert("댓글 등록이 완료되었습니다.")
                 }
-                else{
+                else {
                     alert("잘못된 접근입니다, 관리자에게 문의하세요.")
                 }
             })
@@ -236,9 +251,9 @@ export default function Episode() {
     const handleRating = () => {
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
-        myHeaders.append("AUTHORIZATION",  localStorage.getItem("AUTHORIZATION"));
+        myHeaders.append("AUTHORIZATION", localStorage.getItem("AUTHORIZATION"));
 
-        var raw = JSON.stringify({ "rating": score});
+        var raw = JSON.stringify({ "rating": score });
         console.log(score);
 
         var requestOptions = {
@@ -248,7 +263,7 @@ export default function Episode() {
             redirect: 'follow'
         };
 
-        fetch("/episodes/"+ep_idx+"/rating", requestOptions)
+        fetch("/episodes/" + ep_idx + "/rating", requestOptions)
             .then(response => response.text())
             .then(result => console.log(result))
             .catch(error => console.log('error', error));
@@ -304,13 +319,13 @@ export default function Episode() {
                     </div>
                     <div style={{ width: 950, borderTop: '1px solid grey', paddingTop: 40, paddingBottom: 40 }} align="center">
                         {contents.map(content => (
-                            <img src={content} alt="cut" key={content}/>
+                            <img src={content} alt="cut" key={content} />
                         ))}
                     </div>
                     <div style={{ width: 950, borderTop: '1px solid grey', borderBottom: '1px solid grey', paddingBottom: 20 }}>
                         <div style={{ marginLeft: 30 }}>
                             <h4>작가의 말</h4>
-                        <body1>{author_comment}</body1>
+                            <body1>{author_comment}</body1>
                         </div>
                     </div>
                     <div className={classes.comment}>
@@ -328,7 +343,7 @@ export default function Episode() {
                             />
                             <Button color="primary" variant="contained" onClick={submitComment} style={{ height: 40, marginLeft: 10, marginTop: 70 }}>등록</Button>
                         </div>
-                        <Paper elevation={3} style={{ marginTop: 30 }}>
+                        <Paper elevation={3} style={{ marginTop: 30, paddingBottom: 5}}>
                             <AppBar position="static" color="inherit">
                                 <Tabs value={value} onChange={tabChange} aria-label="commentTabLabel">
                                     <Tab label="베스트 댓글"  {...a11yProps(0)} />
@@ -340,12 +355,19 @@ export default function Episode() {
                                 {best_comments.map(comment => (
                                     <Comment cmt_idx={comment.idx} nickname={comment.user_id} comment={comment.content} date={comment.created_date} goodNum={comment.like_cnt} badNum={comment.dislike_cnt} />
                                 ))}
+                                <div className={classes.paging}>
+                                    <Pagination count={10} color="primary" />
+                                </div>
                             </TabPanel>
                             <TabPanel value={value} index={1}>
                                 {comments.map(comment => (
                                     <Comment cmt_idx={comment.idx} nickname={comment.user_id} comment={comment.content} date={comment.created_date} goodNum={comment.like_cnt} badNum={comment.dislike_cnt} />
                                 ))}
+                                <div className={classes.paging}>
+                                    <Pagination count={10} color="primary" onClick={handlePaging}/>
+                                </div>
                             </TabPanel>
+
                         </Paper>
                     </div>
                 </div>
