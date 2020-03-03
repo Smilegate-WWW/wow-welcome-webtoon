@@ -201,12 +201,9 @@ export default function Episode() {
     const [value, setValue] = React.useState(0);
 
     //page 정보
-    const [page, setPage] = React.useState(1);
     const handlePaging = (event, value) => {
-      setPage(value);
-      commentLoading(value);
+        commentLoading(value);
     };
-
     const handleCommentChange = (e) => {
         setComment(e.target.value);
     }
@@ -238,6 +235,9 @@ export default function Episode() {
                 console.log(result)
                 if (result.code == 0) {
                     alert("댓글 등록이 완료되었습니다.")
+                }
+                else if(result.code==27){
+                    alert("댓글 글자수 200자 제한을 초과하였습니다.")
                 }
                 else if(result.code==44){
                     //만료된 토큰 처리 필요

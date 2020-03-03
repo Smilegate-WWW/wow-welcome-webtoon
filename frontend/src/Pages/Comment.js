@@ -56,30 +56,41 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-
 export default function Comment() {
     const [myComments,setMyComments]=React.useState([]);
-
+    const [renderFlag,setRenderFlag]=React.useState(0);
 
     React.useEffect(() => {
+        /* 내 댓글 목록 조회 */
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
         myHeaders.append("Authorization", localStorage.getItem("AUTHORIZATION"));
-                
-        var requestOptions = {
+            
+       var requestOptions = {
           method: 'GET',
           headers: myHeaders,
           redirect: 'follow'
         };
-        
+    
         fetch("/users/comments?page=1", requestOptions)
           .then(response => response.json())
           .then(result => {
               console.log(result)
-              setMyComments(result.data.comments);
-            })
+              if(result.code==0){
+                setMyComments(result.data.comments);
+              }
+              if(result.code==23){
+                  alert("[ERROR 23] 유효하지 않은 페이지 요청 입니다.")
+              }
+              else if(result.code==42){
+                alert("[ERROR 42] 잘못된 접근입니다, 관리자에게 문의하세요.")
+            }
+            else if(result.code==44){
+                //토큰 재발급
+            }
+        })
           .catch(error => console.log('error', error));
-    },[]);
+    },[renderFlag]);
     
     const classes = useStyles();
     const [checked, setChecked] = React.useState(true);
@@ -105,8 +116,25 @@ export default function Comment() {
 
         console.log("/comments/"+idx);
         fetch("/comments/" + idx, requestOptions)
-            .then(response => response.text())
-            .then(result => console.log(result))
+            .then(response => response.json())
+            .then(result => {
+                console.log(result)
+                if(result.code==0){
+                    setRenderFlag(1)
+                }
+                else if(result.code==21){
+                    alert("존재하지 않는 댓글입니다.")
+                }
+                else if(result.code==22){
+                    alert("이 댓글의 작성자가 아닙니다.")
+                }
+                else if(result.code==42){
+                    alert("[ERROR 42] 잘못된 접근입니다, 관리자에게 문의하세요.")
+                }
+                else if(result.code==44){
+                    //토큰 재발급
+                }
+            })
             .catch(error => console.log('error', error));
     }
 
@@ -185,6 +213,7 @@ export default function Comment() {
                         </TableBody>
                     </Table>
                 </TableContainer>
+                
             </div>
         </div>
     )
