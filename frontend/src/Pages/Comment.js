@@ -60,10 +60,22 @@ const useStyles = makeStyles(theme => ({
 
 export default function Comment() {
     const [myComments,setMyComments]=React.useState([]);
-    const [renderFlag,setRenderFlag]=React.useState(0);
+    //const [renderFlag,setRenderFlag]=React.useState(0);
 
     React.useEffect(() => {
-        /* 내 댓글 목록 조회 */
+        loadMyComments();
+    },[]);
+    
+    const classes = useStyles();
+    const [checked, setChecked] = React.useState(true);
+
+    const handleChange = event => {
+        setChecked(event.target.checked);
+    };
+
+    /* 내 댓글 목록 조회 */
+    const loadMyComments = () => {
+
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
         myHeaders.append("Authorization", localStorage.getItem("AUTHORIZATION"));
@@ -92,14 +104,7 @@ export default function Comment() {
             }
         })
           .catch(error => console.log('error', error));
-    },[renderFlag]);
-    
-    const classes = useStyles();
-    const [checked, setChecked] = React.useState(true);
-
-    const handleChange = event => {
-        setChecked(event.target.checked);
-    };
+    }
 
     /* 댓글 삭제 */
     const deleteComment = (idx) => {
@@ -122,7 +127,7 @@ export default function Comment() {
             .then(result => {
                 console.log(result)
                 if(result.code==0){
-                    setRenderFlag(1)
+                    loadMyComments()
                 }
                 else if(result.code==21){
                     alert("존재하지 않는 댓글입니다.")
