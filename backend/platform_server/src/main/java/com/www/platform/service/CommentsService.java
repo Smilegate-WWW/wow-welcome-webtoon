@@ -48,7 +48,11 @@ public class  CommentsService {
         Optional<Users> user = usersRepository.findById(userIdx);
         Optional<Episode> episode = episodeRepository.findById(epIdx);
 
-        if(!episode.isPresent()){ // 에피소드가 존재하지 않을 때
+        if(200 < content.length()){
+            result.setCode(27);
+            result.setMsg("fail : content length is too long");
+        }
+        else if(!episode.isPresent()){ // 에피소드가 존재하지 않을 때
             result.setCode(20);
             result.setMsg("fail : episode don't exists");
         }
