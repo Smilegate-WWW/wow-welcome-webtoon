@@ -53,6 +53,7 @@ export default function EditEpisode() {
     const [title, setTitle] = React.useState("");
     const [writer, setWriter] = React.useState("");
     const [plot, setPlot] = React.useState("");
+    const [rating,setRating]=React.useState("");
 
     React.useEffect(() => {
         var myHeaders = new Headers();
@@ -73,6 +74,7 @@ export default function EditEpisode() {
                 setTitle(result.data.title)
                 setWriter(result.data.writer)
                 setPlot(result.data.plot)
+                setRating(result.data.rating_avg)
             })
             .catch(error => console.log('error', error));
     }, []);
@@ -162,7 +164,7 @@ export default function EditEpisode() {
                                     </TableCell>
                                     <TableCell align="center">
                                         <Box component="span" mb={0} borderColor="transparent">
-                                            <Rating name="read-only" value={episode.starRating} readOnly />
+                                            <Rating name="read-only" value={episode.rating} readOnly />
                                         </Box>
                                     </TableCell>
                                     <TableCell align="center">{episode.created_date.slice(0, 10)}</TableCell>

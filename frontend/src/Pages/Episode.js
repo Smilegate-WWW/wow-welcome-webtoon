@@ -24,7 +24,6 @@ import Comment from '../Components/Comment';
 import Pagination from '@material-ui/lab/Pagination';
 // 토큰 재발급
 var ReToken = require("../AuthRoute");
-import { render } from '@testing-library/react';
 
 const useStyles = makeStyles(theme => ({
     menu: {
@@ -112,11 +111,11 @@ export default function Episode() {
     const [rating_avg, setRating_avg] = React.useState("");
     const [webtoon_title, setWebtoon_title] = React.useState("");
     const [author_comment, setAuthor_comment] = React.useState("");
-       
+
     //댓글 관련
-    const [comments,setComments]=React.useState([]);
-    const [bestComments,setBestComments]=React.useState([]);
-    const [cmt_page,setCmtPage]=React.useState(1);
+    const [comments, setComments] = React.useState([]);
+    const [bestComments, setBestComments] = React.useState([]);
+    const [cmt_page, setCmtPage] = React.useState(1);
 
     //first rendering
     React.useEffect(() => {
@@ -145,17 +144,17 @@ export default function Episode() {
 
         // 베스트 댓글 로드
         fetch("/episodes/" + ep_idx + "/comments/best", requestOptions)
-        .then(response => response.json())
-        .then(result => {
-            console.log(result)
-            if (result.code == 0) {
-                setBestComments(result.data);
-            }
-            else if (result.code == 20) {
-                alert("[ERROR 20] 잘못된 접근입니다, 관리자에게 문의하세요.");
-            }
-        })
-        .catch(error => console.log('error', error));       
+            .then(response => response.json())
+            .then(result => {
+                console.log(result)
+                if (result.code == 0) {
+                    setBestComments(result.data);
+                }
+                else if (result.code == 20) {
+                    alert("[ERROR 20] 잘못된 접근입니다, 관리자에게 문의하세요.");
+                }
+            })
+            .catch(error => console.log('error', error));
     }, []);
 
     const classes = useStyles();
@@ -182,7 +181,7 @@ export default function Episode() {
             method: 'GET',
             redirect: 'follow'
         };
-    
+
         fetch("/episodes/" + ep_idx + "/comments?page=" + page, requestOptions)
             .then(response => response.json())
             .then(result => {
@@ -211,41 +210,47 @@ export default function Episode() {
         myHeaders.append("Content-Type", "application/json");
         myHeaders.append("AUTHORIZATION", localStorage.getItem("AUTHORIZATION"));
 
-        if(comment.length!=0){
-        var raw = JSON.stringify({ "content": comment });
+        if (comment.length != 0) {
+            var raw = JSON.stringify({ "content": comment });
 
-        var requestOptions = {
-            method: 'POST',
-            headers: myHeaders,
-            body: raw,
-            redirect: 'follow'
-        };
+            var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw,
+                redirect: 'follow'
+            };
 
-        fetch("/episodes/" + ep_idx + "/comments", requestOptions)
-            .then(response => response.json())
-            .then(result => {
-                console.log(result)
-                if (result.code == 0) {
-                    alert("댓글 등록이 완료되었습니다.")
-                    setComment("")
-                    loadComment(1)
-                }
-                else if(result.code==27){
-                    alert("댓글 글자수 200자 제한을 초과하였습니다.")
-                }
-                else if(result.code==44){
-                    ReToken.ReToken()
-                }
-                else if(result.code==42){
-                    alert("[ERROR 42] 잘못된 접근입니다, 관리자에게 문의하세요.")
-                }
-                else{
-                    alert("잘못된 접근입니다, 관리자에게 문의하세요.")
-                }
-            })
-            .catch(error => console.log('error', error));
+            fetch("/episodes/" + ep_idx + "/comments", requestOptions)
+                .then(response => response.json())
+                .then(result => {
+                    console.log(result)
+                    if (result.code == 0) {
+                        alert("댓글 등록이 완료되었습니다.")
+                        setComment("")
+                        loadComment(1)
+                    }
+                    else if (result.code == 27) {
+                        alert("댓글 글자수 200자 제한을 초과하였습니다.")
+                    }
+                    else if (result.code == 44) {
+                        ReToken.ReToken()
+                    }
+                    else if (result.code == 42) {
+                        // 로그인 필요한 경우
+                        if (!(localStorage.getItem("AUTHORIZATION"))) {
+                            alert("로그인이 필요한 기능입니다, 로그인 페이지로 이동합니다.")
+                            window.location.href = "/login";
+                        }
+                        else
+                            alert("[ERROR 42] 잘못된 접근입니다, 관리자에게 문의하세요.")
+                    }
+                    else {
+                        alert("잘못된 접근입니다, 관리자에게 문의하세요.")
+                    }
+                })
+                .catch(error => console.log('error', error));
         }
-        else{
+        else {
             alert("댓글 내용을 입력해주세요.");
         }
     }
@@ -267,24 +272,30 @@ export default function Episode() {
             redirect: 'follow'
         };
 
-        fetch("/episodes/"+ep_idx+"/rating", requestOptions)
+        fetch("/episodes/" + ep_idx + "/rating", requestOptions)
             .then(response => response.json())
             .then(result => {
                 console.log(result)
-                if(result.code==0){
+                if (result.code == 0) {
                     alert("별점 등록이 완료되었습니다.");
                 }
-                else if(result.code==20){
+                else if (result.code == 20) {
                     alert("존재하지 않는 회차입니다. 관리자에게 문의하세요.");
                 }
-                else if(result.code==26){
+                else if (result.code == 26) {
                     alert("이미 별점 주기에 참여하셨습니다.")
                 }
-                else if(result.code==44){
+                else if (result.code == 44) {
                     ReToken.ReToken()
                 }
-                else if(result.code==42){
-                    alert("[ERROR 42] 잘못된 접근입니다, 관리자에게 문의하세요.")
+                else if (result.code == 42) {
+                    // 로그인 필요한 경우
+                    if (!(localStorage.getItem("AUTHORIZATION"))) {
+                        alert("로그인이 필요한 기능입니다, 로그인 페이지로 이동합니다.")
+                        window.location.href = "/login";
+                    }
+                    else
+                        alert("[ERROR 42] 잘못된 접근입니다, 관리자에게 문의하세요.")
                 }
             })
             .catch(error => console.log('error', error));
@@ -340,7 +351,7 @@ export default function Episode() {
                     </div>
                     <div style={{ width: 950, borderTop: '1px solid grey', paddingTop: 40, paddingBottom: 40 }} align="center">
                         {contents.map(content => (
-                            <img src={content} alt="webtoon img" key={content}/>
+                            <img src={content} alt="webtoon img" key={content} />
                         ))}
                     </div>
                     <div style={{ width: 950, borderTop: '1px solid grey', borderBottom: '1px solid grey', paddingBottom: 20 }}>
@@ -364,7 +375,7 @@ export default function Episode() {
                             />
                             <Button color="primary" variant="contained" onClick={submitComment} style={{ height: 40, marginLeft: 10, marginTop: 70 }}>등록</Button>
                         </div>
-                        <Paper elevation={3} style={{ marginTop: 30, paddingBottom: 5}}>
+                        <Paper elevation={3} style={{ marginTop: 30, paddingBottom: 5 }}>
                             <AppBar position="static" color="inherit">
                                 <Tabs value={value} onChange={tabChange} aria-label="commentTabLabel">
                                     <Tab label="베스트 댓글"  {...a11yProps(0)} />
@@ -374,7 +385,7 @@ export default function Episode() {
 
                             <TabPanel value={value} index={0}>
                                 {bestComments.map(comment => (
-                                    <Comment cmt_idx={comment.idx} nickname={comment.user_id} comment={comment.content} date={comment.created_date} goodNum={comment.like_cnt} badNum={comment.dislike_cnt} />
+                                    <Comment key={comment.idx} cmt_idx={comment.idx} nickname={comment.user_id} comment={comment.content} date={comment.created_date} goodNum={comment.like_cnt} badNum={comment.dislike_cnt} />
                                 ))}
                             </TabPanel>
                             <TabPanel value={value} index={1}>
@@ -382,7 +393,7 @@ export default function Episode() {
                                     <Comment key={comment.idx} cmt_idx={comment.idx} nickname={comment.user_id} comment={comment.content} date={comment.created_date} goodNum={comment.like_cnt} badNum={comment.dislike_cnt} />
                                 ))}
                                 <div className={classes.paging}>
-                                    <Pagination count={cmt_page} color="primary" onChange={handlePaging}/>
+                                    <Pagination count={cmt_page} color="primary" onChange={handlePaging} />
                                 </div>
                             </TabPanel>
 

@@ -74,14 +74,7 @@ export default function Login() {
                                 localStorage.setItem("EMAIL", result.data.email);
                                 localStorage.setItem("REFRESHTOKEN", result.data.token);
                                 
-                                if (window.history.state == null) {
-                                    window.location.href = "/"
-                                }
-                                else {
-                                    const history = (window.history.state.state.from.pathname);
-                                    window.location.href = history;
-                                }
-                                
+                                window.history.back();
                             }
 
                             else if (result.code == 2) {
