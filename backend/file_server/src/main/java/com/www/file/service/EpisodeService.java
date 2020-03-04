@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import javax.transaction.Transactional;
 
@@ -42,7 +43,7 @@ public class EpisodeService {
 		this.episodeRepository = episodeRepository;
 	}
 	//필수 조건 체크
-	public void checkCondition(MultipartFile thumbnail, MultipartFile[] manuscript, EpisodeDto episodeDto,Response<EpisodeDto> res) {
+	public void checkCondition(MultipartFile thumbnail, MultipartFile[] manuscript, EpisodeDto episodeDto, Response<EpisodeDto> res) {
 		
 		if(episodeDto.getTitle()==null) {
 			res.setCode(10);
@@ -177,7 +178,8 @@ public class EpisodeService {
         String manuscriptsName="";
         for(int i=0;i<manuscripts.length;i++) {
         	if(i!=0) manuscriptsName+=";";
-        	manuscriptsName += manuscripts[i].getOriginalFilename();
+        	UUID uuid = UUID.randomUUID();
+        	manuscriptsName += uuid + "_" + manuscripts[i].getOriginalFilename();
         }
         
         episodeDto.setContents(manuscriptsName);
@@ -233,7 +235,8 @@ public class EpisodeService {
         String manuscriptsName="";
         for(int i=0;i<manuscripts.length;i++) {
         	if(i!=0) manuscriptsName+=";";
-        	manuscriptsName += manuscripts[i].getOriginalFilename();
+        	UUID uuid = UUID.randomUUID();
+        	manuscriptsName += uuid + "_" + manuscripts[i].getOriginalFilename();
         }
         
         episodeDto.setContents(manuscriptsName);

@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import javax.transaction.Transactional;
 
@@ -79,7 +80,6 @@ public class WebtoonService {
 	public Response<WebtoonDto> createWebtoon(MultipartFile file, WebtoonDto webtoonDto, int user_idx) throws IOException {
 		Response<WebtoonDto> res = new Response<WebtoonDto>();
 		System.out.println(user_idx);
-		//Users user = usersRepository.findByIdx(user_idx);
 		
 		Optional<Users> users = usersRepository.findById(user_idx);
 		Users user = users.get();
@@ -88,9 +88,10 @@ public class WebtoonService {
 		if(res.getCode()!=0)
 			return res;
 		else {
+			
 			//필수 입력 조건 만족시
-			String fileName = file.getOriginalFilename();
-			System.out.println(fileName);
+			UUID uuid = UUID.randomUUID();
+			String fileName = uuid + "_" + file.getOriginalFilename();
 			webtoonDto.setThumbnail(fileName);
 			
 			//file 외부 폴더로 이동
@@ -98,10 +99,6 @@ public class WebtoonService {
 			destinationFile.getParentFile().mkdir();
 			file.transferTo(destinationFile);
 			
-			//webtoonDto.toEntity().setUsers(user);
-			//webtoonRepository.save(webtoonDto.toEntity());
-			//WebtoonRegisterDto webtoonRegister = new WebtoonRegisterDto(webtoonDto,user);
-			//webtoonRepository.save(webtoonRegister.toEntity());
 			Webtoon webtoon = Webtoon.builder()
 					.title(webtoonDto.getTitle())
 					.toon_type(webtoonDto.getToon_type())
@@ -198,7 +195,8 @@ public class WebtoonService {
 	        webtoon.setToon_type(webtoonDto.getToon_type());
 	        
 	        if(!file.isEmpty()) {
-				String fileName = file.getOriginalFilename();
+	        	UUID uuid = UUID.randomUUID();
+				String fileName = uuid + "_" + file.getOriginalFilename();
 				System.out.println(fileName);
 				webtoonDto.setThumbnail(fileName);
 				//file 외부 폴더로 이동

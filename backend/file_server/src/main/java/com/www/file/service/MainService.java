@@ -46,7 +46,7 @@ public class MainService {
 	}
 	
 	@Transactional
-	public MainWebtoonPage/*List<MainWebtoonDto>*/ getWebtoonList(Integer pageNum, Response<MainWebtoonPage> res, int sort) {
+	public MainWebtoonPage getWebtoonList(Integer pageNum, Response<MainWebtoonPage> res, int sort) {
 		
 		Page<Webtoon> page = null;
 		switch(sort) {
