@@ -50,9 +50,7 @@ public class MainController {
 			@RequestParam(value="sortBy", defaultValue = "0") int sort ){
 		
 		Response<MainWebtoonPage> res = new Response<MainWebtoonPage>();
-		List<MainWebtoonDto> webtoonList = mainService.getWebtoonList(page,res,sort);
-		Integer[] pageList = mainService.getPageList(page);
-		MainWebtoonPage webtoonpage = new MainWebtoonPage(webtoonList, pageList);
+		MainWebtoonPage webtoonpage =  mainService.getWebtoonList(page,res,sort);
 		switch(res.getCode()) {
 		case 0:
 			res.setData(webtoonpage);
@@ -70,16 +68,12 @@ public class MainController {
 			@RequestParam(value="page", defaultValue = "1") Integer page){
 		Response<EpisodePage> res = new Response<EpisodePage>();
 		EpisodePage episodePage = new EpisodePage();
-		List<EpisodeListDto> episodeList = episodeService.getEpisodeList(idx,page,res,episodePage,-1);
-		Integer[] pageList = episodeService.getPageList(page,idx);
+		
 		//EpisodePage episodePage = new EpisodePage(episodeList, pageList);
-		episodePage.setEpisodelist(episodeList);
-		episodePage.setPagelist(pageList);
 
 		switch (res.getCode()) {
 		case 0:
-			res.setData(episodePage);
-			break;
+			return episodeService.getEpisodeList(idx,page,-1);
 		case 1:
 			break;
 		}

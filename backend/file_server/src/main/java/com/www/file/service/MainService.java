@@ -46,8 +46,7 @@ public class MainService {
 	}
 	
 	@Transactional
-	public List<MainWebtoonDto> getWebtoonList(Integer pageNum, Response<MainWebtoonPage> res, int sort) {
-		
+	public MainWebtoonPage/*List<MainWebtoonDto>*/ getWebtoonList(Integer pageNum, Response<MainWebtoonPage> res, int sort) {
 		
 		Page<Webtoon> page = null;
 		switch(sort) {
@@ -102,33 +101,8 @@ public class MainService {
 	    	res.setMsg("fail : pageNum is not in valid range");
 		}
 		
-	    return webtoonListDto;
-	}
-	public Long getWebtoonCount() {
-		return webtoonRepository.count();
-	}
-	
-	public Integer[] getPageList(Integer curPageNum) {
-		Integer[] pageList = new Integer[BLOCK_PAGE_NUM_COUNT];
-		
-		//총 에피소드 갯수
-		Double webtoonsTotalCount = Double.valueOf(this.getWebtoonCount());
-		
-		//총 게시글 기준으로 계산한 마지막 페이지 번호 계산 (올림으로 계산)
-		Integer totalLastPageNum = (int)(Math.ceil((webtoonsTotalCount/PAGE_WEBTOON_COUNT)));
-		
-		//현재 페이지를 기준으로 블럭의 마지막 페이지 번호 계산
-		Integer blockLastPageNum = (totalLastPageNum > curPageNum + BLOCK_PAGE_NUM_COUNT)
-					? curPageNum + BLOCK_PAGE_NUM_COUNT
-					: totalLastPageNum;
-		//페이지 시작 번호 조정
-		curPageNum = (curPageNum <= 3) ? 1 : curPageNum-2;
-		
-		//페이지 번호 할당
-		for(int val = curPageNum, idx=0; val <= blockLastPageNum; val++, idx++) {
-			pageList[idx] = val;
-		}
-		return pageList;
+		MainWebtoonPage mainWebtoonPage = new MainWebtoonPage(webtoonListDto, totalpages);
+	    return mainWebtoonPage;
 	}
 	
 	public Response<EpisodeContents> showEpisode(int webtoon_idx, int no){

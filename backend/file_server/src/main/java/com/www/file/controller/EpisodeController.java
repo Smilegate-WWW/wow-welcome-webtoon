@@ -92,22 +92,14 @@ public class EpisodeController {
 	public Response<EpisodePage> showEpisodeList(@RequestHeader("Authorization") String AccessToken,
 			@PathVariable("idx") int idx, @RequestParam(value="page", defaultValue = "1") Integer page){
 		Response<EpisodePage> res = new Response<EpisodePage>();
-		EpisodePage episodePage = new EpisodePage();
 		
 		int n = tokenchecker.validateToken(AccessToken);
 		int user_idx = tokenchecker.getUserIdx(AccessToken);
 		switch(n) {
 		case 0: //유효한 토큰
-			List<EpisodeListDto> episodeList = episodeService.getEpisodeList(idx,page,res, episodePage, user_idx);
-			Integer[] pageList = episodeService.getPageList(page,idx);
-			//EpisodePage episodePage = new EpisodePage(episodeList, pageList);
-			episodePage.setEpisodelist(episodeList);
-			episodePage.setPagelist(pageList);
-			
 			switch (res.getCode()) {
 			case 0:
-				res.setData(episodePage);
-				break;
+				return episodeService.getEpisodeList(idx,page,user_idx);
 			case 1:
 				res.setData(null);
 				break;

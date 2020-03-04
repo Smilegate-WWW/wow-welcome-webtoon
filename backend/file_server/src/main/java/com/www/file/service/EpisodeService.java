@@ -67,9 +67,10 @@ public class EpisodeService {
 	}
 	
 	@Transactional
-	public List<EpisodeListDto> getEpisodeList(int idx, Integer pageNum, Response<EpisodePage> res
-			,EpisodePage episodePage, int user_idx) {
+	public Response<EpisodePage> getEpisodeList(int idx, Integer pageNum, int user_idx) {
 		
+		Response<EpisodePage> res = new Response<EpisodePage>();
+		EpisodePage episodePage = new EpisodePage();
 		Pageable pageable = PageRequest.of(pageNum-1, PAGE_EPISODE_COUNT);
 		Page<Episode> page = episodeRepository.findAllByWebtoonIdx(pageable,idx);		
 	    List<EpisodeListDto> episodeDtoList = new ArrayList<>();
@@ -78,6 +79,7 @@ public class EpisodeService {
 	    if(totalpages==0) totalpages=1;
 	    System.out.println("*****회차 목록 출력 idx 체크 : "+ idx);
 	    ///////////////////////////////////////
+	    episodePage.setTotalpage(totalpages);
 	    if(!webtoonRepository.existsById(idx)) {
 	    	System.out.println("존재하지 않음");
 	    	
@@ -91,7 +93,7 @@ public class EpisodeService {
 	        	System.out.println("작가 일치 X");
 	        	res.setCode(1);
 	        	res.setMsg("fail: user do not match");
-	        	return episodeDtoList;
+	        	return res;
 	        }
 	        episodePage.setWebtoon_title(webtoon.getTitle());
 	        episodePage.setPlot(webtoon.getPlot());
@@ -116,6 +118,8 @@ public class EpisodeService {
 		    			.build();
 		    	episodeDtoList.add(episodeDto);
 		    }
+		    episodePage.setEpisodelist(episodeDtoList);
+		    res.setData(episodePage);
 		    res.setCode(0);
 		    res.setMsg("show complete");
 	    }
@@ -125,42 +129,10 @@ public class EpisodeService {
 	    	res.setMsg("fail : pageNum is not in valid range");
 	    }
 	    
-	    return episodeDtoList;
+	    return res;
 	    
 	}
 	
-	public int getEpisodeCount(int webtoon_idx) {
-		List<Episode> eprepos = episodeRepository.findAllByWebtoonIdx(webtoon_idx);
-		return eprepos.size();
-	}
-	
-
-	public Integer[] getPageList(Integer curPageNum, int webtoon_idx) {
-		Integer[] pageList = new Integer[BLOCK_PAGE_NUM_COUNT];
-		
-		//총 에피소드 갯수
-		Double episodesTotalCount = Double.valueOf(this.getEpisodeCount(webtoon_idx));
-		
-		//총 게시글 기준으로 계산한 마지막 페이지 번호 계산 (올림으로 계산)
-		Integer totalLastPageNum = (int)(Math.ceil((episodesTotalCount/PAGE_EPISODE_COUNT)));
-		
-		//현재 페이지를 기준으로 블럭의 마지막 페이지 번호 계산
-		Integer blockLastPageNum = (totalLastPageNum > curPageNum + BLOCK_PAGE_NUM_COUNT)
-					? curPageNum + BLOCK_PAGE_NUM_COUNT
-					: totalLastPageNum;
-		
-		//페이지 시작 번호 조정
-		curPageNum = (curPageNum <= 3) ? 1 : curPageNum-2;
-		
-		//페이지 번호 할당
-		for(int val = curPageNum, idx=0; val <= blockLastPageNum; val++, idx++) {
-			pageList[idx] = val;
-		}
-		
-		return pageList;
-	}
-	
-
 	
 	@Transactional
 	public Response<EpisodeDto> addEpisode(int webtoon_idx, MultipartFile thumbnail, MultipartFile[] manuscripts, EpisodeDto episodeDto) throws IllegalStateException, IOException {
