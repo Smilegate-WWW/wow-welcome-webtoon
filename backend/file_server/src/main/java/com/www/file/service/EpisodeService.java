@@ -166,8 +166,9 @@ public class EpisodeService {
         	episodeDto.setEp_no(1);
         }
          
+        UUID uuid1 = UUID.randomUUID();
         
-        String thumbnailName = thumbnail.getOriginalFilename();
+        String thumbnailName = uuid1 + "_" + thumbnail.getOriginalFilename();
         episodeDto.setThumbnail(thumbnailName);
         
         File ThumbDestinationFile = new File(filePath+"/ep_thumbnail/"+thumbnailName);
@@ -180,16 +181,23 @@ public class EpisodeService {
         	if(i!=0) manuscriptsName+=";";
         	UUID uuid = UUID.randomUUID();
         	manuscriptsName += uuid + "_" + manuscripts[i].getOriginalFilename();
+        	
+        	File destinationFile = new File(filePath+"/webtoon/"+ uuid + "_" + manuscripts[i].getOriginalFilename());
+			destinationFile.getParentFile().mkdir();
+        	manuscripts[i].transferTo(destinationFile);
+        	
         }
         
         episodeDto.setContents(manuscriptsName);
         
+        /*
 		//file 외부 폴더로 이동
 		for(int i=0;i<manuscripts.length;i++) {
 			File destinationFile = new File(filePath+"/webtoon/"+manuscripts[i].getOriginalFilename());
 			destinationFile.getParentFile().mkdir();
         	manuscripts[i].transferTo(destinationFile);
         }
+        */
         
         EpisodeRegistDto ep = new EpisodeRegistDto(episodeDto,webtoon);
       
@@ -224,7 +232,9 @@ public class EpisodeService {
         episode.setAuthor_comment(episodeDto.getAuthor_comment());
         episode.setTitle(episodeDto.getTitle());
         
-        String thumbnailName = thumbnail.getOriginalFilename();
+        UUID uuid1 = UUID.randomUUID();
+        
+        String thumbnailName = uuid1 + "_" + thumbnail.getOriginalFilename();
         episodeDto.setThumbnail(thumbnailName);
         episode.setThumbnail(thumbnailName);
         
@@ -237,17 +247,24 @@ public class EpisodeService {
         	if(i!=0) manuscriptsName+=";";
         	UUID uuid = UUID.randomUUID();
         	manuscriptsName += uuid + "_" + manuscripts[i].getOriginalFilename();
+        	
+        	File destinationFile = new File(filePath+"/webtoon/"+ uuid + "_" + manuscripts[i].getOriginalFilename());
+			destinationFile.getParentFile().mkdir();
+        	manuscripts[i].transferTo(destinationFile);
+        	
         }
         
         episodeDto.setContents(manuscriptsName);
         episode.setContents(manuscriptsName);
         
+        /*
         //file 외부 폴더로 이동
       	for(int i=0;i<manuscripts.length;i++) {
       		File destinationFile = new File(filePath+"/webtoon/"+manuscripts[i].getOriginalFilename());
       		destinationFile.getParentFile().mkdir();
             manuscripts[i].transferTo(destinationFile);
         }
+        */
         
         episodeRepository.save(episode);
         res.setData(episodeDto);
