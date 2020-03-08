@@ -136,7 +136,10 @@ export default function Episode() {
                 setAuthor(result.data.author)
                 setSummary(result.data.summary)
                 setThumbnail(result.data.thumbnail)
-                setRating_avg((result.data.rating_avg+"").substring(0,4))
+                if((result.data.rating_avg+"").length > 4)
+                    setRating_avg((result.data.rating_avg+"").substring(0,4))
+                else 
+                    setRating_avg(result.data.rating_avg)
                 setContents(result.data.contents)
                 setAuthor_comment(result.data.author_comment)
                 setWebtoon_title(result.data.webtoon_title)
@@ -282,9 +285,11 @@ export default function Episode() {
                 console.log(result)
                 if (result.code == 0) {
                     alert("별점 등록이 완료되었습니다.");
-                    setRating_avg((result.data.rating_avg+"").substring(0,4));
+                    if((result.data.rating+"").length > 4)
+                        setRating_avg((result.data.rating+"").substring(0,4))
+                    else 
+                        setRating_avg(result.data.rating)
                     setRating_prt(result.data.person_total);
-                    console.log(rating_avg);
                 }
                 else if (result.code == 20) {
                     alert("존재하지 않는 회차입니다. 관리자에게 문의하세요.");
