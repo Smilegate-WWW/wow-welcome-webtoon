@@ -131,6 +131,7 @@ public class MainService {
 				.author(webtoon.getUsers().getName())
 				.summary(webtoon.getSummary())
 				.thumbnail("http://localhost:8081/static/web_thumbnail/"+webtoon.getThumbnail())
+				.rating_person_total(episode.getRating_person_total())
 				.rating_avg(episode.getRating_avg())
 				.ep_hits(episode.getEp_hits())
 				.build();
