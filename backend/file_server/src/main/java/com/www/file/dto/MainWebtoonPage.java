@@ -9,10 +9,10 @@ import lombok.Setter;
 @Setter
 public class MainWebtoonPage {
 	private List<MainWebtoonDto> webtoonlist;
-	private Integer[] pagelist;
+	private int totalpage;
 	
-	public MainWebtoonPage(List<MainWebtoonDto> webtoonlist, Integer[] pagelist) {
+	public MainWebtoonPage(List<MainWebtoonDto> webtoonlist, int totalpage) {
 		this.webtoonlist = webtoonlist;
-		this.pagelist = pagelist;
+		this.totalpage = totalpage;
 	}
 }

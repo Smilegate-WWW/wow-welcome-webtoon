@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import javax.transaction.Transactional;
 
@@ -79,7 +80,6 @@ public class WebtoonService {
 	public Response<WebtoonDto> createWebtoon(MultipartFile file, WebtoonDto webtoonDto, int user_idx) throws IOException {
 		Response<WebtoonDto> res = new Response<WebtoonDto>();
 		System.out.println(user_idx);
-		//Users user = usersRepository.findByIdx(user_idx);
 		
 		Optional<Users> users = usersRepository.findById(user_idx);
 		Users user = users.get();
@@ -88,9 +88,10 @@ public class WebtoonService {
 		if(res.getCode()!=0)
 			return res;
 		else {
+			
 			//필수 입력 조건 만족시
-			String fileName = file.getOriginalFilename();
-			System.out.println(fileName);
+			UUID uuid = UUID.randomUUID();
+			String fileName = uuid + "_" + file.getOriginalFilename();
 			webtoonDto.setThumbnail(fileName);
 			
 			//file 외부 폴더로 이동
@@ -98,10 +99,6 @@ public class WebtoonService {
 			destinationFile.getParentFile().mkdir();
 			file.transferTo(destinationFile);
 			
-			//webtoonDto.toEntity().setUsers(user);
-			//webtoonRepository.save(webtoonDto.toEntity());
-			//WebtoonRegisterDto webtoonRegister = new WebtoonRegisterDto(webtoonDto,user);
-			//webtoonRepository.save(webtoonRegister.toEntity());
 			Webtoon webtoon = Webtoon.builder()
 					.title(webtoonDto.getTitle())
 					.toon_type(webtoonDto.getToon_type())
@@ -122,13 +119,14 @@ public class WebtoonService {
 	}
 	
 	@Transactional
-	public List<WebtoonListDto> getWebtoonList(Integer pageNum, Response<WebtoonPage> res, int user_idx) {
+	public WebtoonPage getWebtoonList(Integer pageNum, Response<WebtoonPage> res, int user_idx) {
 		Pageable pageable = PageRequest.of(pageNum-1, PAGE_WEBTOON_COUNT);
 		Page<Webtoon> page = webtoonRepository.findAllByUsersIdx(pageable, user_idx);	
 	    List<WebtoonListDto> webtoonListDto = new ArrayList<>();
-		
+		WebtoonPage webtoonPage = null;
 		int totalpages = page.getTotalPages();
 		if(totalpages == 0 ) totalpages =1;
+		
 		//요청한 페이지 번호가 유효한 범위인지 체크
 		if(pageNum>0 && pageNum<=totalpages) {
 			List<Webtoon> webtoons = page.getContent();
@@ -157,6 +155,7 @@ public class WebtoonService {
 		        }
 				webtoonListDto.add(webtoonDto);
 			}
+			webtoonPage = new WebtoonPage(webtoonListDto, totalpages);
 			res.setCode(0);
 		    res.setMsg("show complete");
 		}
@@ -166,35 +165,10 @@ public class WebtoonService {
 	    	res.setMsg("fail : pageNum is not in valid range");
 		}
 		
-	    return webtoonListDto;
+	    return webtoonPage;
         
 	}
-	public Long getWebtoonCount() {
-		return webtoonRepository.count();
-	}
 	
-	public Integer[] getPageList(Integer curPageNum) {
-		Integer[] pageList = new Integer[BLOCK_PAGE_NUM_COUNT];
-		
-		//총 에피소드 갯수
-		Double webtoonsTotalCount = Double.valueOf(this.getWebtoonCount());
-		
-		//총 게시글 기준으로 계산한 마지막 페이지 번호 계산 (올림으로 계산)
-		Integer totalLastPageNum = (int)(Math.ceil((webtoonsTotalCount/PAGE_WEBTOON_COUNT)));
-		
-		//현재 페이지를 기준으로 블럭의 마지막 페이지 번호 계산
-		Integer blockLastPageNum = (totalLastPageNum > curPageNum + BLOCK_PAGE_NUM_COUNT)
-					? curPageNum + BLOCK_PAGE_NUM_COUNT
-					: totalLastPageNum;
-		//페이지 시작 번호 조정
-		curPageNum = (curPageNum <= 3) ? 1 : curPageNum-2;
-		
-		//페이지 번호 할당
-		for(int val = curPageNum, idx=0; val <= blockLastPageNum; val++, idx++) {
-			pageList[idx] = val;
-		}
-		return pageList;
-	}
 	
 	@Transactional
 	public Response<WebtoonDto> editWebtoon(int idx, MultipartFile file, WebtoonDto webtoonDto) throws IOException {
@@ -213,6 +187,7 @@ public class WebtoonService {
 		else {
 			Optional<Webtoon> WebtoonEntityWrapper = webtoonRepository.findById(idx);
 	        Webtoon webtoon = WebtoonEntityWrapper.get();
+	        
 	        webtoon.setEnd_flag(webtoonDto.getEnd_flag());
 	        webtoon.setGenre1(webtoonDto.getGenre1());
 	        webtoon.setGenre2(webtoonDto.getGenre2());
@@ -222,7 +197,8 @@ public class WebtoonService {
 	        webtoon.setToon_type(webtoonDto.getToon_type());
 	        
 	        if(!file.isEmpty()) {
-				String fileName = file.getOriginalFilename();
+	        	UUID uuid = UUID.randomUUID();
+				String fileName = uuid + "_" + file.getOriginalFilename();
 				System.out.println(fileName);
 				webtoonDto.setThumbnail(fileName);
 				//file 외부 폴더로 이동
