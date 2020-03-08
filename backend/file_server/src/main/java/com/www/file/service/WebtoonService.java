@@ -126,6 +126,7 @@ public class WebtoonService {
 		WebtoonPage webtoonPage = null;
 		int totalpages = page.getTotalPages();
 		if(totalpages == 0 ) totalpages =1;
+		
 		//요청한 페이지 번호가 유효한 범위인지 체크
 		if(pageNum>0 && pageNum<=totalpages) {
 			List<Webtoon> webtoons = page.getContent();
@@ -186,6 +187,7 @@ public class WebtoonService {
 		else {
 			Optional<Webtoon> WebtoonEntityWrapper = webtoonRepository.findById(idx);
 	        Webtoon webtoon = WebtoonEntityWrapper.get();
+	        
 	        webtoon.setEnd_flag(webtoonDto.getEnd_flag());
 	        webtoon.setGenre1(webtoonDto.getGenre1());
 	        webtoon.setGenre2(webtoonDto.getGenre2());

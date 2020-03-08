@@ -79,7 +79,7 @@ public class EpisodeService {
 	    int totalpages = page.getTotalPages();
 	    if(totalpages==0) totalpages=1;
 	    System.out.println("*****회차 목록 출력 idx 체크 : "+ idx);
-	    ///////////////////////////////////////
+	    
 	    episodePage.setTotalpage(totalpages);
 	    if(!webtoonRepository.existsById(idx)) {
 	    	System.out.println("존재하지 않음");
@@ -103,7 +103,7 @@ public class EpisodeService {
 	        episodePage.setWebtoon_thumbnail("http://localhost:8081/static/web_thumbnail/"+webtoon.getThumbnail());
 	        System.out.println("5");
 	    }
-	    /////////////////////////////////////////////
+	    
 	    //요청한 페이지 번호가 유효한 범위인지 체크
 	    if(pageNum>0 && pageNum<=totalpages) {
 	    	List<Episode> episodeList = page.getContent();
@@ -190,14 +190,6 @@ public class EpisodeService {
         
         episodeDto.setContents(manuscriptsName);
         
-        /*
-		//file 외부 폴더로 이동
-		for(int i=0;i<manuscripts.length;i++) {
-			File destinationFile = new File(filePath+"/webtoon/"+manuscripts[i].getOriginalFilename());
-			destinationFile.getParentFile().mkdir();
-        	manuscripts[i].transferTo(destinationFile);
-        }
-        */
         
         EpisodeRegistDto ep = new EpisodeRegistDto(episodeDto,webtoon);
       
@@ -256,15 +248,6 @@ public class EpisodeService {
         
         episodeDto.setContents(manuscriptsName);
         episode.setContents(manuscriptsName);
-        
-        /*
-        //file 외부 폴더로 이동
-      	for(int i=0;i<manuscripts.length;i++) {
-      		File destinationFile = new File(filePath+"/webtoon/"+manuscripts[i].getOriginalFilename());
-      		destinationFile.getParentFile().mkdir();
-            manuscripts[i].transferTo(destinationFile);
-        }
-        */
         
         episodeRepository.save(episode);
         res.setData(episodeDto);

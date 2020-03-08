@@ -75,7 +75,7 @@ public class MainService {
 		int totalpages = page.getTotalPages();
 		
 		//등록된 웹툰이 없을 경우
-		if(totalpages == 0 ) totalpages =1;
+		if(totalpages == 0 ) totalpages = 1;
 		
 		//요청한 페이지 번호가 유효한 범위인지 체크
 		if(pageNum>0 && pageNum<=totalpages) {

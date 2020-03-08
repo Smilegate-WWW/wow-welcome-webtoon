@@ -68,8 +68,6 @@ public class MainController {
 			@RequestParam(value="page", defaultValue = "1") Integer page){
 		Response<EpisodePage> res = new Response<EpisodePage>();
 		EpisodePage episodePage = new EpisodePage();
-		
-		//EpisodePage episodePage = new EpisodePage(episodeList, pageList);
 
 		switch (res.getCode()) {
 		case 0:
