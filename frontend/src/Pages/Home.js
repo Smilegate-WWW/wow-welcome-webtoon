@@ -54,7 +54,7 @@ const useStyles = makeStyles(theme => ({
     },
     gridList: {
         width: 1200,
-        height: 800,
+        height: 550,
         margin: theme.spacing(3, 1)
     },
     paging: {
@@ -144,6 +144,7 @@ export default function Home() {
     const [tabValue, setTabValue] = React.useState(0);
 
     const [list, setList] = React.useState([]);
+    const [pageNum,setPageNum]=React.useState("");
 
     const webtoonListLoading = (page,sortBy) => {
         var requestOptions = {
@@ -157,6 +158,7 @@ export default function Home() {
                 console.log(result)
                 if (result.code == 0) {
                     setList(result.data.webtoonlist);
+                    setPageNum(result.data.totalpage);
                 }
             })
             .catch(error => console.log('error', error));
@@ -170,8 +172,7 @@ export default function Home() {
 
     //page 정보
     const handlePaging = (event, value) => {
-        //webtoonListLoading(value,tabValue);
-        //setList(tempList);
+        webtoonListLoading(value,tabValue);
     };
     
     React.useEffect(() => {
@@ -229,7 +230,7 @@ export default function Home() {
                                 ))}
                             </GridList>
                             <div className={classes.paging}>
-                                <Pagination count={10} color="primary" onChange={handlePaging} />
+                                <Pagination count={pageNum} color="primary" onChange={handlePaging} />
                             </div>
                         </div>
                     </TabPanel>
@@ -243,7 +244,7 @@ export default function Home() {
                                 ))}
                             </GridList>
                             <div className={classes.paging}>
-                                    <Pagination count={10} color="primary" onChange={handlePaging} />
+                                    <Pagination count={pageNum} color="primary" onChange={handlePaging} />
                                 </div>
                         </div>
                     </TabPanel>
@@ -257,7 +258,7 @@ export default function Home() {
                                 ))}
                             </GridList>
                             <div className={classes.paging}>
-                                    <Pagination count={10} color="primary"  onChange={handlePaging} />
+                                    <Pagination count={pageNum} color="primary"  onChange={handlePaging} />
                             </div>
                         </div>
                     </TabPanel>

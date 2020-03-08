@@ -70,7 +70,7 @@ export default function Upload() {
     const [comment, setComment] = React.useState("");
     const [thumbnail, setThumbnail] = React.useState("");
     const [script, setScript] = React.useState([]);
-    const [thumbnailstr,setThumbnailstr]=React.useState("");
+    const [thumbnailstr, setThumbnailstr] = React.useState("");
     var images = [];
 
     const classes = useStyles();
@@ -109,7 +109,6 @@ export default function Upload() {
                     images = script;
                     images.push(file);
                     setScript(images);
-                    localStorage.setItem("SCRIPT",script)
                     alert(file.name + "이(가) 선택되었습니다 \n\n 선택된 이미지: " + images.length + "개");
                 }
                 else {
@@ -170,7 +169,7 @@ export default function Upload() {
             formdata.append("author_comment", comment);
 
             var requestOptions = {
-                headers:myHeaders,
+                headers: myHeaders,
                 method: 'POST',
                 body: formdata,
                 redirect: 'follow'
@@ -180,17 +179,17 @@ export default function Upload() {
                 .then(response => response.json())
                 .then(result => {
                     console.log(result)
-                    if(result.code ==0 ){
+                    if (result.code == 0) {
                         alert("새로운 회차가 등록되었습니다")
-                        window.location.href="/mypage/editEpisode?idx="+idx;
+                        window.location.href = "/mypage/editEpisode?idx=" + idx;
                     }
-                    else if(result.code==44){
+                    else if (result.code == 44) {
                         ReToken.ReToken()
                     }
-                    else if(result.code==42){
+                    else if (result.code == 42) {
                         alert("[ERROR 42] 잘못된 접근입니다, 관리자에게 문의하세요.")
                     }
-                    else{
+                    else {
                         alert("잘못된 접근입니다, 관리자에게 문의하세요.")
                     }
                 })
@@ -199,8 +198,18 @@ export default function Upload() {
     }
 
     const handlePreview = () => {
+        var reader = new FileReader();
+
         if (script.length >= 1) {
-            window.open("/mypage/upload/preview", "preview")
+            var previewWin;
+            previewWin = window.open("/mypage/upload/preview", "preview")
+            //previewWin.document.getElementById("scripts").value=script;
+            script.map(sc => (
+                reader.readAsDataURL(script),
+                sc.src = reader.result,
+                previewWin.document.write("hi"),
+                previewWin.document.write(<img src="sc.src"/>)
+            ))
         }
     }
 
@@ -252,7 +261,7 @@ export default function Upload() {
                         />
                     </div>
 
-                    <div style={{ display: "flex", height:110}}>
+                    <div style={{ display: "flex", height: 110 }}>
                         <h5>썸네일 이미지&emsp;</h5>
                         <div>
                             <input
@@ -263,10 +272,10 @@ export default function Upload() {
                                 onChange={handleThumbnailChange}
                             />
                             <label htmlFor="thumbnail">
-                                <Button variant="contained" component="span" style={{ height: 100, width: 100, marginLeft: 10,marginRight:5 }}>
+                                <Button variant="contained" component="span" style={{ height: 100, width: 100, marginLeft: 10, marginRight: 5 }}>
                                     430 X 330
                                 </Button>
-                            <img src={thumbnailstr} alt="thumbnail" width="100" height="100"/>
+                                <img src={thumbnailstr} alt="thumbnail" width="100" height="100" />
                             </label>
                         </div>
                         <div style={{ marginTop: 80, }}>

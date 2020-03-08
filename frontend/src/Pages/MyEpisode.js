@@ -243,7 +243,7 @@ export default function MyEpisode() {
                     </div>
                     <div style={{ width: 950, borderTop: '1px solid grey', paddingTop: 40, paddingBottom: 40 }} align="center">
                         {contents.map(content => (
-                            <img src={content} alt="cut" key={content} />
+                            <img src={content} alt="cut" key={content} style={{margin:0, padding:0}} />
                         ))}
                     </div>
                     <div style={{ width: 950, borderTop: '1px solid grey', borderBottom: '1px solid grey', paddingBottom: 20 }}>
