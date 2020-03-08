@@ -140,8 +140,7 @@ export default function Episode() {
                 setContents(result.data.contents)
                 setAuthor_comment(result.data.author_comment)
                 setWebtoon_title(result.data.webtoon_title)
-                //연우 코드 수정후에 주석처리 풀기
-                //setRating_prt(result.data.person_total);
+                setRating_prt(result.data.rating_person_total);
             })
             .catch(error => console.log('error', error));
         // 댓글 로드
