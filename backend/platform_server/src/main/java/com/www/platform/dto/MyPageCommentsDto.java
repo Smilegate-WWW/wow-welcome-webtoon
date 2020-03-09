@@ -22,7 +22,7 @@ public class MyPageCommentsDto {
 
     public MyPageCommentsDto(Comments entity) {
         idx = entity.getIdx();
-        webtoon_thumbnail = entity.getEp().getWebtoon().getThumbnail();
+        webtoon_thumbnail = "http://localhost:8081/static/web_thumbnail/" + entity.getEp().getWebtoon().getThumbnail();
         webtoon_title = entity.getEp().getWebtoon().getTitle();
         ep_no = entity.getEp().getEp_no();
         like_cnt = entity.getLike_cnt();

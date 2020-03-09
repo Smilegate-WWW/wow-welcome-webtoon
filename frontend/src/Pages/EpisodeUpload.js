@@ -197,22 +197,6 @@ export default function Upload() {
         }
     }
 
-    const handlePreview = () => {
-        var reader = new FileReader();
-
-        if (script.length >= 1) {
-            var previewWin;
-            previewWin = window.open("/mypage/upload/preview", "preview")
-            //previewWin.document.getElementById("scripts").value=script;
-            script.map(sc => (
-                reader.readAsDataURL(script),
-                sc.src = reader.result,
-                previewWin.document.write("hi"),
-                previewWin.document.write(<img src="sc.src"/>)
-            ))
-        }
-    }
-
     return (
         <div>
             <Header />
@@ -300,10 +284,6 @@ export default function Upload() {
                                     원고 등록
                                 </Button>
                             </label>
-
-                            <Button variant="contained" style={{ height: 30, marginTop: 20 }} onClick={handlePreview}>
-                                전체 보기
-                            </Button>
 
                             <body1 className={classes.fontStyle}>
                                 <br />

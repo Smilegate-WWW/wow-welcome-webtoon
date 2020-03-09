@@ -11,15 +11,15 @@ import lombok.Setter;
 @NoArgsConstructor
 public class EpisodePage {
 	private List<EpisodeListDto> episodelist;
-	private Integer[] pagelist;
+	private int totalpage;
 	private String webtoon_thumbnail;
 	private String webtoon_title;
 	private String plot;
 	private String writer;
 	private String id;
 	
-	public EpisodePage(List<EpisodeListDto> episodelist, Integer[] pagelist) {
+	public EpisodePage(List<EpisodeListDto> episodelist, int totalpage) {
 		this.episodelist = episodelist;
-		this.pagelist = pagelist;
+		this.totalpage = totalpage;
 	}
 }

@@ -75,9 +75,7 @@ public class WebtoonController {
 		
 		switch(n) {
 		case 0: //유효한 토큰
-			List<WebtoonListDto> webtoonList = webtoonService.getWebtoonList(page,res,user_idx);
-			Integer[] pageList = webtoonService.getPageList(page);
-			WebtoonPage webtoonpage = new WebtoonPage(webtoonList, pageList);
+			WebtoonPage webtoonpage = webtoonService.getWebtoonList(page,res,user_idx);
 
 			switch(res.getCode()) {
 			case 0:

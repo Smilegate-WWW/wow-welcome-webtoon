@@ -108,9 +108,12 @@ export default function Episode() {
     const [title, setTitle] = React.useState("");
     const [author, setAuthor] = React.useState("");
     const [summary, setSummary] = React.useState("");
-    const [rating_avg, setRating_avg] = React.useState("");
     const [webtoon_title, setWebtoon_title] = React.useState("");
     const [author_comment, setAuthor_comment] = React.useState("");
+
+    //별점 관련
+    const [rating_avg, setRating_avg] = React.useState("");
+    const [rating_prt, setRating_prt] = React.useState(0); //별점참여자수
 
     //댓글 관련
     const [comments, setComments] = React.useState([]);
@@ -133,10 +136,14 @@ export default function Episode() {
                 setAuthor(result.data.author)
                 setSummary(result.data.summary)
                 setThumbnail(result.data.thumbnail)
-                setRating_avg(result.data.rating_avg)
+                if((result.data.rating_avg+"").length > 4)
+                    setRating_avg((result.data.rating_avg+"").substring(0,4))
+                else 
+                    setRating_avg(result.data.rating_avg)
                 setContents(result.data.contents)
                 setAuthor_comment(result.data.author_comment)
                 setWebtoon_title(result.data.webtoon_title)
+                setRating_prt(result.data.rating_person_total);
             })
             .catch(error => console.log('error', error));
         // 댓글 로드
@@ -278,6 +285,11 @@ export default function Episode() {
                 console.log(result)
                 if (result.code == 0) {
                     alert("별점 등록이 완료되었습니다.");
+                    if((result.data.rating+"").length > 4)
+                        setRating_avg((result.data.rating+"").substring(0,4))
+                    else 
+                        setRating_avg(result.data.rating)
+                    setRating_prt(result.data.person_total);
                 }
                 else if (result.code == 20) {
                     alert("존재하지 않는 회차입니다. 관리자에게 문의하세요.");
@@ -330,7 +342,8 @@ export default function Episode() {
                         <h5 style={{ marginTop: 20, marginBottom: 0 }}>{ep_no}화 {title}</h5>
                         <Box component="span" mb={0} borderColor="transparent" style={{ display: "flex", }}>
                             <Rating name="read-only" value={rating_avg} readOnly style={{ marginTop: 30 }} />
-                            <body2 style={{ marginTop: 30 }}>&nbsp;({rating_avg})&ensp;</body2>
+                            <body2 style={{ marginTop: 30 }}>&nbsp;{rating_avg} (참여자수 {rating_prt})&ensp;</body2>
+                            
                             <FormControl className={classes.formControl}>
                                 <InputLabel htmlFor="star-score">별점</InputLabel>
                                 <Select
