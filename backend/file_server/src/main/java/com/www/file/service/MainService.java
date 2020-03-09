@@ -37,7 +37,7 @@ public class MainService {
 	//한 블럭 내 최대 페이지 번호 수
 	private static final int BLOCK_PAGE_NUM_COUNT = 5;
 	//한 페이지 내 최대 웹툰 출력 갯수
-	private static final int PAGE_WEBTOON_COUNT = 20;
+	private static final int PAGE_WEBTOON_COUNT = 10;
 	//한 페이지 내 최대 회차 출력 갯수
 	private static final int PAGE_EPISODE_COUNT = 7;
 	
