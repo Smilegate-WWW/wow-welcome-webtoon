@@ -36,7 +36,7 @@ export default function App() {
         <AuthRoute path="/mypage/register" render={props => <Register {...props} />}/>
         <Route exact path="/webtoon" component={Webtoon}/>
         <Route path="/webtoon/episode" component={Episode}/>
-        <AuthRoute path="/mypage/upload" render={props => <Upload {...props}/>}/>
+        <AuthRoute exact path="/mypage/upload" render={props => <Upload {...props}/>}/>
         <AuthRoute path="/mypage/editInfo" render={props => <EditInfo {...props}/>}/>
         <AuthRoute path="/mypage/editRegister" render={props => <EditRegister {...props}/>}/>
         <AuthRoute path="/mypage/editEpisode" render={props => <EditEpisode {...props}/>}/>

@@ -49,7 +49,7 @@ const useStyles = makeStyles(theme => ({
     },
     gridList: {
         width: 1200,
-        height: 500,
+        height: 700,
         justify: "center",
     },
     alarm: {
@@ -67,6 +67,7 @@ export default function MyPage() {
     const classes = useStyles();
 
     const [myWebtoons, setMyWebtoons] = React.useState([]);
+    const [pageNum,setPageNum]=React.useState("");
 
     const mypageLoading = (page) => {
         var myHeaders = new Headers();
@@ -80,13 +81,13 @@ export default function MyPage() {
             redirect: 'follow',
         };
 
-        fetch("/myTitleList?page=1", requestOptions)
+        fetch("/myTitleList?page="+page, requestOptions)
             .then(response => response.json())
             .then(result => {
                 console.log(result)
                 if (result.code == 0) {
                     setMyWebtoons(result.data.webtoonlist);
-                    //pageNum=result.data.~
+                    setPageNum(result.data.totalpage);
                 }
                 else if(result.code==44){
                     ReToken.ReToken()
@@ -105,8 +106,6 @@ export default function MyPage() {
         mypageLoading(1);
     }, []);
 
-    //page 정보
-    var pageNum=1;
     const handlePaging = (event, value) => {
         mypageLoading(value);
     };

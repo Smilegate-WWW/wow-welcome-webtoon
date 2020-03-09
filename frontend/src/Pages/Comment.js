@@ -15,6 +15,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
+//paging
+import Pagination from '@material-ui/lab/Pagination';
 // 토큰 재발급
 var ReToken = require("../AuthRoute");
 
@@ -56,16 +58,22 @@ const useStyles = makeStyles(theme => ({
             marginLeft: theme.spacing(167),
         },
     },
+    paging: {
+        '& > *': {
+            marginTop: theme.spacing(2),
+        },
+        marginLeft:theme.spacing(15)
+    }
 }));
 
 export default function Comment() {
-    const [myComments,setMyComments]=React.useState([]);
+    const [myComments, setMyComments] = React.useState([]);
     //const [renderFlag,setRenderFlag]=React.useState(0);
 
     React.useEffect(() => {
-        loadMyComments();
-    },[]);
-    
+        loadMyComments(1);
+    }, []);
+
     const classes = useStyles();
     const [checked, setChecked] = React.useState(true);
 
@@ -73,38 +81,45 @@ export default function Comment() {
         setChecked(event.target.checked);
     };
 
+    const [pageNum,setPageNum]=React.useState("");
+    
     /* 내 댓글 목록 조회 */
-    const loadMyComments = () => {
+    const loadMyComments = (page) => {
 
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
         myHeaders.append("Authorization", localStorage.getItem("AUTHORIZATION"));
-            
-       var requestOptions = {
-          method: 'GET',
-          headers: myHeaders,
-          redirect: 'follow'
+
+        var requestOptions = {
+            method: 'GET',
+            headers: myHeaders,
+            redirect: 'follow'
         };
-    
-        fetch("/users/comments?page=1", requestOptions)
-          .then(response => response.json())
-          .then(result => {
-              console.log(result)
-              if(result.code==0){
-                setMyComments(result.data.comments);
-              }
-              if(result.code==23){
-                  alert("[ERROR 23] 유효하지 않은 페이지 요청 입니다.")
-              }
-              else if(result.code==42){
-                alert("[ERROR 42] 잘못된 접근입니다, 관리자에게 문의하세요.")
-            }
-            else if(result.code==44){
-                ReToken.ReToken()
-            }
-        })
-          .catch(error => console.log('error', error));
+
+        fetch("/users/comments?page="+page, requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                console.log(result)
+                if (result.code == 0) {
+                    setMyComments(result.data.comments);
+                    setPageNum(result.data.total_pages);
+                }
+                if (result.code == 23) {
+                    alert("[ERROR 23] 유효하지 않은 페이지 요청 입니다.")
+                }
+                else if (result.code == 42) {
+                    alert("[ERROR 42] 잘못된 접근입니다, 관리자에게 문의하세요.")
+                }
+                else if (result.code == 44) {
+                    ReToken.ReToken()
+                }
+            })
+            .catch(error => console.log('error', error));
     }
+
+    const handlePaging = (event, value) => {
+        loadMyComments(value);
+    };
 
     /* 댓글 삭제 */
     const deleteComment = (idx) => {
@@ -121,24 +136,24 @@ export default function Comment() {
             redirect: 'follow'
         };
 
-        console.log("/comments/"+idx);
+        console.log("/comments/" + idx);
         fetch("/comments/" + idx, requestOptions)
             .then(response => response.json())
             .then(result => {
                 console.log(result)
-                if(result.code==0){
+                if (result.code == 0) {
                     loadMyComments()
                 }
-                else if(result.code==21){
+                else if (result.code == 21) {
                     alert("존재하지 않는 댓글입니다.")
                 }
-                else if(result.code==22){
+                else if (result.code == 22) {
                     alert("이 댓글의 작성자가 아닙니다.")
                 }
-                else if(result.code==42){
+                else if (result.code == 42) {
                     alert("[ERROR 42] 잘못된 접근입니다, 관리자에게 문의하세요.")
                 }
-                else if(result.code==44){
+                else if (result.code == 44) {
                     ReToken.ReToken()
                 }
             })
@@ -178,6 +193,9 @@ export default function Comment() {
             </div>
 
             <div>
+                <div className={classes.paging}>
+                    <Pagination count={pageNum} color="primary" onChange={handlePaging} />
+                </div>
                 <TableContainer component={Paper} backgroundColor>
                     <Table className={classes.table} aria-label="simple table" align="center">
                         <TableHead>
@@ -195,7 +213,7 @@ export default function Comment() {
                         <TableBody>
                             {myComments.map(myComment => (
                                 <TableRow key={myComment.idx}>
-                                    <TableCell align="center"><img src={myComment.webtoon_thumbnail}/></TableCell>
+                                    <TableCell align="center"><img src={myComment.webtoon_thumbnail} /></TableCell>
                                     <TableCell align="center">
                                         <div className={classes.titleField}>
                                             {myComment.webtoon_title}
@@ -211,7 +229,7 @@ export default function Comment() {
                                     <TableCell align="center">{myComment.dislike_cnt}</TableCell>
                                     <TableCell align="center">{myComment.created_date}</TableCell>
                                     <TableCell align="center">
-                                        <Button variant="contained" color="primary" onClick={()=>deleteComment(myComment.idx)} >
+                                        <Button variant="contained" color="primary" onClick={() => deleteComment(myComment.idx)} >
                                             삭제
                                         </Button>
                                     </TableCell>
@@ -220,7 +238,7 @@ export default function Comment() {
                         </TableBody>
                     </Table>
                 </TableContainer>
-                
+
             </div>
         </div>
     )

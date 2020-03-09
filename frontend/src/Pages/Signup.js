@@ -133,9 +133,12 @@ export default function Signup() {
                     console.log(result);
                     if(result.code==0){
                     alert("회원가입 성공");
-                    window.location.href = "/login";}
+                    window.location.href = "/";}
                     else if(result.code==1){
                         alert("이미 존재하는 아이디입니다.")
+                    }
+                    else if(result.code==3){
+                        alert("이미 존재하는 이메일입니다.")
                     }
                 })
                 .catch(error => console.log('error', error));
@@ -180,7 +183,7 @@ export default function Signup() {
                 />
             </form>
 
-            <div className={classes.display}>s
+            <div className={classes.display}>
                 <form className={classes.smallTextField} noValidate autoComplete="off">
                     <TextField id="name" label="이름" value={name} onChange={handleNameChange} variant="outlined" />
                 </form>

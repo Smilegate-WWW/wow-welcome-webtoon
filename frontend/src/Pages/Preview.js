@@ -5,12 +5,7 @@ export default function Preview() {
     var reader = new FileReader();
 
     return (
-        <div>
-            {localStorage.getItem("SCRIPT").map(script => (
-                reader.readAsDataURL(script),
-                tempImage.src = reader.result,
-                <img src={tempImage.src} alt="script"/>
-            ))}
+        <div id="scripts">
         </div>
     )
 }
