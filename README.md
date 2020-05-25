@@ -1,5 +1,7 @@
 # 웹툰 서비스 시스템
 2020 스마일게이트 온라인 서버개발캠프 : 네이버 도전만화 클론 프로젝트
+
+![main]](./etc/main.png)
 </a>
 
 ## 바로가기
@@ -15,7 +17,7 @@
 
 </a>
 
-![Architecture](./forReadMe/architecture.png)
+![Architecture](./etc/architecture.png)
 
 [맨 위로 가기](#top)
 </br>
@@ -26,7 +28,7 @@
 
 </a>
 
-![DataBase](./forReadMe/db.png)
+![DataBase](./etc/db.png)
 
 [맨 위로 가기](#top)
 </br>
