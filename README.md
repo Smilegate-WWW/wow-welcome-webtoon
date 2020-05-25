@@ -1,119 +1,64 @@
-### TODO
-https://github.com/Smilegate-Healer/WebKakao 참고하여 Readme File 뼈대 작성 한 거라 추후 프로젝트 상황에 따라 수정
-</br>
-
-<a name="top">
-  
-# Wow-Welcome-Webtoon
-  
+# 웹툰 서비스 시스템
+2020 스마일게이트 온라인 서버개발캠프 : 네이버 도전만화 클론 프로젝트
 </a>
 
 
 ## 목차
 
-#### [1. 프로젝트 설명](#about_project)
-#### [2. Wow-Welcome-Webtoon 기능](#functions)
-#### [3. 아키텍처](#architecture)
-#### [4. 데모 영상](#demo_video)
-#### [5. 문서 링크](#docs_link)
-#### [6. 팀 소개](#about_team)
-#### [7. History](#history)
+#### [Architecture](#architecture)
+#### [DataBase](#DataBase)
+#### [Documents](#documents)
+#### [File Structure](#file_structure)
 
-
-</br>
-
-<a name="about_project">  
-
-### 1. 프로젝트 설명
-
-</a>
-  
-#### 1-1. 프로젝트 기획
-
->- 
-
-#### 1-2. 프로젝트 목적
-
->-
-  
-[맨 위로 가기](#top)
-</br>
-
-<a name="functions">  
-
-### 2. Wow-Welcome-Webtoon 기능
-
-</a>
-
->-
-
-[맨 위로 가기](#top)
-</br>
-  
 <a name="architecture">  
 
-### 3. 아키텍처
+### Architecture
 
 </a>
 
-#### 3-1. 아키텍쳐 구성도
+![Architecture](./ForReadMe/architecture.png)
 
->- TODO : 아키텍쳐 이미지 추가
+[맨 위로 가기](#top)
+</br>
 
-#### 3-2. 기술 스택
-  
->- 
+<a name="architecture">  
+
+### DataBase
+
+</a>
+
+![DataBase](./ForReadMe/db.png)
 
 [맨 위로 가기](#top)
 </br>
   
-<a name="demo_video">  
+<a name="documents">  
+  
+### Documents
 
-### 4. 데모 영상
+</a>
+
+>- [인증서버 API](https://documenter.getpostman.com/view/10215521/SWTK3Dqq) </br>
+>- [파일서버 API](https://documenter.getpostman.com/view/10254430/SzKSRygn) </br>
+>- [플랫폼 서버 API](https://documenter.getpostman.com/view/9773992/SzKWtGnX) </br>
+
+[맨 위로 가기](#top)
+</br>
+
+<a name="file_structure">  
+
+### File Structure
 
 </a>  
 
->-
-
-[맨 위로 가기](#top)
-</br>
-  
-<a name="docs_link">  
-  
-### 5. 문서 링크
-
-</a>
-
->-
-
-[맨 위로 가기](#top)
-</br>
-
-<a name="about_team">  
-
-### 6. 팀 소개
-
-</a>
-
-#### 6-1. 팀 목표
-
->- 
-
-#### 6-2. 방법 / 수단
-
->- 
-
-[맨 위로 가기](#top)
-</br>
-
-<a name="history"> 
-
-### 7. History
-
-</a>
-
->- 20.01.09 Team Building( 프로젝트 진행 희망자 중 개인 참가자 4명으로 팀 구성)
->-
+```
+├── backend
+│   └── core
+│   └── auth_server
+│   └── file_server
+│   └── platform_server
+└── frontend
+```
 
 [맨 위로 가기](#top)
 </br>
