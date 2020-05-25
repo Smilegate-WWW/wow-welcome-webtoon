@@ -2,13 +2,12 @@
 2020 스마일게이트 온라인 서버개발캠프 : 네이버 도전만화 클론 프로젝트
 </a>
 
+## 바로가기
 
-## 목차
-
-#### [Architecture](#architecture)
-#### [DataBase](#DataBase)
-#### [Documents](#documents)
-#### [File Structure](#file_structure)
+- [Architecture](#architecture)
+- [DataBase](#ataBase)
+- [Documents](#documents)
+- [File Structure](#file_structure)
 
 <a name="architecture">  
 
@@ -16,7 +15,7 @@
 
 </a>
 
-![Architecture](./ForReadMe/architecture.png)
+![Architecture](./forReadMe/architecture.png)
 
 [맨 위로 가기](#top)
 </br>
@@ -27,7 +26,7 @@
 
 </a>
 
-![DataBase](./ForReadMe/db.png)
+![DataBase](./forReadMe/db.png)
 
 [맨 위로 가기](#top)
 </br>
