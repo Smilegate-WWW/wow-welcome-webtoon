@@ -7,7 +7,7 @@
 ## 바로가기
 
 - [Architecture](#architecture)
-- [DataBase](#ataBase)
+- [DataBase](#data_base)
 - [Documents](#documents)
 - [File Structure](#file_structure)
 
@@ -20,7 +20,7 @@
 ![Architecture](./etc/architecture.png)
 
 
-<a name="architecture">  
+<a name="data_base">  
 
 ### DataBase
 
