@@ -14,7 +14,7 @@
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "fs": "0.0.1-security",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "jwt-decode": "^2.2.0",
     "material-table": "^1.56.1",
     "react": "^16.12.0",
